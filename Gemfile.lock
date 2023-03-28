@@ -83,6 +83,9 @@ GEM
     bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
+    bullet (7.0.7)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     case_transform (0.2)
       activesupport
     choice (0.2.0)
@@ -109,6 +112,10 @@ GEM
     faker (3.1.1)
       i18n (>= 1.8.11, < 2)
     ffi (1.15.5)
+    figaro (1.2.0)
+      thor (>= 0.14.0, < 2)
+    friendly_id (5.4.2)
+      activerecord (>= 4.0.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
     i18n (1.12.0)
@@ -226,6 +233,7 @@ GEM
     timeout (0.3.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uniform_notifier (1.16.0)
     versionist (2.0.1)
       activesupport (>= 3)
       railties (>= 3)
@@ -247,10 +255,13 @@ DEPENDENCIES
   acts_as_paranoid (~> 0.8.1)
   bcrypt (~> 3.1.7)
   bootsnap
+  bullet
   debug
   draper
   factory_bot_rails
   faker
+  figaro
+  friendly_id (~> 5.4.0)
   image_processing (~> 1.2)
   jbuilder
   jwt

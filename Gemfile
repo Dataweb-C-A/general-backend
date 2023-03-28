@@ -72,3 +72,9 @@ gem "acts_as_paranoid", "~> 0.8.1"
 gem 'accountingjs-rails'
 
 gem 'draper'
+
+gem 'figaro'
+
+gem 'bullet'
+
+gem 'friendly_id', '~> 5.4.0'
