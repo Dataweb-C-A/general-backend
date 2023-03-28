@@ -2,6 +2,8 @@ class User < ApplicationRecord
   has_secure_password
   has_one_attached :avatar
   default_scope { where(deleted_at: nil) }
+  has_many :owned_taquillas, class_name: 'Taquilla', foreign_key: 'owner_id'
+  has_and_belongs_to_many :riferos, class_name: 'Taquilla', foreign_key: 'riferos_ids'
   acts_as_paranoid
 
   validates :email, presence: true, uniqueness: true
