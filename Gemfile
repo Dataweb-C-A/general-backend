@@ -80,3 +80,5 @@ gem 'figaro'
 gem 'bullet'
 
 gem 'friendly_id', '~> 5.4.0'
+
+gem 'redis-rails'
