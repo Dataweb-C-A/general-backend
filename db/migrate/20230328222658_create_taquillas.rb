@@ -3,8 +3,8 @@ class CreateTaquillas < ActiveRecord::Migration[7.0]
     create_table :taquillas do |t|
       t.string :name
       t.string :apikey
-      t.integer :owner_id
-      t.integer :riferos_ids, array: true, default: []
+      t.integer :owner_id, null: false
+      t.integer :users_ids, array: true, default: []
 
       t.timestamps
     end

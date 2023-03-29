@@ -251,6 +251,7 @@ PLATFORMS
 
 DEPENDENCIES
   accountingjs-rails
+  actioncable
   active_model_serializers
   acts_as_paranoid (~> 0.8.1)
   bcrypt (~> 3.1.7)

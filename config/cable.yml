@@ -1,8 +1,10 @@
 development:
-  adapter: async
+  adapter: redis
+  url: redis://localhost:6379/1
+  channel_prefix: rifamax_dev
 
 test:
-  adapter: test
+  adapter: async
 
 production:
   adapter: redis

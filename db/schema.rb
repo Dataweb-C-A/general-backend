@@ -45,8 +45,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_224113) do
   create_table "taquillas", force: :cascade do |t|
     t.string "name"
     t.string "apikey"
-    t.integer "owner_id"
-    t.integer "riferos_ids", default: [], array: true
+    t.integer "owner_id", null: false
+    t.integer "users_ids", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

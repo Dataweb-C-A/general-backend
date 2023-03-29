@@ -1,8 +1,8 @@
 class TaquillaSerializer < ActiveModel::Serializer
-  attributes :id, :apikey, :owner, :riferos
+  attributes :id, :name, :apikey, :owner, :users
 
-  def riferos
-    object.riferos_ids.map do |rifero|
+  def users
+    object.users_ids.map do |rifero|
       UserSerializer.new(User.find(rifero)).as_json
     end
   end
