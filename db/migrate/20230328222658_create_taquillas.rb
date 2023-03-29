@@ -3,6 +3,7 @@ class CreateTaquillas < ActiveRecord::Migration[7.0]
     create_table :taquillas do |t|
       t.string :name
       t.string :apikey
+      t.string :system, default: 'Rifamax'
       t.integer :owner_id, null: false
       t.integer :users_ids, array: true, default: []
 

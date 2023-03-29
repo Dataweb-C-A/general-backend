@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_28_224113) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_29_051531) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_224113) do
     t.integer "users_ids", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_taquillas_on_owner_id"
+    t.index ["users_ids"], name: "index_taquillas_on_users_ids", using: :gin
   end
 
   create_table "taquillas_users", id: false, force: :cascade do |t|

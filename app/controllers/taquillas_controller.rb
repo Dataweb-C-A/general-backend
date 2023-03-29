@@ -3,8 +3,8 @@ class TaquillasController < ApplicationController
   before_action :find_taquillas, except: [:index, :create]
 
   def index
-    @taquilla = Taquilla.includes(:owner, :users)
-    @pagy, @taquillas = pagy(@taquilla, items: params[:items], page: params[:page])
+    @taquilla = Taquilla.includes([:owner]) #.where(owner: @current_user)
+    @pagy, @taquillas = pagy(@taquilla, items: params[:items] || 5, page: params[:page])
     render json: {
       taquillas: @taquillas.as_json(include: [:owner, :users]),
       metadata: {

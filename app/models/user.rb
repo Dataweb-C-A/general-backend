@@ -9,6 +9,7 @@ class User < ApplicationRecord
   acts_as_paranoid
 
   validates :email, presence: true, uniqueness: true
+  validates :cedula, presence: true, uniqueness: true
   validates :username, presence: true, uniqueness: true
   validates :password,
             length: { minimum: 8 },
@@ -18,6 +19,12 @@ class User < ApplicationRecord
   scope :created_within, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   before_validation :generate_username, on: :create
+  before_validation :generate_slug, on: :create
+  before_save :process_avatar
+
+  def generate_slug
+    self.slug ||= "#{self.name.parameterize}-#{self.id}"
+  end
 
   def generate_username
     self.username ||= UsernameGeneratorService.generate_username
