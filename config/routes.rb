@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   
   resources :users, param: :_username
   resources :taquillas, path: 'taquillas', param: :_id
-
+  resources :riferos, only: [:index], path: 'riferos'
   resources :rifas, only: [:index]
 
   get '/my-profile', to: 'profiles#index'

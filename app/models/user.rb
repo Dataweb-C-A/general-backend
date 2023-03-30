@@ -38,6 +38,10 @@ class User < ApplicationRecord
     end
   end
 
+  def taquilla
+    Taquilla.find_by(owner_id: self.id)
+  end
+
   def as_json(options={})
     UserSerializer.new(self).as_json
   end

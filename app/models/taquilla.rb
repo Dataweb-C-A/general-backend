@@ -13,6 +13,12 @@ class Taquilla < ApplicationRecord
     self.apikey = 'API-'+'D'+SecureRandom.hex(7)+'RM'+SecureRandom.hex(7)+'BG'+SecureRandom.hex(7)
   end
 
+  def self.show_riferos(owner)
+    Taquilla.find_by(owner_id: owner).users_ids.each do |rifero|
+      User.find(rifero)
+    end
+  end
+
   def as_json(options={})
     TaquillaSerializer.new(self).as_json
   end

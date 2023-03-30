@@ -17,7 +17,7 @@ class TaquillasController < ApplicationController
   end
 
   def show
-    render json: @taquilla.as_json(include: [:owner, :users])
+    render json: { taquilla: @taquilla.as_json(include: [:owner, :users]) }, status: :ok
   end
   
   def create
