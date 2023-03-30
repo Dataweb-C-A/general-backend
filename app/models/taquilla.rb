@@ -1,6 +1,7 @@
 class Taquilla < ApplicationRecord
   belongs_to :owner, class_name: 'User'
   has_and_belongs_to_many :users, class_name: 'User'
+  has_many :rifas
 
   before_validation :generate_api_key, on: :create
 

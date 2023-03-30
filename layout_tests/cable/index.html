@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>WebSocket Example</title>
+  </head>
+  <body>
+    <h1>WebSocket Example</h1>
+    <div id="messages"></div>
+    <input type="text" id="message" />
+    <button id="sendBtn">Enviar</button>
+  </body>
+  <script>
+    const socket = new WebSocket('ws://localhost:3000/cable');
+    
+    socket.addEventListener('open', (event) => {
+      console.log('Conectado al servidor de WebSockets');
+    });
+    
+    socket.addEventListener('message', (event) => {
+      console.log('Mensaje recibido:', event.data);
+      const message = JSON.parse(event.data);
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.innerHTML += `<p>${message.content}</p>`;
+    });
+    
+    const sendBtn = document.getElementById('sendBtn');
+    const messageInput = document.getElementById('message');
+    
+    sendBtn.addEventListener('click', (event) => {
+      const message = {
+        command: 'message',
+        identifier: JSON.stringify({ channel: 'ChatChannel' }),
+        data: JSON.stringify({ content: messageInput.value })
+      };
+      socket.send(JSON.stringify(message));
+      messageInput.value = '';
+    });
+  </script>
+</html>

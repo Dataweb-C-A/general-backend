@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_29_051531) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_29_212512) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,9 +42,39 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_29_051531) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "rifas", force: :cascade do |t|
+    t.string "awardSign"
+    t.string "awardNoSign"
+    t.boolean "is_send"
+    t.date "rifDate"
+    t.date "expired"
+    t.string "loteria"
+    t.string "money"
+    t.float "price"
+    t.string "pin"
+    t.string "serial"
+    t.boolean "verify"
+    t.string "plate"
+    t.integer "numbers"
+    t.integer "year"
+    t.integer "taquillas_ids", default: [], array: true
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_rifas_on_user_id"
+  end
+
+  create_table "rifas_taquillas", id: false, force: :cascade do |t|
+    t.bigint "rifa_id", null: false
+    t.bigint "taquilla_id", null: false
+    t.index ["rifa_id"], name: "index_rifas_taquillas_on_rifa_id"
+    t.index ["taquilla_id"], name: "index_rifas_taquillas_on_taquilla_id"
+  end
+
   create_table "taquillas", force: :cascade do |t|
     t.string "name"
     t.string "apikey"
+    t.string "system", default: "Rifamax"
     t.integer "owner_id", null: false
     t.integer "users_ids", default: [], array: true
     t.datetime "created_at", null: false
@@ -66,6 +96,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_29_051531) do
     t.string "username"
     t.string "cedula"
     t.string "email"
+    t.string "phone"
+    t.string "role", null: false
     t.string "password_digest"
     t.datetime "deleted_at"
     t.string "slug"
@@ -80,4 +112,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_29_051531) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "rifas", "users"
 end
