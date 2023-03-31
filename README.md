@@ -50,7 +50,7 @@ rails db:create
 
 7. Start the server using:
 ```bash
-rails s
+rails server
 ```
 
 ## Setup
