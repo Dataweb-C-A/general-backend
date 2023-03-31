@@ -1,7 +1,9 @@
 # Rifamax General Backend
 
-Welcome to Rifamax, a raffle system designed for managing all modules of raffles and Dataweb Systems. This system is coded on Ruby on Rails with PostgreSQL and Redis.
+Welcome to Rifamax, a raffle system designed for managing all modules of raffles and Dataweb Systems. This system is coded on [Ruby on Rails](https://rubyonrails.org/) with [PostgreSQL](https://www.postgresql.org/), [Sidekiq](https://sidekiq.org/) and [Redis](https://redis.io/).
 
+<img src="https://i.imgur.com/d4dhkty.png" style="width: 100%;">
+  
 ## Features
 Rifamax comes with the following features:
 
