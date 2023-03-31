@@ -4,7 +4,7 @@
   <img src="https://rifa-max.com/logo-rifamax.png" />
 </p>
 
-Welcome to Rifamax, a raffle system designed for managing all modules of raffles and Dataweb Systems. This system is coded on [Ruby on Rails](https://rubyonrails.org/) with [PostgreSQL](https://www.postgresql.org/), [Sidekiq](https://sidekiq.org/) and [Redis](https://redis.io/).
+Rifamax is a raffle system designed for managing all modules of raffles and Dataweb Systems. It is coded on [Ruby on Rails](https://rubyonrails.org/) with [PostgreSQL](https://www.postgresql.org/), [Sidekiq](https://sidekiq.org/) and [Redis](https://redis.io/). The system has features such as the ability to create, edit, and delete raffles, specify start and end dates for each raffle, have multiple prizes and winners for each raffle, automatic selection of winners at the end of each raffle, email notifications to winners and an admin dashboard for managing raffles and winners. It also has integration with Redis for caching and background jobs.
 
 <p align="center">
   <img src="https://i.imgur.com/d4dhkty.png" style="width: 80%;">
