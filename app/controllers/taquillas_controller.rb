@@ -12,7 +12,8 @@ class TaquillasController < ApplicationController
         count: @pagy.count,
         items: @pagy.items,
         pages: @pagy.pages
-      }
+      },
+      status_code: 200
     }
   end
 

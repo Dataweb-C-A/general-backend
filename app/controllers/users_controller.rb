@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     render json: { 
       users: @users, 
       profile: @current_user, 
-      statusCode: 200 
+      status_code: 200 
     }, status: 200
   end
 

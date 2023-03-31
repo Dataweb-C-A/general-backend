@@ -3,13 +3,19 @@ class ProfilesController < ApplicationController
 
   # GET /my-profile
   def index
-    render json: { profile: @current_user, statusCode: 200 }, status: :ok
+    render json: { 
+      profile: @current_user, 
+      status_code: 200
+    }, status: :ok
   end
 
   # GET /profiles/{username}
   def find
     @user = User.find_by_username!(params[:username])
-    render json: @user, status: :ok
+    render json: { 
+      profile: @user,
+      status_code: 200 
+    }, status: :ok
   end
 
   # PUT /my-profile
