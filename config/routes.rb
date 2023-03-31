@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :taquillas, path: 'taquillas', param: :_id
   resources :riferos, only: [:index], path: 'riferos'
   resources :rifas, only: [:index]
+  resources :stats, only: [:index]
 
   get '/my-profile', to: 'profiles#index'
   post '/auth/login', to: 'authentication#login'

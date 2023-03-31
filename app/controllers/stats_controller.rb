@@ -3,7 +3,6 @@ class StatsController < ApplicationController
     render json: {
       all: Rifa.count,
       actives: Rifa.active.count,
-      send: Rifa.send.count,
       expired: Rifa.expired.count,
       status_code: 200
     }

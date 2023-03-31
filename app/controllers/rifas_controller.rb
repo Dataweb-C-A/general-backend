@@ -72,8 +72,8 @@ class RifasController < ApplicationController
       :plate,
       :numbers,
       :year,
+      :user_id,
       taquillas_ids: [],
-      :user_id
     )
   end
 end
