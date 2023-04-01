@@ -6,6 +6,7 @@ class CreateRifaTickets < ActiveRecord::Migration[7.0]
       t.integer :ticket_nro
       t.string :serial
       t.boolean :is_sold
+      t.string :type
 
       t.timestamps
     end
