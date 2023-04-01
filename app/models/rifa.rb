@@ -1,6 +1,7 @@
 class Rifa < ApplicationRecord
   belongs_to :user
   has_and_belongs_to_many :taquillas, class_name: 'Taquilla'
+  has_many :rifa_tickets, dependent: :destroy
 
   scope :expired, -> { where('NOW() >= expired') }
   scope :active, -> { where('NOW() < expired') }
