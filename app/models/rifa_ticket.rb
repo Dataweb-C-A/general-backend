@@ -13,6 +13,8 @@ class RifaTicket < ApplicationRecord
     self.serial = SecureRandom.hex(5)
   end
 
+  def generate_tickets
+
   def self.find_by_serial!(serial)
     find_by!(serial: serial)
   end
@@ -21,9 +23,10 @@ class RifaTicket < ApplicationRecord
     sold.where(rifa_id: rifa_id).count == rifa.tickets_count
   end
 
-  def sell!
-    self.is_sold = true
-    self.sold_at = Time.now.utc
+  def sell(tickets)
+    tickets.each do |ticket|
+      ticket.is_sold = true
+    end
     save!
   end
 

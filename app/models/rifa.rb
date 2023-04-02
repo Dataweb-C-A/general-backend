@@ -36,6 +36,7 @@ class Rifa < ApplicationRecord
         status_code: 400
       }
     end
+    
     if (taquillas_ids.empty?)
       return {
         error: 'Not taquillas found',
