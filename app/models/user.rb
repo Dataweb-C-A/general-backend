@@ -1,12 +1,22 @@
 class User < ApplicationRecord
+  acts_as_paranoid
+
   has_secure_password
   has_one_attached :avatar
   has_many :owned_taquillas, class_name: 'Taquilla', foreign_key: 'owner_id'
   has_and_belongs_to_many :users, class_name: 'Taquilla', foreign_key: 'riferos_ids'
   has_one :taquilla
 
+  enum role: {
+    ADMIN: 'Admin',
+    TAQUILLA: 'Taquilla',
+    AUTO: 'Auto',
+    RIFERO: 'Rifero'
+  }
+
   default_scope { where(deleted_at: nil) }
-  acts_as_paranoid
+  scope :active, -> { where(deleted_at: nil) }        
+  scope :created_within, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   validates :email, presence: true, uniqueness: true
   validates :cedula, presence: true, uniqueness: true
@@ -14,9 +24,6 @@ class User < ApplicationRecord
   validates :password,
             length: { minimum: 8 },
             if: -> { new_record? || !password.nil? }
-
-  scope :active, -> { where(deleted_at: nil) }        
-  scope :created_within, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   before_validation :generate_username, on: :create
   before_validation :generate_slug, on: :create

@@ -6,7 +6,6 @@ class CreateRifas < ActiveRecord::Migration[7.0]
       t.boolean :is_send
       t.date :rifDate
       t.date :expired
-      t.string :loteria
       t.string :money
       t.float :price
       t.string :pin

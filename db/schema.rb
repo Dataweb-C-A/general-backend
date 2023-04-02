@@ -48,8 +48,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
     t.integer "ticket_nro"
     t.string "serial"
     t.boolean "is_sold"
+    t.string "type"
+    t.bigint "rifa_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["rifa_id"], name: "index_rifa_tickets_on_rifa_id"
   end
 
   create_table "rifas", force: :cascade do |t|
@@ -58,7 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
     t.boolean "is_send"
     t.date "rifDate"
     t.date "expired"
-    t.string "loteria"
     t.string "money"
     t.float "price"
     t.string "pin"
@@ -107,7 +109,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
     t.string "cedula"
     t.string "email"
     t.string "phone"
-    t.string "role", null: false
     t.string "password_digest"
     t.datetime "deleted_at"
     t.string "slug"
@@ -122,5 +123,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "rifa_tickets", "rifas"
   add_foreign_key "rifas", "users"
 end

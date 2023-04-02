@@ -7,6 +7,7 @@ class CreateRifaTickets < ActiveRecord::Migration[7.0]
       t.string :serial
       t.boolean :is_sold
       t.string :type
+      t.references :rifa, null: false, foreign_key: true
 
       t.timestamps
     end

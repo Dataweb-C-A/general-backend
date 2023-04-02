@@ -7,7 +7,6 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :cedula
       t.string :email
       t.string :phone
-      t.string :role, null: false
       t.string :password_digest
       t.datetime :deleted_at # Add a column to store whether the record is deleted or not
       t.string :slug # Add a column to store the slug
