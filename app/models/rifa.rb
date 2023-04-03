@@ -6,18 +6,22 @@ class Rifa < ApplicationRecord
   scope :expired, -> { where('NOW() >= expired') }
   scope :active, -> { where('NOW() < expired') }
 
-  validates :rifDate, presence: true
+  validates :rifDate, presence: true, comparison: { greater_than_or_equal_to: Date.today }
   validates :awardSign, presence: true
   validates :money, presence: true
   validates :price, presence: true
   validates :numbers, presence: true
-  validates :expired, comparison: { greater_than: :rifDate }
 
   before_save :generate_serial
   before_save :add_expired
+  after_create :generate_tickets
 
   def as_json(options={})
     RifaSerializer.new(self).as_json
+  end
+
+  def generate_tickets
+    GenerateRifaTicketsJob.new.generate(self.id)
   end
 
   def self.find_by_user(user)
@@ -41,7 +45,7 @@ class Rifa < ApplicationRecord
       return {
         error: 'Not taquillas found',
         status_code: 404,
-        redirect: 'https://admin.rifa-max.com/login'
+        redirect: 'https://admin.rifa-max.com/'
       }
     end
 

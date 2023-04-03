@@ -6,4 +6,4 @@ User.create(name: 'Bob', username: 'BotBob', role: 'Taquilla', cedula: 'AUTO', e
 
 Taquilla.create(name: 'La Maxima', owner_id: 1, users_ids: [1, 2])
 
-Rifa.create(awardSign: 'Una moto', awardNoSign: '1000$', is_send: false, rifDate: Date.today, expired: Date.today + 3, loteria: 'ZULIA 7A', money: '$', price: 1.0, pin: nil, serial: SecureRandom.hex(6), verify: false, plate: 'AA2OD08', numbers: 203, year: 2020, taquillas_ids: [1], user_id: 1)
+# Rifa.create(awardSign: 'Una moto', awardNoSign: '1000$', is_send: false, rifDate: Date.today, loteria: 'ZULIA 7A', money: '$', price: 1.0, pin: nil, serial: SecureRandom.hex(6), verify: false, plate: 'AA2OD08', numbers: 203, year: 2020, taquillas_ids: [1], user_id: 1)

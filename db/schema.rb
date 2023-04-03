@@ -49,7 +49,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
     t.string "serial"
     t.boolean "is_sold"
     t.string "sold_at"
-    t.string "type"
     t.bigint "rifa_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -63,12 +62,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
     t.date "rifDate"
     t.date "expired"
     t.string "money"
+    t.string "loteria", null: false
     t.float "price"
     t.string "pin"
     t.string "serial"
     t.boolean "verify"
     t.string "plate"
     t.integer "numbers"
+    t.string "tickets_type"
     t.integer "year"
     t.integer "taquillas_ids", default: [], array: true
     t.bigint "user_id", null: false
