@@ -3,9 +3,11 @@ class User < ApplicationRecord
 
   has_secure_password
   has_one_attached :avatar
+  has_one :wallet
+  has_one :taquilla
+
   has_many :owned_taquillas, class_name: 'Taquilla', foreign_key: 'owner_id'
   has_and_belongs_to_many :users, class_name: 'Taquilla', foreign_key: 'riferos_ids'
-  has_one :taquilla
 
   enum role: {
     ADMIN: 'Admin',
@@ -30,7 +32,7 @@ class User < ApplicationRecord
   before_save :process_avatar
 
   def generate_slug
-    self.slug ||= "#{self.name.parameterize}-#{self.id}"
+    self.slug ||= "#{self.name.parameterize}-#{SecureRandom.hex(4)}"
   end
 
   def generate_username
