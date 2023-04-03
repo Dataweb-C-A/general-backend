@@ -1,3 +1,6 @@
+# == Route Map
+#
+
 # config/routes.rb
 Rails.application.routes.draw do
   require 'sidekiq/web'

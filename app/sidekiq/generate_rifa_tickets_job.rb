@@ -11,17 +11,19 @@ class GenerateRifaTicketsJob < ApplicationJob
         return
       end
 
-      if rifa.loteria === 'Zulia 7A'
-        GenerateZulia7ATicketsService.new(rifa).call
-        logger.info 'Zulia 7A tickets seeded!'
-      elsif rifa.loteria === 'Triple Pelotica'
-        GenerateTriplePeloticaTicketsService.new(rifa).call
-        logger.info 'Triple Pelotica tickets seeded!'
-      else
-        logger.info "Unsupported loteria: #{rifa.loteria}"
-        Rifa.destroy(rifa.id)
-        return ActiveRecord::Rollback
-      end
+
+      case(rifa.loteria)
+        when 'Zulia 7A'
+          GenerateZulia7ATicketsService.new(rifa).call
+          logger.info 'Zulia 7A tickets seeded!'
+        when 'Triple Pelotica'
+          GenerateTriplePeloticaTicketsService.new(rifa).call
+          logger.info 'Triple Pelotica tickets seeded!'
+        else
+          logger.info "Unsupported loteria: #{rifa.loteria}"
+          Rifa.destroy(rifa.id)
+          return ActiveRecord::Rollback
+        end
     end
   end
 end

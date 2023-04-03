@@ -79,6 +79,9 @@ GEM
     acts_as_paranoid (0.8.1)
       activerecord (>= 5.2, < 7.1)
       activesupport (>= 5.2, < 7.1)
+    annotate (3.2.0)
+      activerecord (>= 3.2, < 8.0)
+      rake (>= 10.4, < 14.0)
     ast (2.4.2)
     bcrypt (3.1.18)
     bootsnap (1.16.0)
@@ -299,6 +302,7 @@ DEPENDENCIES
   actioncable
   active_model_serializers
   acts_as_paranoid (~> 0.8.1)
+  annotate
   bcrypt (~> 3.1.7)
   bootsnap
   bullet
