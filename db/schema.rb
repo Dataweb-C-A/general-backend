@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_03_071825) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -104,6 +104,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
     t.index ["user_id"], name: "index_taquillas_users_on_user_id"
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.string "reason"
+    t.string "transaction_type"
+    t.string "reference"
+    t.float "amount"
+    t.integer "sender_wallet_id", null: false
+    t.integer "receiver_wallet_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "avatar"
     t.string "name"
@@ -123,8 +134,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  create_table "wallets", force: :cascade do |t|
+    t.float "balance", default: 0.0
+    t.float "debt", default: 0.0
+    t.float "debt_limit", default: 0.0
+    t.float "balance_limit", default: 10000.0
+    t.string "api_key"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_wallets_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "rifa_tickets", "rifas"
   add_foreign_key "rifas", "users"
+  add_foreign_key "wallets", "users"
 end
