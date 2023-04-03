@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_184802) do
     t.integer "ticket_nro"
     t.string "serial"
     t.boolean "is_sold"
+    t.string "sold_at"
     t.string "type"
     t.bigint "rifa_id", null: false
     t.datetime "created_at", null: false

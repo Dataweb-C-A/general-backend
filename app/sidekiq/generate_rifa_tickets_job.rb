@@ -52,7 +52,6 @@ class GenerateRifaTicketsJob
                             type: 'sign')
         end
         Rails.logger.info 'Zulia 7A tickets seeded!'
-
       when 'Triple Pelotica'
         SPORTS_WILDCARDS.each_with_index do |sport, index|
           RifaTicket.create(rifa_id: rifa_id,
@@ -63,7 +62,6 @@ class GenerateRifaTicketsJob
                             type: 'wildcard')
         end
         Rails.logger.info 'Triple Pelotica tickets seeded!'
- 
       else
         Rails.logger.info "Unsupported loteria: #{rifa.loteria}"
       end

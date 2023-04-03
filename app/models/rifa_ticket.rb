@@ -8,12 +8,15 @@ class RifaTicket < ApplicationRecord
   validates :is_sold, inclusion: { in: [true, false] }
 
   before_save :generate_serial
+  after_save :generate_tickets
 
   def generate_serial
     self.serial = SecureRandom.hex(5)
   end
 
   def generate_tickets
+    GenerateRifaTicketsJob.new.generate(self.id)
+  end
 
   def self.find_by_serial!(serial)
     find_by!(serial: serial)
