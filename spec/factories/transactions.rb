@@ -6,6 +6,7 @@
 #  amount             :float
 #  reason             :string
 #  reference          :string
+#  status             :string
 #  transaction_type   :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null

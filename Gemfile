@@ -85,3 +85,5 @@ gem 'friendly_id', '~> 5.4.0'
 gem 'redis-rails'
 
 gem 'sidekiq'
+
+gem 'aasm'

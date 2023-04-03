@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_071825) do
     t.string "transaction_type"
     t.string "reference"
     t.float "amount"
+    t.string "status"
     t.integer "sender_wallet_id", null: false
     t.integer "receiver_wallet_id", null: false
     t.datetime "created_at", null: false
