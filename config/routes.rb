@@ -3,6 +3,7 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  get 'wallets/index'
   require 'sidekiq/web'
 
   get 'rifas/index'
@@ -14,6 +15,7 @@ Rails.application.routes.draw do
   resources :riferos, only: [:index], path: 'riferos'
   resources :rifas, only: [:index]
   resources :stats, only: [:index]
+  resources :wallets, only: [:index]
 
   get '/my-profile', to: 'profiles#index'
   post '/auth/login', to: 'authentication#login'

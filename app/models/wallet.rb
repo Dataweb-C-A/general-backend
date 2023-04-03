@@ -25,11 +25,22 @@ class Wallet < ApplicationRecord
   has_many :sent_transactions, class_name: "Transaction", foreign_key: "sender_wallet_id"
   has_many :received_transactions, class_name: "Transaction", foreign_key: "receiver_wallet_id"
 
-  before_save :generate_api_key
+  after_create :generate_api_key
 
   def generate_api_key
-    self.api_key ||= SecureRandom.hex(32)
+    id_width = 6
+    id_format = "%0#{id_width}d"
+    self.api_key = "WALLET-#{id_format % self.id}-#{SecureRandom.hex(16)}"
   end
+  
+
+  def self.transactions
+    Transaction.where("sender_wallet_id = ? OR receiver_wallet_id = ?", self.id, self.id)
+  end
+
+  # def as_json(options = {})
+  #   WalletSerializer.new(self).as_json
+  # end
 
   def send_money(amount, receiver_wallet)
     if self.balance >= amount

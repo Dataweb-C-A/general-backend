@@ -38,6 +38,7 @@ class Rifa < ApplicationRecord
 
   scope :expired, -> { where('NOW() >= expired') }
   scope :active, -> { where('NOW() < expired') }
+  scope :created_within, -> (start_date, end_date) { where(created_at: start_date..end_date) }
 
   validates :rifDate, presence: true, comparison: { greater_than_or_equal_to: Date.today }
   validates :awardSign, presence: true
@@ -51,6 +52,22 @@ class Rifa < ApplicationRecord
 
   def as_json(options={})
     RifaSerializer.new(self).as_json
+  end
+
+  def self.sold_tickets(tickets_ids)
+    if (tickets_ids.class == Integer)
+      return RifaTicket.find(tickets_ids).update(is_sold: true, sold_at: Time.now)
+    end
+
+    if (tickets_ids.class == Array)
+      return RifaTicket
+    end
+
+    return {
+      error: 'Not an Array of numbers or Number',
+      message: 'Not an array',
+      status_code: 400
+    }
   end
 
   def generate_tickets

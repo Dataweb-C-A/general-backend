@@ -10,6 +10,7 @@
 #  name            :string
 #  password_digest :string
 #  phone           :string
+#  role            :string
 #  slug            :string
 #  username        :string
 #  created_at      :datetime         not null
@@ -54,10 +55,16 @@ class User < ApplicationRecord
 
   before_validation :generate_username, on: :create
   before_validation :generate_slug, on: :create
+  before_create :generate_wallet
+  
   before_save :process_avatar
 
   def generate_slug
     self.slug ||= "#{self.name.parameterize}-#{SecureRandom.hex(4)}"
+  end
+
+  def generate_wallet 
+    Wallet.create(balance: 0.0, debt: 0.0, debt_limit: 0.0, balance_limit: 10000.0, user_id: self.id)
   end
 
   def generate_username

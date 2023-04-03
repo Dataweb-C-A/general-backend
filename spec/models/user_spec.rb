@@ -10,6 +10,7 @@
 #  name            :string
 #  password_digest :string
 #  phone           :string
+#  role            :string
 #  slug            :string
 #  username        :string
 #  created_at      :datetime         not null

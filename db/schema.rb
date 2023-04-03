@@ -120,6 +120,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_071825) do
     t.string "avatar"
     t.string "name"
     t.string "username"
+    t.string "role"
     t.string "cedula"
     t.string "email"
     t.string "phone"

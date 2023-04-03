@@ -17,6 +17,17 @@ class Transaction < ApplicationRecord
   belongs_to :sender_wallet, class_name: "Wallet"
   belongs_to :receiver_wallet, class_name: "Wallet"
 
+  scope :pending, -> { where(status: "pending") }
+  scope :completed, -> { where(status: "completed") }
+  scope :denied, -> { where(status: "denied") }
+  scope :cancelled, -> { where(status: "cancelled") }
+
+  scope :deposit, -> { where(transaction_type: "deposit") }
+  scope :withdraw, -> { where(transaction_type: "withdraw") }
+  scope :transfer, -> { where(transaction_type: "transfer") }
+
+  scope :created_within, ->(start_date, end_date) { where(created_at: start_date..end_date) }
+
   include AASM
 
   validates :amount, presence: true
@@ -46,15 +57,13 @@ class Transaction < ApplicationRecord
   end
 
   def generate_reference
-    self.reference ||= "#{parse_id_from_reference()}-#{SecureRandom.hex(2)}"
+    self.reference ||= parse_id_from_reference()
   end
 
   def parse_id_from_reference
-    self.id <= 9 ? "000#{self.id}" 
-    : self.id <= 99 ? "00#{self.id}" 
-    : self.id <= 999 ? "0#{self.id}" 
-    : self.id <= 9999 ? self.id.to_s
-    : self.id.to_s
+    id_width = 4
+    id_format = "%0#{id_width}d"
+    return "#{id_format % self.id}-#{SecureRandom.hex(4)}"
   end
 
   def self.find_by_reference(reference)
