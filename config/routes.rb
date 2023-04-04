@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   get 'rifas/index'
   mount ActionCable.server => '/cable'
-  mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => '/sidekiq/token=682670148277b817c481f663e47ae770a9c1257c490c76e6692d02e8c7cc33da'
   
   resources :users, param: :_username
   resources :taquillas, path: 'taquillas', param: :_id

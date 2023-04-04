@@ -37,22 +37,24 @@ class Transaction < ApplicationRecord
 
   before_save :generate_reference
 
-  aasm do
+  aasm column: 'status', no_direct_assignment: true do
     state :pending, initial: true
-    state :cancelled
-    state :denied
-    state :completed
+    state :cancelled, :denied, :completed
 
-    event :cancel do 
-      transitions from [:pending], to: :cancelled
+    event :reopen do
+      transitions from: [:cancelled, :denied], to: :pending
     end
-
+  
+    event :cancel do
+      transitions from: [:pending], to: :cancelled
+    end
+  
     event :deny do
-      transitions from [:pending], to: :denied
+      transitions from: [:pending], to: :denied
     end
-
+  
     event :complete do
-      transitions from [:pending], to: :completed
+      transitions from: [:pending], to: :completed
     end
   end
 
@@ -63,7 +65,7 @@ class Transaction < ApplicationRecord
   def parse_id_from_reference
     id_width = 4
     id_format = "%0#{id_width}d"
-    return "#{id_format % self.id}-#{SecureRandom.hex(4)}"
+    return "#{id_format % self.id}-#{SecureRandom.hex(3)}"
   end
 
   def self.find_by_reference(reference)

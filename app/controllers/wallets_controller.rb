@@ -1,6 +1,6 @@
 class WalletsController < ApplicationController
   def index
-    @wallets = Wallet.all
+    @wallets = Wallet.includes([:user])
     render json: @wallets, status: :ok
   end
 end
