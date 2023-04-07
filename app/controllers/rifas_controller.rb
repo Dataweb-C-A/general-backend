@@ -29,6 +29,21 @@ class RifasController < ApplicationController
     }, status: :ok
   end
 
+  def expireds
+    @rifas = Rifa.includes([:user]).where(is_send: true).order(:id)
+    @pagy, @rifa = pagy(@rifas, items: params[:items] || 20, page: params[:page])
+    render json: {
+      rifas: @rifa.reverse.as_json,
+      status_code: 200,
+      metadata: {
+        page: @pagy.page,
+        count: @pagy.count,
+        items: @pagy.items,
+        pages: @pagy.pages
+      },
+    }, status: :ok
+  end
+
   def create
     @rifa = Rifa.new(rifa_params)
     if @rifa.save

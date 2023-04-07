@@ -39,7 +39,7 @@ class User < ApplicationRecord
     ADMIN: 'Admin',
     TAQUILLA: 'Taquilla',
     AUTO: 'Auto',
-    RIFERO: 'Rifero'
+    RIFERO: 'Rifero',
     CLIENTE: 'Cliente'
   }
 
@@ -61,6 +61,10 @@ class User < ApplicationRecord
 
   def generate_slug
     self.slug ||= "#{self.name.parameterize}-#{SecureRandom.hex(4)}"
+  end
+
+  def self.find_role(role)
+    User.roles[role]
   end
 
   def generate_wallet 

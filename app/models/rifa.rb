@@ -74,8 +74,15 @@ class Rifa < ApplicationRecord
     GenerateRifaTicketsJob.new.generate(self.id)
   end
 
-  def self.find_by_user(user)
-    Rifa.where(user_id: user)
+  def self.filter_actives(user_id, type = 'All')
+    case type
+    when 'Signs'
+      return Rifa.where(user_id: user_id, expired: Date.today..Date.today + 5.days, tickets_type: 'Signs')
+    when 'Wildcards'
+      return Rifa.where(user_id: user_id, expired: Date.today..Date.today + 5.days, tickets_type: 'Wildcards')
+    else
+      return Rifa.where(user_id: user_id, expired: Date.today..Date.today + 5.days)
+    end
   end
 
   def self.find_by_taquillas(taquillas_ids)
