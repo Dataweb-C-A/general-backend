@@ -11,7 +11,7 @@ class GenerateRifaTicketsJob < ApplicationJob
         ActiveRecord::Rollback
         return
       end
-
+      
       case(rifa.loteria)
         when 'Zulia 7A'
           GenerateZulia7ATicketsService.new(rifa).call

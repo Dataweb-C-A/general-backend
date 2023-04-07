@@ -73,7 +73,7 @@ class RifasController < ApplicationController
       :numbers,
       :year,
       :user_id,
-      taquillas_ids: [],
+      :taquillas_ids,
     )
   end
 end

@@ -40,11 +40,11 @@ class User < ApplicationRecord
     TAQUILLA: 'Taquilla',
     AUTO: 'Auto',
     RIFERO: 'Rifero'
+    CLIENTE: 'Cliente'
   }
 
   default_scope { where(deleted_at: nil) }
   scope :active, -> { where(deleted_at: nil) }        
-  scope :created_within, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   validates :email, presence: true, uniqueness: true
   validates :cedula, presence: true, uniqueness: true

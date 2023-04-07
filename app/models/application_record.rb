@@ -1,7 +1,9 @@
 class ApplicationRecord < ActiveRecord::Base
   primary_abstract_class
 
-  def allow_sell_tickets?(user_id, rifa_id)
-    User.find(user_id) === Rifa.find(rifa_id).taquilla
+  scope :created_within, ->(start_date, end_date) { where(created_at: start_date..end_date) }
+
+  def self.api_key_generator
+    return "API-RM#{SecureRandom.hex(32)}"
   end
 end

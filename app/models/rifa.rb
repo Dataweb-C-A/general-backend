@@ -38,13 +38,13 @@ class Rifa < ApplicationRecord
 
   scope :expired, -> { where('NOW() >= expired') }
   scope :active, -> { where('NOW() < expired') }
-  scope :created_within, -> (start_date, end_date) { where(created_at: start_date..end_date) }
 
   validates :rifDate, presence: true, comparison: { greater_than_or_equal_to: Date.today }
   validates :awardSign, presence: true
   validates :money, presence: true
   validates :price, presence: true
   validates :numbers, presence: true
+  # validates :taquillas_ids, presence: true, array: true, length: { minimum: 1 }
 
   before_save :generate_serial
   before_save :add_expired
