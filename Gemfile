@@ -87,3 +87,4 @@ gem 'redis-rails'
 gem 'sidekiq'
 
 gem 'aasm'
+gem "pundit", "~> 2.3"

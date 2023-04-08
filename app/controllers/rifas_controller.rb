@@ -1,5 +1,9 @@
 class RifasController < ApplicationController
+  before_action :authorize_request
+  before_action :find_rifa, only: [:show, :update, :destroy]
+  
   def index
+    permit_access_by_role('Admin', 'Taquilla', 'Riferos') do
     @rifas = Rifa.includes([:user]).order(:id)
     @pagy, @rifa = pagy(@rifas, items: params[:items] || 20, page: params[:page])
     render json: {
@@ -12,10 +16,11 @@ class RifasController < ApplicationController
         pages: @pagy.pages
       },
     }, status: :ok
+    end
   end
 
   def actives
-    @rifas = Rifa.includes([:user]).where(is_send: false).order(:id)
+    @rifas = Rifa.active.includes([:user]).order(:id)
     @pagy, @rifa = pagy(@rifas, items: params[:items] || 20, page: params[:page])
     render json: {
       rifas: @rifa.reverse.as_json,
@@ -30,7 +35,7 @@ class RifasController < ApplicationController
   end
 
   def expireds
-    @rifas = Rifa.includes([:user]).where(is_send: true).order(:id)
+    @rifas = Rifa.expired.includes([:user]).order(:id)
     @pagy, @rifa = pagy(@rifas, items: params[:items] || 20, page: params[:page])
     render json: {
       rifas: @rifa.reverse.as_json,

@@ -35,20 +35,13 @@ class User < ApplicationRecord
   has_many :owned_taquillas, class_name: 'Taquilla', foreign_key: 'owner_id'
   has_and_belongs_to_many :users, class_name: 'Taquilla', foreign_key: 'riferos_ids'
 
-  enum role: {
-    ADMIN: 'Admin',
-    TAQUILLA: 'Taquilla',
-    AUTO: 'Auto',
-    RIFERO: 'Rifero',
-    CLIENTE: 'Cliente'
-  }
-
   default_scope { where(deleted_at: nil) }
   scope :active, -> { where(deleted_at: nil) }        
 
   validates :email, presence: true, uniqueness: true
   validates :cedula, presence: true, uniqueness: true
   validates :username, presence: true, uniqueness: true
+  validates :role, presence: true, inclusion: { in: %w(Admin Taquilla Rifero Auto) }
   validates :password,
             length: { minimum: 8 },
             if: -> { new_record? || !password.nil? }

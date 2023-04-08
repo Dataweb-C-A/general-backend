@@ -13,10 +13,13 @@ Rails.application.routes.draw do
   resources :users, param: :_username
   resources :taquillas, path: 'taquillas', param: :_id
   resources :riferos, only: [:index], path: 'riferos'
-  resources :rifas, only: [:index]
+  resources :rifas, only: [:index, :create, :update]
   resources :stats, only: [:index]
   resources :wallets, only: [:index]
 
+
+  get '/rifas/expired', to: 'rifas#expireds'
+  get '/rifas/active', to: 'rifas#actives'
   get '/my-profile', to: 'profiles#index'
   post '/auth/login', to: 'authentication#login'
 end
