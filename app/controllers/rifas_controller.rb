@@ -3,7 +3,7 @@ class RifasController < ApplicationController
   before_action :find_rifa, only: [:show, :update, :destroy]
   
   def index
-    permit_access_by_role('Admin', 'Taquilla', 'Riferos') do
+    permit_access_to_riferos!
     @rifas = Rifa.includes([:user]).order(:id)
     @pagy, @rifa = pagy(@rifas, items: params[:items] || 20, page: params[:page])
     render json: {
@@ -16,7 +16,6 @@ class RifasController < ApplicationController
         pages: @pagy.pages
       },
     }, status: :ok
-    end
   end
 
   def actives

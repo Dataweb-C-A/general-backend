@@ -1,4 +1,4 @@
-class RifaDecorator < ApplicationDecorator
+class RifaDecorator < Draper::Decorator
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through
