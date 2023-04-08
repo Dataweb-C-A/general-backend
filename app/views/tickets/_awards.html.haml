@@ -1,0 +1,15 @@
+%hr{:class => "mt-2"}
+.col-4
+  %p{:class => "card-text"} 
+    %strong PREMIO: 
+.col-8
+  %p{:class => "card-text text-end"} 
+    %strong= @rifa.awardSign
+- if @rifa.awardNoSign != nil
+  .col-7
+    %p{:class => "card-text"} 
+      %strong PREMIO SIN SIGNO: 
+  .col-5
+    %p{:class => "card-text text-end"} 
+      %strong= @rifa.awardNoSign
+%hr{:class => "mt-3"}

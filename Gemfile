@@ -88,3 +88,5 @@ gem 'sidekiq'
 
 gem 'aasm'
 gem "pundit", "~> 2.3"
+
+gem "haml", "~> 6.1"

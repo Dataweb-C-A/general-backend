@@ -37,7 +37,7 @@ end
 class GenerateZulia7ATicketsService
   def initialize(rifa)
     @rifa = rifa
-    @signs = [
+    @zodiac_signs = [
       'Aries',
       'Tauro',
       'Geminis',
@@ -57,7 +57,7 @@ class GenerateZulia7ATicketsService
     @rifa.update(serial: SecureRandom.hex(5),
                  expired: @rifa.rifDate + 5.days,
                  tickets_type: 'Signs')
-    @signs.each_with_index do |sign, index|
+    @zodiac_signs.each_with_index do |sign, index|
       RifaTicket.create(rifa_id: @rifa.id,
                         serial: SecureRandom.hex(5),
                         sign: sign,

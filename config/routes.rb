@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :rifas, only: [:index, :create, :update]
   resources :stats, only: [:index]
   resources :wallets, only: [:index]
+  resources :tickets, only: [:index]
 
 
   get '/rifas/expired', to: 'rifas#expireds'

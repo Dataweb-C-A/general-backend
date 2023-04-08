@@ -17,16 +17,9 @@ module Authenticate
     permit_access_by_role("Riferos")
   end
 
-  private
-
   def permit_access_by_role(*roles)
-    if roles.include?(@current_user.role)
-      yield
-    else
-      raise InsufficientPermissionsError unless roles.include?(@current_user.role)
-    end
+    raise InsufficientPermissionsError unless roles.include?(@current_user.role)
   end
-
 end
 
 class InsufficientPermissionsError < StandardError
