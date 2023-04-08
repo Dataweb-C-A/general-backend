@@ -5,11 +5,25 @@
 .col-8
   %p{:class => "card-text text-end"} 
     %strong= @rifa.awardSign
-- if @rifa.awardNoSign != nil
-  .col-7
+- if @rifa.plate != nil
+  .col-4
     %p{:class => "card-text"} 
-      %strong PREMIO SIN SIGNO: 
+      %strong PLACA: 
+  .col-8
+    %p{:class => "card-text text-end"} 
+      %strong= @rifa.plate
+- if @rifa.year != nil
+  .col-4
+    %p{:class => "card-text"} 
+      %strong MODELO: 
+  .col-8
+    %p{:class => "card-text text-end"} 
+      %strong= @rifa.year
+- if @rifa.awardNoSign != nil
   .col-5
+    %p{:class => "card-text"} 
+      %strong SIN SIGNO: 
+  .col-7
     %p{:class => "card-text text-end"} 
       %strong= @rifa.awardNoSign
 %hr{:class => "mt-3"}
