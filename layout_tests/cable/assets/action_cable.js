@@ -1,4 +1,4 @@
-let scoket = new WebSocket("ws://localhost:3000/cable");
+let socket = new WebSocket("ws://localhost:3000/cable");
 
 socket.onopen = function(e) {
   console.log("Connection established!");
