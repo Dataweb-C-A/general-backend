@@ -1,5 +1,4 @@
-class TicketsController < ActionController::Base
-  include ApplicationController
+class TicketsController <  ApplicationController
   
   def index
     @rifa = Rifa.last

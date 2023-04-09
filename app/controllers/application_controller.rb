@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::API
   include Pagy::Backend
-  include Authenticate
 
   rescue_from InsufficientPermissionsError do |e|
     render json: { error: e.message, redirect: "https://admin.rifa-max.com/", status_code: 403 }, status: :forbidden
