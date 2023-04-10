@@ -65,6 +65,8 @@ group :development do
   gem 'rubocop', require: false
 
   gem 'annotate'
+
+  gem 'rails-erd'
 end
 
 
@@ -90,3 +92,5 @@ gem 'aasm'
 gem "pundit", "~> 2.3"
 
 gem "haml", "~> 6.1"
+
+gem "railroady", "~> 1.6"

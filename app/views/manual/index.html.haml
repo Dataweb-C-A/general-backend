@@ -1,0 +1,41 @@
+%html
+  %head
+    %meta{:charset => "utf-8"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}
+    %link{:rel => "shortcut icon", :type => "image/png", :href => "/meta/favicon.ico"}
+    %link{:rel => "stylesheet", :href => "/css/user-manual.css"}
+  %body
+    #wrapper
+      #container
+        %section.open-book
+          %header
+            %h1 Manual de usuario
+            %h6 Javier A. Diaz
+          %article
+            %h2.chapter-title Manual de usuario
+            %p
+              Rifamax es un sistema de gestión de sorteos que permite la creación, venta y gestión de sorteos durante los últimos 5 días. Este sistema dispone de un módulo de rifas que consta de 3 fases: Creación de la rifa, Envío a la APP y Venta de boletos. Además, cuenta con módulos administrativos como gestión de usuarios, gestión de sorteos, gestión de agencias y gestión de monederos.
+            %p
+              El sistema utiliza lenguaje TypeScript y la librería principal utilizada es React con Vite. Rifamax utiliza JSON Web Token (JWT) para la autenticación y Role-Based Authentication para gestionar los permisos. Todo el sistema es gestionado por un usuario administrador que tiene acceso a todas las características del sistema.
+            %p
+              %img(src="https://i.imgur.com/Q5jcPak.png" style="margin-left: -50px")/
+            %p
+              Diagrama Entidad-Relacion:
+              Un diagrama entidad-relación, también conocido como modelo entidad relación o ERD, es un tipo de diagrama de flujo que ilustra cómo las "entidades", como personas, objetos o conceptos, se relacionan entre sí dentro de un sistema. Los diagramas ER se usan a menudo para diseñar o depurar bases de datos relacionales en los campos de ingeniería de software, sistemas de información empresarial, educación e investigación. También conocidos como los ERD o modelos ER, emplean un conjunto definido de símbolos, tales como rectángulos, diamantes, óvalos y líneas de conexión para representar la interconexión de entidades, relaciones y sus atributos. Son un reflejo de la estructura gramatical y emplean entidades como sustantivos y relaciones como verbos.
+            %p
+              %img(src="https://i.imgur.com/HSxGMaf.png" style="margin-left: -50px")/
+            %p
+              El Lenguaje Unificado de Modelado (UML) fue creado para forjar un lenguaje de modelado visual común y semántica y sintácticamente rico para la arquitectura, el diseño y la implementación de sistemas de software complejos, tanto en estructura como en comportamiento. UML tiene aplicaciones más allá del desarrollo de software, p. ej., en el flujo de procesos en la fabricación.
+            %p
+              %br/
+              Imagenes del sistema de RifaMax:
+              %img(src="https://i.imgur.com/a0L0Ezt.png" style="margin-left: 0px")/
+              %img(src="https://i.imgur.com/doPooFW.png")/
+              %img(src="https://i.imgur.com/Ovuo1oH.png")/
+            %br/
+            Logo Rifamax
+            %img(src="https://admin.rifa-max.com/assets/rifamax-logo-15095f58.png")/
+          %footer
+            %ol#page-numbers
+              %li 1
+              %li 2
