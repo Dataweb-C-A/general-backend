@@ -3,8 +3,8 @@ class TicketsController <  ApplicationController
 
   before_action :check_hibernation_time
 
-  HIBERNATION_START_TIME = Time.new(Time.now.year, Time.now.month, Time.now.day, 4, 0, 0)
-  HIBERNATION_END_TIME = Time.new(Time.now.year, Time.now.month, Time.now.day, 23, 30, 0)
+  HIBERNATION_START_TIME = Time.new(Time.now.year, Time.now.month, Time.now.day, 19, 30, 0)
+  HIBERNATION_END_TIME = Time.new(Time.now.year, Time.now.month, Time.now.day + 1, 4, 0, 0)
 
   rescue_from ForbiddenException do |e|
     render json: { error: e.message, redirect: "https://admin.rifa-max.com/", status_code: 403 }, status: :forbidden
