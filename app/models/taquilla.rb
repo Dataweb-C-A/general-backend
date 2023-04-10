@@ -28,7 +28,7 @@ class Taquilla < ApplicationRecord
   validates :owner_id, presence: true
 
   def generate_api_key() 
-    self.apikey = 'API-'+'D'+SecureRandom.hex(7)+'RM'+SecureRandom.hex(7)+'BG'+SecureRandom.hex(7)
+    self.apikey = Random.uuid
   end
 
   def self.show_riferos(owner)

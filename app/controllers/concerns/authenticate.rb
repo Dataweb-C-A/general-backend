@@ -18,7 +18,11 @@ module Authenticate
   end
 
   def permit_access_by_role(*roles)
-    raise InsufficientPermissionsError unless roles.include?(@current_user.role)
+    if roles.include?(@current_user.role) == true
+      yield if block_given?
+    else
+      raise InsufficientPermissionsError
+    end 
   end
 end
 

@@ -33,7 +33,7 @@
     RIFERO: 
 .col-6
   %p{:class => "card-text text-end"}
-    #{@rifa.user.name}
+    #{@rifa.user.name.to_s.split.map(&:capitalize).join(' ')}
 .col-6
   %p{:class => "card-text"} 
     TELEFONO:

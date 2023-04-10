@@ -2,7 +2,7 @@ module TimeBlock extend ActiveSupport::Concern
   def self.block(start_time, end_time)
     @start_time = start_time
     @end_time = end_time
-    @now = Time.now
+    @now = Time.find_zone('America/Caracas').now
 
     @check = @now.between?(@start_time, @end_time)
 

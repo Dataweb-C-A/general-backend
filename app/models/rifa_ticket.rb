@@ -27,8 +27,8 @@ class RifaTicket < ApplicationRecord
   scope :sold, -> { where(is_sold: true) }
   scope :available, -> { where(is_sold: false) }
 
-  # validates :serial, presence: true
-  # validates :is_sold, inclusion: { in: [true, false] }
+  validates :serial, presence: true
+  validates :is_sold, inclusion: { in: [true, false] }
 
   def self.find_by_serial!(serial)
     find_by!(serial: serial)
@@ -39,8 +39,18 @@ class RifaTicket < ApplicationRecord
   end
 
   def sell(tickets)
-    tickets.each do |ticket|
-      ticket.is_sold = true
+    if (tickets.classes == Array) 
+      tickets.each do |ticket|
+        if (ticket.is_sold == false)
+          RifaTicket.find_by_serial!(ticket.serial).update!(is_sold: true)
+        else
+          raise ForbiddenException.new("Ticket already sold")
+        end
+      end
+    end
+
+    if (tickets.classes == Integer)
+      RifaTicket.find_by_serial!(ticket.serial).update!(is_sold: true)
     end
     save!
   end
