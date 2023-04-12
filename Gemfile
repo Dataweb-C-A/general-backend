@@ -52,8 +52,6 @@ gem 'versionist'
 
 gem 'pagy'
 
-gem 'rails-erd'
-
 gem 'actioncable'
 
 group :development, :test do
