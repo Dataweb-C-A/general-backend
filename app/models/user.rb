@@ -37,20 +37,37 @@ class User < ApplicationRecord
 
   default_scope { where(deleted_at: nil) }
   scope :active, -> { where(deleted_at: nil) }
-  scope :inactive, -> { where.not(deleted_at: nil) }        
+  scope :inactive, -> { where.not(deleted_at: nil) }
 
-  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :cedula, presence: true, uniqueness: true
-  validates :username, presence: true, uniqueness: true
-  validates :role, presence: true, inclusion: { in: %w(Admin Taquilla Rifero Auto) }
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+
+  validates :cedula, 
+            presence: true, 
+            uniqueness: true
+  
+  validates :username, 
+            presence: true, 
+            uniqueness: true
+  
+  validates :role, 
+            presence: true, 
+            inclusion: { in: %w(Admin Taquilla Rifero Auto) }
+  
+  validates :email, 
+            presence: true, 
+            uniqueness: { case_sensitive: false }, 
+            format: { with: VALID_EMAIL_REGEX }
+
   validates :password,
             length: { minimum: 8 },
             if: -> { new_record? || !password.nil? }
 
   before_validation :generate_username, on: :create
   before_validation :generate_slug, on: :create
+
   before_create :generate_wallet
   
+  before_save { self.email = email.downcase }
   before_save :process_avatar
 
   def generate_slug
