@@ -13,7 +13,7 @@ class TicketsController <  ApplicationController
   def index
     @rifa = Rifa.last
     @tickets = RifaTicket.find(1)
-    render 'manual/index', locals: { rifa: @rifa, tickets: @tickets }
+    render 'tickets/index', locals: { rifa: @rifa, tickets: @tickets }
   end
 
   private
