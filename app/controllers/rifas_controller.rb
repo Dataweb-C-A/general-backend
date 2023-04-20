@@ -1,7 +1,7 @@
 class RifasController < ApplicationController
   include Authenticate
 
-  before_action :authorize_request
+  before_action :authorize_request, except: [:create, :index]
   before_action :find_rifa, only: [:show, :update, :destroy]
   
   def index

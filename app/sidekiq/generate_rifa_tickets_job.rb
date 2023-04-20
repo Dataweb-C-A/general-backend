@@ -58,12 +58,11 @@ class GenerateZulia7ATicketsService
                  expired: @rifa.rifDate + 5.days,
                  tickets_type: 'Signs')
     @zodiac_signs.each_with_index do |sign, index|
-      RifaTicket.create(rifa_id: @rifa.id,
-                        serial: SecureRandom.hex(5),
-                        sign: sign,
-                        ticket_nro: index + 1,
-                        number: @rifa.numbers)
-    end
+      Ticket.create(rifa_id: @rifa.id,
+                    serial: SecureRandom.hex(5),
+                    play: sign,
+                    ticket_nro: index + 1,
+                    number: @rifa.numbers)
   end
 end
 
@@ -91,11 +90,11 @@ class GenerateTriplePeloticaTicketsService
                  expired: @rifa.rifDate + 5.days,
                  tickets_type: 'Wildcards')
     @sports_wildcards.each_with_index do |sport, index|
-      RifaTicket.create(rifa_id: @rifa.id,
-                        serial: SecureRandom.hex(5),
-                        sign: sport,
-                        ticket_nro: index + 1,
-                        number: @rifa.numbers)
+      Ticket.create(rifa_id: @rifa.id,
+                    serial: SecureRandom.hex(5),
+                    play: sport,
+                    ticket_nro: index + 1,
+                    number: @rifa.numbers)
     end
   end
 end

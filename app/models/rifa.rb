@@ -56,11 +56,11 @@ class Rifa < ApplicationRecord
 
   def self.sold_tickets(tickets_ids)
     if (tickets_ids.class == Integer)
-      return RifaTicket.find(tickets_ids).update(is_sold: true, sold_at: Time.now)
+      return Ticket.find(tickets_ids).update(is_sold: true, sold_at: Time.now)
     end
 
     if (tickets_ids.class == Array)
-      return RifaTicket
+      return Ticket
     end
 
     return {

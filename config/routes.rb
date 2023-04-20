@@ -3,6 +3,7 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  get 'rifa_tickets/index'
   get 'wallets/index'
   require 'sidekiq/web'
 
@@ -17,6 +18,8 @@ Rails.application.routes.draw do
   resources :stats, only: [:index]
   resources :wallets, only: [:index]
   resources :tickets, only: [:index]
+
+  get '/rifas/tickets', to: 'rifa_tickets#index', param: :rifa_id
 
 
   get '/rifas/expired', to: 'rifas#expireds'
