@@ -20,7 +20,7 @@ class GenerateDrawPlacesJob < ApplicationJob
         }
       end
       redis = Redis.new
-      redis.set("places-#{draw.id}", places.to_json)
+      redis.set("places:#{draw.id}", places.to_json)
     end
   end
 end

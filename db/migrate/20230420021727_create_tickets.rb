@@ -5,7 +5,7 @@ class CreateTickets < ActiveRecord::Migration[7.0]
       t.integer :number
       t.integer :ticket_nro
       t.string :serial
-      t.boolean :is_sold
+      t.boolean :is_sold, default: false
       t.date :sold_at
       t.references :rifa, null: false, foreign_key: true
 

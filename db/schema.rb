@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_03_071825) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_20_080553) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,17 +42,49 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_071825) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "rifa_tickets", force: :cascade do |t|
-    t.string "sign"
-    t.integer "number"
-    t.integer "ticket_nro"
-    t.string "serial"
-    t.boolean "is_sold"
-    t.string "sold_at"
-    t.bigint "rifa_id", null: false
+  create_table "draws", force: :cascade do |t|
+    t.string "title"
+    t.string "first_prize"
+    t.string "second_prize"
+    t.string "uniq"
+    t.date "init_date"
+    t.date "expired_date"
+    t.integer "numbers"
+    t.integer "tickets_count"
+    t.string "loteria"
+    t.boolean "has_winners", default: false
+    t.boolean "is_active", default: true
+    t.integer "first_winner"
+    t.integer "second_winner"
+    t.string "draw_type"
+    t.integer "limit", default: 100
+    t.float "price_unit"
+    t.string "money"
+    t.integer "visible_taquillas_ids", default: [], array: true
+    t.integer "automatic_taquillas_ids", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["rifa_id"], name: "index_rifa_tickets_on_rifa_id"
+  end
+
+  create_table "draws_taquillas", id: false, force: :cascade do |t|
+    t.bigint "draw_id", null: false
+    t.bigint "taquilla_id", null: false
+    t.index ["draw_id"], name: "index_draws_taquillas_on_draw_id"
+    t.index ["taquilla_id"], name: "index_draws_taquillas_on_taquilla_id"
+  end
+
+  create_table "places", force: :cascade do |t|
+    t.string "sold_client_name"
+    t.string "sold_client_phone"
+    t.string "sold_client_email"
+    t.string "sold_client_dni"
+    t.integer "number"
+    t.integer "place_nro"
+    t.date "sold_at"
+    t.bigint "draw_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["draw_id"], name: "index_places_on_draw_id"
   end
 
   create_table "rifas", force: :cascade do |t|
@@ -104,6 +136,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_071825) do
     t.index ["user_id"], name: "index_taquillas_users_on_user_id"
   end
 
+  create_table "tickets", force: :cascade do |t|
+    t.string "play"
+    t.integer "number"
+    t.integer "ticket_nro"
+    t.string "serial"
+    t.boolean "is_sold", default: false
+    t.date "sold_at"
+    t.bigint "rifa_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rifa_id"], name: "index_tickets_on_rifa_id"
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.string "reason"
     t.string "transaction_type"
@@ -150,7 +195,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_071825) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "rifa_tickets", "rifas"
+  add_foreign_key "places", "draws"
   add_foreign_key "rifas", "users"
+  add_foreign_key "tickets", "rifas"
   add_foreign_key "wallets", "users"
 end

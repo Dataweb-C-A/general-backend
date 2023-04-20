@@ -6,7 +6,7 @@ class GenerateRifaTicketsJob < ApplicationJob
     return unless rifa
 
     ActiveRecord::Base.transaction do
-      if rifa.rifa_tickets.count >= 12
+      if rifa.tickets.count >= 12
         logger.info 'Cannot generate tickets for this rifa, tickets already generated!'
         ActiveRecord::Rollback
         return
@@ -63,6 +63,7 @@ class GenerateZulia7ATicketsService
                     play: sign,
                     ticket_nro: index + 1,
                     number: @rifa.numbers)
+    end
   end
 end
 

@@ -25,7 +25,7 @@ class Taquilla < ApplicationRecord
   before_validation :generate_api_key, on: :create
 
   validates :name, presence: true
-  validates :system, default: 'Rifamax'
+  # validates :system, default: 'Rifamax'
   validates :owner_id, presence: true
 
   def generate_api_key() 
