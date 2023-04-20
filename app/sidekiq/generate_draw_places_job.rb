@@ -10,18 +10,8 @@ class GenerateDrawPlacesJob < ApplicationJob
         ActiveRecord::Rollback
         return
       end
-
-      places = []
-      draw.nro_tickets.times do |index|
-        places << {
-          draw_id: draw.id,
-          number: draw.number,
-          place_nro: index + 1,
-        }
-      end
-      redis = Redis.new
-      redis.set("places:#{draw.id}", places.to_json)
     end
+    GenerateDrawPlacesService.new(draw).call
   end
 end
 
@@ -31,7 +21,25 @@ end
 # |------------------------------------------------    ▼         WARNINIG!!!        ▼     ------------------------------------------------------------------------|
 # +---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
+class GenerateDrawPlacesService
+  def initialize(draw)
+    @draw = draw
+  end
 
+  def call
+    places = []
+
+    @draw.tickets_count.times do |index|
+      places << {
+        draw_id: @draw.id,
+        numbers: @draw.numbers,
+        place_number: index + 1,
+      }
+    end
+    redis = Redis.new
+    redis.set("places:#{@draw.id}", places.to_json)
+  end
+end
 
 # +---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 # |------------------------------------------------    ▲         WARNINIG!!!        ▲     ------------------------------------------------------------------------|

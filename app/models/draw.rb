@@ -28,4 +28,10 @@
 class Draw < ApplicationRecord
   has_and_belongs_to_many :taquillas, class_name: 'Taquilla'
   has_many :places, dependent: :destroy
+
+  after_create :generate_places
+
+  def generate_places
+    GenerateDrawPlacesJob.new.generate(self.id)
+  end
 end

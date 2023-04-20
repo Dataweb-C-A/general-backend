@@ -67,6 +67,8 @@ class GenerateZulia7ATicketsService
   end
 end
 
+# +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
 class GenerateTriplePeloticaTicketsService
   def initialize(rifa)
     @rifa = rifa
