@@ -1,15 +1,12 @@
 class TransactionServices < ApplicationJob
-  include Sidekiq::Worker
-  sidekiq_options retry: false
+  # def perform_async(wallet_id, transaction_id)
+  #   wallet = Wallet.find(wallet_id)
+  #   transaction = Transaction.find(transaction_id)
 
-  def perform_async(wallet_id, transaction_id)
-    wallet = Wallet.find(wallet_id)
-    transaction = Transaction.find(transaction_id)
-
-    ActiveRecord::Base.transaction do
-      TransactionOptions.new(wallet, transaction).transaction
-    end
-  end
+  #   ActiveRecord::Base.transaction do
+  #     TransactionOptions.new(wallet, transaction).transaction
+  #   end
+  # end
 end
 
 # +---------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -19,9 +16,6 @@ end
 # +---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 class TransactionOptions
-  include Sidekiq::Worker
-  sidekiq_options retry: false
-
   def initialize(wallet, transaction)
     @wallet = wallet
     @transaction = transaction
@@ -29,18 +23,18 @@ class TransactionOptions
     @receiver_wallet = Wallet.find(@transaction.receiver_wallet_id)
   end
 
-  def transaction
-    case @transaction.transaction_type
-    when "DEPOSIT"
+  # def transaction
+  #   case @transaction.transaction_type
+  #   when "DEPOSIT"
     
-    when "WITHDRAW"
+  #   when "WITHDRAW"
     
-    when "TRANSFER"
+  #   when "TRANSFER"
     
-    else
-      raise "Invalid transaction type"
-    end
-  end
+  #   else
+  #     raise "Invalid transaction type"
+  #   end
+  # end
 end
 
 # +---------------------------------------------------------------------------------------------------------------------------------------------------------------+
