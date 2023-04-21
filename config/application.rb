@@ -28,6 +28,10 @@ module ConcBackend
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
+
+    config.autoload_paths << "#{config.root}/lib"
+    config.eager_load_paths << "#{config.root}/lib"
+    
     config.time_zone = "Caracas"
     # config.eager_load_paths << Rails.root.join("extras")
 
