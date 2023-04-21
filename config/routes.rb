@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   resources :wallets, only: [:index]
   resources :tickets, only: [:index]
 
-  get '/rifas/tickets', to: 'rifa_tickets#index', param: :rifa_id
+  get '/rifas/tickets', to: 'tickets#index', param: :rifa_id
 
 
   get '/rifas/expired', to: 'rifas#expireds'
