@@ -97,6 +97,17 @@ class Rifa < ApplicationRecord
     roles[current.role.to_sym].call
   end
 
+  def self.stats(current) 
+    return unless current
+
+    roles = {
+      'Admin': -> {{ active: Rifa.active.count, expired: Rifa.expired.count, total: Rifa.count }},
+      'Taquilla': -> {{ active: Rifa.find_by(taquillas_ids: [current.taquilla.id], expired: Date.today.. Date.today + 5).count, expired: Rifa.find_by(taquillas_ids: [current.taquilla.id], expired: Date.today.. Date.today + 5).count, total: Rifa.find_by(taquillas_ids: [current.taquilla.id]).count }},
+      'Rifero': -> {{ active: Rifa.find_by(user_id: current.id, expired: Date.today.. Date.today + 5).count, expired: Rifa.find_by(user_id: current.id, expired: Date.today.. Date.today + 5).count, total: Rifa.find_by(user_id: current.id).count }},
+    }
+
+    roles[current.role.to_sym].call
+  end
 
   def self.search(query)
     where("serial ILIKE ?", "%#{query}%")
