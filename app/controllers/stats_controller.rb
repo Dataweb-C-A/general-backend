@@ -1,10 +1,7 @@
 class StatsController < ApplicationController
+  before_action :authorize_request
+
   def index 
-    render json: {
-      all: Rifa.count,
-      actives: Rifa.active.count,
-      expired: Rifa.expired.count,
-      status_code: 200
-    }
+    render json: Rifa.stats(@current_user)
   end
 end
