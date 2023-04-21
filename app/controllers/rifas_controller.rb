@@ -5,20 +5,18 @@ class RifasController < ApplicationController
   before_action :find_rifa, only: [:show, :update, :destroy]
   
   def index
-    permit_access_by_role("Admin", "Taquilla", "Riferos") do
-      @rifas = Rifa.includes([:user]).order(:id)
-      @pagy, @rifa = pagy(@rifas, items: params[:items] || 20, page: params[:page])
-      render json: {
-        rifas: @rifa.reverse.as_json,
-        status_code: 200,
-        metadata: {
-          page: @pagy.page,
-          count: @pagy.count,
-          items: @pagy.items,
-          pages: @pagy.pages
-        },
-      }, status: :ok
-    end
+    @rifas = Rifa.includes([:user]).order(:id)
+    @pagy, @rifa = pagy(@rifas, items: params[:items] || 20, page: params[:page])
+    render json: {
+      rifas: @rifa.reverse.as_json,
+      status_code: 200,
+      metadata: {
+        page: @pagy.page,
+        count: @pagy.count,
+        items: @pagy.items,
+        pages: @pagy.pages
+      },
+    }, status: :ok
   end
 
   def actives

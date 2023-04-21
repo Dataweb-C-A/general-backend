@@ -113,6 +113,19 @@ class Rifa < ApplicationRecord
     } : Rifa.where(taquillas_ids: taquillas_ids)
   end
 
+  def self.auth_find(current)
+    return unless current
+
+    roles = {
+      'Admin': -> { Rifa.active },
+      'Taquilla': -> { Rifa.find_by(taquillas_ids: [current.taquilla.id], expired: Date.today.. Date.today + 5) },
+      'Rifero': -> { Rifa.find_by(user_id: current.id, expired: Date.today.. Date.today + 5) },
+      'Auto': -> {{ error: 'Not allowed', message: "Not allowed to view Rifas", redirect: "https://admin.rifa-max.com/login", status_code: 403 }}
+    }
+    roles[current.role.to_sym].call
+  end
+
+
   def self.search(query)
     where("serial ILIKE ?", "%#{query}%")
   end

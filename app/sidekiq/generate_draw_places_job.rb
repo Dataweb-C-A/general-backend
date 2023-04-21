@@ -34,6 +34,11 @@ class GenerateDrawPlacesService
         draw_id: @draw.id,
         numbers: @draw.numbers,
         place_number: index + 1,
+        is_sold: false,
+        is_winner: false,
+        client_name: nil,
+        client_phone: nil,
+        client_cedula: nil
       }
     end
     redis = Redis.new

@@ -5,24 +5,22 @@ module Authenticate
     before_action :authorize_request
   end
 
-  def permit_access_to_admin!
-    permit_access_by_role("Admin")
+  def authorize_admin
+    return false unless @current_user.Admin?
+
+    true
   end
 
-  def permit_access_to_taquilla!
-    permit_access_by_role("Taquilla")
+  def authorize_taquilla
+    return false unless @current_user.Taquilla?
+
+    true
   end
 
-  def permit_access_to_riferos!
-    permit_access_by_role("Riferos")
-  end
+  def authorize_rifero
+    return false unless @current_user.Rifero? 
 
-  def permit_access_by_role(*roles)
-    if roles.include?(@current_user.role) == true
-      yield if block_given?
-    else
-      raise InsufficientPermissionsError
-    end 
+    true
   end
 end
 

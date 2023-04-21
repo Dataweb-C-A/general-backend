@@ -39,6 +39,8 @@ class User < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :inactive, -> { where.not(deleted_at: nil) }
 
+  enum :role, { Admin: 'admin', Taquilla: 'taquilla', Rifero: 'rifero', Auto: 'auto' }
+
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   validates :cedula, 
