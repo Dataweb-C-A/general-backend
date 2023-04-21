@@ -85,34 +85,6 @@ class Rifa < ApplicationRecord
     end
   end
 
-  def self.find_by_taquillas(taquillas_ids)
-    if (taquillas_ids.class == Integer) 
-      return Rifa.where(taquillas_ids: [taquillas_ids])
-    end
-
-    if (taquillas_ids.class != Array)
-      return { 
-        error: 'Not an Array of numbers or Number, try again...',
-        message: 'Not an array',
-        status_code: 400
-      }
-    end
-    
-    if (taquillas_ids.empty?)
-      return {
-        error: 'Not taquillas found',
-        status_code: 404,
-        redirect: 'https://admin.rifa-max.com/'
-      }
-    end
-
-    Rifa.where(taquillas_ids: taquillas_ids) === [] ? {
-      error: 'Not taquillas found',
-      message: 'Not taquillas found',
-      status_code: 404,
-    } : Rifa.where(taquillas_ids: taquillas_ids)
-  end
-
   def self.auth_find(current)
     return unless current
 
