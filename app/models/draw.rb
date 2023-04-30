@@ -31,7 +31,18 @@ class Draw < ApplicationRecord
 
   after_create :generate_places
 
+  scope :active, -> { where('is_active = true') }
+  scope :expired, -> { where('is_active = false') }
+
   def generate_places
     GenerateDrawPlacesJob.new.generate(self.id)
+  end
+
+  def self.stats(current)
+    return unless current 
+    
+    roles = {
+      'Admin': -> { act}
+    }
   end
 end

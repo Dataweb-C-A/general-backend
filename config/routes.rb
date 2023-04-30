@@ -15,7 +15,6 @@ Rails.application.routes.draw do
   resources :taquillas, path: 'taquillas', param: :_id
   resources :riferos, only: [:index], path: 'riferos'
   resources :rifas, only: [:index, :create, :update]
-  resources :stats, only: [:index]
   resources :wallets, only: [:index]
   resources :tickets, only: [:index]
 
@@ -26,4 +25,8 @@ Rails.application.routes.draw do
   get '/rifas/active', to: 'rifas#actives'
   get '/my-profile', to: 'profiles#index'
   post '/auth/login', to: 'authentication#login'
+  
+  ### Stats routes ###
+  get '/stats/rifas', to: 'stats#rifas_stats'
+  ### Stats routes ###
 end
