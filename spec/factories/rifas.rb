@@ -2,26 +2,27 @@
 #
 # Table name: rifas
 #
-#  id            :bigint           not null, primary key
-#  awardNoSign   :string
-#  awardSign     :string
-#  expired       :date
-#  is_send       :boolean
-#  loteria       :string           not null
-#  money         :string
-#  numbers       :integer
-#  pin           :string
-#  plate         :string
-#  price         :float
-#  rifDate       :date
-#  serial        :string
-#  taquillas_ids :integer          default([]), is an Array
-#  tickets_type  :string
-#  verify        :boolean
-#  year          :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  user_id       :bigint           not null
+#  id               :bigint           not null, primary key
+#  awardNoSign      :string
+#  awardSign        :string
+#  expired          :date
+#  is_send          :boolean
+#  loteria          :string           not null
+#  money            :string
+#  numbers          :integer
+#  pin              :string
+#  plate            :string
+#  price            :float
+#  rifDate          :date
+#  serial           :string
+#  taquillas_ids    :integer          default([]), is an Array
+#  tickets_are_sold :boolean          default(FALSE)
+#  tickets_type     :string
+#  verify           :boolean
+#  year             :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  user_id          :bigint           not null
 #
 # Indexes
 #

@@ -41,7 +41,7 @@ class User < ApplicationRecord
 
   enum :role, { Admin: 'admin', Taquilla: 'taquilla', Rifero: 'rifero', Auto: 'auto' }
 
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  VALID_EMAIL_REGEX = /\A[a-zA-Z0-9.!\#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\z/
 
   validates :cedula, 
             presence: true, 

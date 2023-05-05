@@ -15,6 +15,7 @@ class CreateRifas < ActiveRecord::Migration[7.0]
       t.string :plate
       t.integer :numbers
       t.string :tickets_type
+      t.boolean :tickets_are_sold, default: false
       t.integer :year
       t.integer :taquillas_ids, array: true, default: []
       t.references :user, null: false, foreign_key: true

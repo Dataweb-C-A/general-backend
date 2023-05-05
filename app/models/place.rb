@@ -24,4 +24,5 @@
 #
 class Place < ApplicationRecord
   belongs_to :draw
+  belongs_to :client
 end
