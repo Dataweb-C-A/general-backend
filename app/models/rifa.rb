@@ -38,6 +38,8 @@ class Rifa < ApplicationRecord
 
   scope :expired, -> { where('NOW() >= expired') }
   scope :active, -> { where('NOW() < expired') }
+ 
+  scope :today, -> { where(rifDate: Time.now.in_time_zone('America/Caracas').to_date) }
 
   validates :rifDate, presence: true, comparison: { greater_than_or_equal_to: Date.today }
   validates :awardSign, presence: true
@@ -69,6 +71,10 @@ class Rifa < ApplicationRecord
       status_code: 400
     }
   end
+
+  # def self.reports
+    
+  # end
 
   def generate_tickets
     GenerateRifaTicketsJob.new.generate(self.id)
