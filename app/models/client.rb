@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: clients
+#
+#  id         :bigint           not null, primary key
+#  dni        :string
+#  email      :string
+#  name       :string
+#  phone      :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Client < ApplicationRecord
   has_many :places, dependent: :destroy
 

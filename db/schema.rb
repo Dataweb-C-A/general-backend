@@ -42,6 +42,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_20_080553) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "clients", force: :cascade do |t|
+    t.string "name"
+    t.string "phone"
+    t.string "email"
+    t.string "dni"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "draws", force: :cascade do |t|
     t.string "title"
     t.string "first_prize"
@@ -74,16 +83,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_20_080553) do
   end
 
   create_table "places", force: :cascade do |t|
-    t.string "sold_client_name"
-    t.string "sold_client_phone"
-    t.string "sold_client_email"
-    t.string "sold_client_dni"
     t.integer "number"
     t.integer "place_nro"
     t.date "sold_at"
+    t.bigint "client_id", null: false
     t.bigint "draw_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_places_on_client_id"
     t.index ["draw_id"], name: "index_places_on_draw_id"
   end
 
@@ -198,6 +205,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_20_080553) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "places", "clients"
   add_foreign_key "places", "draws"
   add_foreign_key "rifas", "users"
   add_foreign_key "tickets", "rifas"
