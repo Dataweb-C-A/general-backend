@@ -11,7 +11,13 @@ class GenerateDrawPlacesJob < ApplicationJob
         return
       end
     end
-    GenerateDrawPlacesService.new(draw).call
+    if draw.draw_type == 'To-Infinity'
+      puts 'To-Infinity Draw, no tickets generated!'
+      return draw
+    else
+      GenerateDrawPlacesService.new(draw).call
+      return draw
+    end
   end
 end
 
@@ -36,9 +42,7 @@ class GenerateDrawPlacesService
         place_number: index + 1,
         is_sold: false,
         is_winner: false,
-        client_name: nil,
-        client_phone: nil,
-        client_cedula: nil
+        client: nil
       }
     end
     redis = Redis.new

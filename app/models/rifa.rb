@@ -42,12 +42,19 @@ class Rifa < ApplicationRecord
  
   scope :today, -> { where(rifDate: Time.now.in_time_zone('America/Caracas').to_date) }
 
-  validates :rifDate, presence: true, comparison: { greater_than_or_equal_to: Date.today }
+  validates :rifDate, 
+            presence: true, 
+            comparison: { greater_than_or_equal_to: Time.now.in_time_zone("Caracas").to_date() }
+
   validates :awardSign, presence: true
+
   validates :money, presence: true
+
   validates :price, presence: true
+
   validates :numbers, presence: true
-  # validates :taquillas_ids, presence: true, array: true, length: { minimum: 1 }
+
+  validates :taquillas_ids, presence: true
 
   before_save :generate_serial
   before_save :add_expired

@@ -42,13 +42,13 @@ class Draw < ApplicationRecord
   validates :second_prize,
             length: { minimum: 5, maximum: 50 }
 
+  # To validate
   validates :init_date,
-            presence: true
-            greater_than_or_equal_to: Date.today
+            presence: true,
+            comparison: { greater_than_or_equal_to: Time.now.in_time_zone("Caracas").to_date() }
+            
+  validate :validate_expired_date
   
-  validates :expired_date,
-            greater_than_or_equal_to: :init_date
-
   validates :numbers,
             presence: true,
             numericality: { 
@@ -67,7 +67,7 @@ class Draw < ApplicationRecord
           
   validates :draw_type,
             presence: true,
-            inclusion: { in: %w[Progressive End-To-Date] }
+            inclusion: { in: %w[Progressive End-To-Date To-Infinity] }
 
   validates :limit,
             presence: false,
@@ -79,13 +79,13 @@ class Draw < ApplicationRecord
 
   validates :money,
             presence: true,
-            inclusion: { in: %w[BsF $ COL] }
+            inclusion: { in: %w[BsF $ COP] }
       
   validates :visible_taquillas_ids,
-            presence: true,
+            presence: true
             
   validates :automatic_taquillas_ids,
-            presence: true,
+            presence: true
 
   scope :active, -> { where('is_active = true') }
   scope :expired, -> { where('is_active = false') }
@@ -94,11 +94,17 @@ class Draw < ApplicationRecord
     GenerateDrawPlacesJob.new.generate(self.id)
   end
 
-  def self.stats(current)
-    return unless current 
-    
-    roles = {
-      'Admin': -> { Draw.all.count }
-    }
+  def validate_expired_date
+    if expired_date.present? && init_date.present? && expired_date < init_date
+      errors.add(:expired_date, "debe ser mayor que la fecha de inicio")
+    end
   end
+
+  # def self.stats(current)
+  #   return unless current 
+    
+  #   roles = {
+  #     'Admin': -> { Draw.all.count }
+  #   }
+  # end
 end
