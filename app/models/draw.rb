@@ -4,6 +4,7 @@
 #
 #  id                      :bigint           not null, primary key
 #  automatic_taquillas_ids :integer          default([]), is an Array
+#  award                   :string
 #  draw_type               :string
 #  expired_date            :date
 #  first_prize             :string
@@ -26,6 +27,8 @@
 #  updated_at              :datetime         not null
 #
 class Draw < ApplicationRecord
+  has_one_attached :award
+
   has_and_belongs_to_many :taquillas, class_name: 'Taquilla'
   has_many :places, dependent: :destroy
 
@@ -97,6 +100,14 @@ class Draw < ApplicationRecord
   def validate_expired_date
     if expired_date.present? && init_date.present? && expired_date < init_date
       errors.add(:expired_date, "debe ser mayor que la fecha de inicio")
+    end
+  end
+
+  def award_url
+    if award.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(award)
+    else
+      return nil
     end
   end
 

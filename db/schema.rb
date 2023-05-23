@@ -52,6 +52,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_145358) do
   end
 
   create_table "draws", force: :cascade do |t|
+    t.string "award"
     t.string "title"
     t.string "first_prize"
     t.string "second_prize"

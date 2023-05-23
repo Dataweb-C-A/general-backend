@@ -3,10 +3,14 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  require 'sidekiq/web'
+
+  get 'draws/index'
+  get 'draws/show'
+  get 'draws/create'
   get 'exchange/index'
   get 'rifa_tickets/index'
   get 'wallets/index'
-  require 'sidekiq/web'
 
   get 'rifas/index'
   mount ActionCable.server => '/cable'
@@ -18,6 +22,7 @@ Rails.application.routes.draw do
   resources :rifas, only: [:index, :create, :update]
   resources :wallets, only: [:index]
   resources :tickets, only: [:index]
+  resources :draws, only: [:index]
 
   get '/rifas/tickets', to: 'tickets#index', param: :rifa_id
 
