@@ -11,3 +11,5 @@ Rifa.create(awardSign: 'Una moto', awardNoSign: '1000$', is_send: false, rifDate
 Draw.create(title: "Sorteo de una moto", first_prize: "Una moto bera", second_prize: "1000$", uniq: "89374ad", init_date: Time.now.in_time_zone("Caracas").to_date(), numbers: 293, tickets_count: 3000, loteria: "Zulia 7A", has_winners: false, is_active: true, draw_type: "Progressive", limit: 100, price_unit: 1.0, money: "$", visible_taquillas_ids: [1], automatic_taquillas_ids: [1])
 
 Draw.create(title: "Sorteo de un mercedes", first_prize: "Una moto mercedes", second_prize: "2500$", uniq: "89374bc", init_date: Time.now.in_time_zone("Caracas").to_date(), numbers: 293, tickets_count: 3000, loteria: "Zulia 7A", has_winners: false, is_active: true, draw_type: "End-To-Date", limit: 100, price_unit: 25.0, money: "BsF", visible_taquillas_ids: [1], automatic_taquillas_ids: [1])
+
+Exchange.create(money: "USD", value: 25.47, day: Time.now.in_time_zone("Caracas").to_date())
