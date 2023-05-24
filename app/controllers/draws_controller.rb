@@ -1,8 +1,8 @@
 class DrawsController < ApplicationController
   before_action :set_draw, only: [:show]
   def index
-    @draws = Draw.all
-    # ActionCable.server.broadcast("draw_channel", @draws)
+    @draws = Draw.all.includes([:award_attachment])
+    ActionCable.server.broadcast("DrawChannel", @draws)
     render json: @draws
   end
 
