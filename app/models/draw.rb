@@ -27,7 +27,7 @@
 #  updated_at              :datetime         not null
 #
 class Draw < ApplicationRecord
-  has_one_attached :award
+  has_many_attached :award
 
   has_and_belongs_to_many :taquillas, class_name: 'Taquilla'
   has_many :places, dependent: :destroy
@@ -45,7 +45,6 @@ class Draw < ApplicationRecord
   validates :second_prize,
             length: { minimum: 5, maximum: 50 }
 
-  # To validate
   validates :init_date,
             presence: true,
             comparison: { greater_than_or_equal_to: Time.now.in_time_zone("Caracas").to_date() }
@@ -90,8 +89,11 @@ class Draw < ApplicationRecord
   validates :automatic_taquillas_ids,
             presence: true
 
-  scope :active, -> { where('is_active = true') }
-  scope :expired, -> { where('is_active = false') }
+  validates :owner_id,
+            presence: true,
+
+  # scope :active, -> { where('is_active = true') }
+  # scope :expired, -> { where('is_active = false') }
 
   def generate_places
     GenerateDrawPlacesJob.new.generate(self.id)
@@ -111,11 +113,7 @@ class Draw < ApplicationRecord
     end
   end
 
-  # def self.stats(current)
-  #   return unless current 
-    
-  #   roles = {
-  #     'Admin': -> { Draw.all.count }
-  #   }
-  # end
+  def self.find_awards_by_owner(id)
+    Draw.where(owner_id: id)
+  end
 end
