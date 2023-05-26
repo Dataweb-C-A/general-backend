@@ -1,10 +1,5 @@
 class DrawChannel < ApplicationCable::Channel
-  def subscribed
-    stream_from "draw_channel"
-  end
-
-  def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
-    raise NotImplementedError
+  def subscribe
+    ActionCable.server.broadcast("draw_channel", { message: "Draws connection successfully" })
   end
 end

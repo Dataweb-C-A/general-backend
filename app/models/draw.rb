@@ -33,6 +33,7 @@ class Draw < ApplicationRecord
   has_many :places, dependent: :destroy
 
   after_create :generate_places
+  after_commit :broadcast_changes, on: [:create, :update]
 
   validates :title,
             presence: true,
@@ -90,7 +91,7 @@ class Draw < ApplicationRecord
             presence: true
 
   validates :owner_id,
-            presence: true,
+            presence: true
 
   # scope :active, -> { where('is_active = true') }
   # scope :expired, -> { where('is_active = false') }
@@ -115,5 +116,11 @@ class Draw < ApplicationRecord
 
   def self.find_awards_by_owner(id)
     Draw.where(owner_id: id)
+  end
+
+  private
+
+  def broadcast_changes
+    ActionCable.server.broadcast("draw_channel", draw: self)
   end
 end

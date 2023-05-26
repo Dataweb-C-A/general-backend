@@ -15,6 +15,7 @@ class ApplicationController < ActionController::API
       render json: { error: 'Update version of APP' }, status: :unauthorized
     else 
       render json: { message: 'App'}
+    end
   end
 
   def authorize_request
