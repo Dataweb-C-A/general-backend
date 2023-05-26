@@ -7,7 +7,14 @@ class ApplicationController < ActionController::API
   # end
 
   def not_found
-    render json: { error: 'not_found' }
+    render json: { error: 'Not found' }
+  end
+
+  def app_version_check
+    if request.headers['App-Version'] != '1.0.0'
+      render json: { error: 'Update version of APP' }, status: :unauthorized
+    else 
+      render json: { message: 'App'}
   end
 
   def authorize_request
