@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_16_145358) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_28_015734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -66,6 +66,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_145358) do
     t.boolean "is_active", default: true
     t.integer "first_winner"
     t.integer "second_winner"
+    t.integer "owner_id", null: false
     t.string "draw_type"
     t.integer "limit", default: 100
     t.float "price_unit"
@@ -210,6 +211,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_145358) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_wallets_on_user_id"
+  end
+
+  create_table "whitelists", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name"
+    t.string "role"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

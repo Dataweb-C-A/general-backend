@@ -6,6 +6,16 @@ class DrawsController < ApplicationController
     render json: @draws
   end
 
+  def public_get
+    if params[:user_id].present?
+      @draws = Draw.find_by(owner_id: params[:user_id])
+      @whitelist = Whitelist.find_by(user_id: params[:user_id])
+      render json: [@draws], status: :ok
+    else
+      render json: { message: 'No se encontraron rifas' }, status: :not_found
+    end
+  end
+
   def filter
     @draws = Draw.find_awards_by_owner(params[:owner_id])
     render json: @draws
@@ -42,6 +52,7 @@ class DrawsController < ApplicationController
                                  :expired_date, 
                                  :numbers, 
                                  :tickets_count, 
+                                 :owner_id,
                                  :loteria, 
                                  :has_winners,
                                  :first_winner, 

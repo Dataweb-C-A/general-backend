@@ -25,6 +25,7 @@
 #  visible_taquillas_ids   :integer          default([]), is an Array
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  owner_id                :integer          not null
 #
 FactoryBot.define do
   factory :draw do

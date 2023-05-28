@@ -13,3 +13,5 @@ Draw.create(title: "Sorteo de una moto", owner_id: 1, first_prize: "Una moto ber
 Draw.create(title: "Sorteo de un mercedes", owner_id: 1, first_prize: "Una moto mercedes", second_prize: "2500$", uniq: "89374bc", init_date: Time.now.in_time_zone("Caracas").to_date(), numbers: 293, tickets_count: 3000, loteria: "Zulia 7A", has_winners: false, is_active: true, draw_type: "End-To-Date", limit: 100, price_unit: 25.0, money: "BsF", visible_taquillas_ids: [1], automatic_taquillas_ids: [1])
 
 Exchange.create(money: "USD", value: 25.47, day: Time.now.in_time_zone("Caracas").to_date())
+
+Whitelist.create(user_id: 1, email: "rifamax4bocas@gmail.com", name: "4 Bocas", role: "Taquilla")

@@ -25,6 +25,7 @@
 #  visible_taquillas_ids   :integer          default([]), is an Array
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  owner_id                :integer          not null
 #
 class Draw < ApplicationRecord
   has_many_attached :award
@@ -33,7 +34,7 @@ class Draw < ApplicationRecord
   has_many :places, dependent: :destroy
 
   after_create :generate_places
-  after_commit :broadcast_changes, on: [:create, :update]
+  # after_commit :broadcast_changes, on: [:create, :update]
 
   validates :title,
             presence: true,
@@ -118,9 +119,9 @@ class Draw < ApplicationRecord
     Draw.where(owner_id: id)
   end
 
-  private
+  # private
 
-  def broadcast_changes
-    ActionCable.server.broadcast("draw_channel", draw: self)
-  end
+  # def broadcast_changes
+  #   ActionCable.server.broadcast("draw_channel", draw: self)
+  # end
 end

@@ -25,6 +25,7 @@
 #  visible_taquillas_ids   :integer          default([]), is an Array
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  owner_id                :integer          not null
 #
 class DrawSerializer < ActiveModel::Serializer
   attributes  :id,
@@ -46,8 +47,7 @@ class DrawSerializer < ActiveModel::Serializer
               :limit,
               :price_unit,
               :money,
-              :visible_taquillas_ids,
-              :automatic_taquillas_ids,
+              :owner,
               :created_at,
               :updated_at
 
@@ -55,5 +55,9 @@ class DrawSerializer < ActiveModel::Serializer
     object.award.map do |award|
       Rails.application.routes.url_helpers.rails_blob_url(award)
     end
+  end
+
+  def owner
+    Whitelist.find_by(user_id: object.owner_id)
   end
 end
