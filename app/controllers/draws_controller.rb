@@ -9,7 +9,6 @@ class DrawsController < ApplicationController
   def public_get
     if params[:user_id].present?
       @draws = Draw.find_by(owner_id: params[:user_id])
-      @whitelist = Whitelist.find_by(user_id: params[:user_id])
       render json: [@draws], status: :ok
     else
       render json: { message: 'No se encontraron rifas' }, status: :not_found
