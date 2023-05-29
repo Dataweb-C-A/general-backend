@@ -101,6 +101,18 @@ class Draw < ApplicationRecord
     GenerateDrawPlacesJob.new.generate(self.id)
   end
 
+  def self.validate_draw_access(user_id, access_token)
+    if (access_token == ENV['ACCESS_TOKEN'])
+      if (Whitelist.find_by(user_id: user_id).present?)
+        true
+      else
+        false 
+      end
+    else
+      false
+    end
+  end
+
   def validate_expired_date
     if expired_date.present? && init_date.present? && expired_date < init_date
       errors.add(:expired_date, "debe ser mayor que la fecha de inicio")
