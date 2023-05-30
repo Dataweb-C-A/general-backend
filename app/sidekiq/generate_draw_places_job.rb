@@ -33,19 +33,33 @@ class GenerateDrawPlacesJob < ApplicationJob
     @client
     redis = Redis.new
     
+    @draw = Draw.find(draw_id)
+
+    return unless @draw
+
     if (Client.find_by(dni: client_data.dni))
       @client = Client.find_by(dni: client_data.dni)
     else
       @client = Client.create(client_data)
     end
 
-    places = JSON.parse(redis.get("places:#{draw_id}"))
+    if (@draw.is_active == false)
+      puts 'Draw expired!'
+      return
+    else
+      places = JSON.parse(redis.get("places:#{draw_id}"))
 
-    places[place_position - 1]['is_sold'] = true
-    places[place_position - 1]['client'] = @client
-
-    redis.del("places:#{draw_id}")
-    redis.set("places:#{draw_id}", places.to_json)
+      if places[place_position - 1]['is_sold']
+        puts 'Place already sold!'
+        return
+      else
+        places[place_position - 1]['is_sold'] = true
+        places[place_position - 1]['client'] = @client
+    
+        redis.del("places:#{draw_id}")
+        redis.set("places:#{draw_id}", places.to_json)
+      end
+    end
   end
 end
 
@@ -74,6 +88,7 @@ class GenerateDrawPlacesService
       }
     end
     redis = Redis.new
+    redis.del("places:#{@draw.id}")
     redis.set("places:#{@draw.id}", places.to_json)
   end
 end

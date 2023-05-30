@@ -15,3 +15,5 @@ Draw.create(title: "Sorteo de un mercedes", owner_id: 1, first_prize: "Una moto 
 Exchange.create(money: "USD", value: 25.47, day: Time.now.in_time_zone("Caracas").to_date())
 
 Whitelist.create(user_id: 1, email: "rifamax4bocas@gmail.com", name: "4 Bocas", role: "Taquilla")
+
+Client.create(name: "Javier Diaz", dni: "V-29543140", phone: "0412-1688466", email: "javierdiazt406@gmail.com")

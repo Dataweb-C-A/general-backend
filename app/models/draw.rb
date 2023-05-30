@@ -3,6 +3,7 @@
 # Table name: draws
 #
 #  id                      :bigint           not null, primary key
+#  ads                     :string
 #  automatic_taquillas_ids :integer          default([]), is an Array
 #  award                   :string
 #  draw_type               :string

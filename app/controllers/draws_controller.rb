@@ -15,6 +15,14 @@ class DrawsController < ApplicationController
     end
   end
 
+  def create
+    if params[:user_id].present? && params[:role] === 'Admin' && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
+    
+    else
+      render json: { message: 'No autorizado' }, status: :forbidden
+    end
+  end
+
   def filter
     @draws = Draw.find_awards_by_owner(params[:owner_id])
     render json: @draws
@@ -41,8 +49,7 @@ class DrawsController < ApplicationController
   end
 
   def draw_params
-    params.require(:draw).permit(:award, 
-                                 :owner_id, 
+    params.require(:draw).permit(:owner_id, 
                                  :title, 
                                  :first_prize, 
                                  :second_prize, 
@@ -60,6 +67,7 @@ class DrawsController < ApplicationController
                                  :limit, 
                                  :price_unit, 
                                  :money, 
+                                 award: [], 
                                  visible_taquillas_ids: [], 
                                  automatic_taquillas_ids: []
     )
