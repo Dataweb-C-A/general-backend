@@ -35,7 +35,7 @@ class Draw < ApplicationRecord
   has_many :places, dependent: :destroy
 
   after_create :generate_places
-  # after_commit :broadcast_changes, on: [:create, :update]
+  after_commit :change_expired_date_by_draw_type, except: [:destroy]
 
   validates :title,
             presence: true,
@@ -53,6 +53,8 @@ class Draw < ApplicationRecord
             comparison: { greater_than_or_equal_to: Time.now.in_time_zone("Caracas").to_date() }
             
   validate :validate_expired_date
+
+  validate :validate_draw_type
   
   validates :numbers,
             presence: true,
@@ -117,17 +119,31 @@ class Draw < ApplicationRecord
   def change_expired_date_by_draw_type
     redis = Redis.new
 
-    if self.draw_type == "Progressive"
+    if draw_type == "Progressive"
       tickets = JSON.parse(redis.get("places:#{self.id}"))
 
-      tickets.count
-        
+      sold_tickets_count = tickets.select { |ticket| ticket["is_sold"] == true }.count.to_f
+      available_tickets_count = tickets.select { |ticket| ticket["is_sold"] == false }.count.to_f
+
+      sold_average = ((sold_tickets_count / available_tickets_count) * 100).round(2)
+    
+      if sold_average >= self.limit
+        expired_date = self.expired_date + 3.day
+      else
+        expired_date = nil
+      end
     end
   end
 
   def validate_expired_date
     if expired_date.present? && init_date.present? && expired_date < init_date
       errors.add(:expired_date, "debe ser mayor que la fecha de inicio")
+    end
+  end
+
+  def validate_draw_type
+    if expired_date.present? && draw_type === "Progressive"
+      errors.add(:draw_type, "No puede ser progresivo si tiene fecha de expiración")
     end
   end
 
