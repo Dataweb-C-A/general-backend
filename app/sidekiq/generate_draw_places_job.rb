@@ -16,6 +16,7 @@ class GenerateDrawPlacesJob < ApplicationJob
       return draw
     else
       GenerateDrawPlacesService.new(draw).call
+      GenerateDrawPlacesService.new(draw).create_winner_place
       return draw
     end
   end
@@ -83,13 +84,50 @@ class GenerateDrawPlacesService
         numbers: @draw.numbers,
         place_number: index + 1,
         is_sold: false,
-        is_winner: false,
+        is_first_winner: false,
+        is_second_winner: @draw.second_prize ? false : nil,
         client: nil
       }
     end
     redis = Redis.new
     redis.del("places:#{@draw.id}")
     redis.set("places:#{@draw.id}", places.to_json)
+  end
+
+  def create_winner_place
+    redis = Redis.new
+    places = JSON.parse(redis.get("places:#{@draw.id}"))
+
+    first_place = rand(0..places.length - 1)
+    second_place = rand(0..places.length - 1)
+
+    while first_place == second_place
+      second_place = rand(0..places.length - 1)
+    end
+
+    if @draw.second_prize
+      places[first_place]['is_first_winner'] = true
+      places[second_place]['is_second_winner'] = true
+    end
+
+    redis.del("places:#{@draw.id}")
+    redis.set("places:#{@draw.id}", places.to_json)
+  end 
+
+  def cleanup 
+    redis = Redis.new
+    
+    if @draw.expired_date <= Time.now
+      @draw.update(is_active: false)
+      
+      places = JSON.parse(redis.get("places:#{@draw.id}"))
+
+      first_winner = places.select { |ticket| ticket["is_first_winner"] == true }
+      second_winner = places.select { |ticket| ticket["is_second_winner"] == true }
+    
+      Place.create(first_winner)
+      Place.create(second_winner)
+    end
   end
 end
 

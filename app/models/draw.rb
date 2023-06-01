@@ -30,6 +30,7 @@
 #
 class Draw < ApplicationRecord
   has_many_attached :award
+  has_one_attached :ads
 
   has_and_belongs_to_many :taquillas, class_name: 'Taquilla'
   has_many :places, dependent: :destroy
@@ -88,11 +89,11 @@ class Draw < ApplicationRecord
             presence: true,
             inclusion: { in: %w[BsF $ COP] }
       
-  validates :visible_taquillas_ids,
-            presence: true
+  # validates :visible_taquillas_ids,
+  #           presence: true
             
-  validates :automatic_taquillas_ids,
-            presence: true
+  # validates :automatic_taquillas_ids,
+  #           presence: true
 
   validates :owner_id,
             presence: true
@@ -157,6 +158,16 @@ class Draw < ApplicationRecord
 
   def self.find_awards_by_owner(id)
     Draw.where(owner_id: id)
+  end
+
+  def self.get_winners(draw_id)
+    redis = Redis.new
+    tickets = JSON.parse(redis.get("places:#{draw_id}"))
+
+    first_winner = tickets.select { |ticket| ticket["is_first_winner"] == true }
+    second_winner = tickets.select { |ticket| ticket["is_second_winner"] == true }
+
+    return { first_winner: first_winner, second_winner: second_winner }
   end
 
   # private
