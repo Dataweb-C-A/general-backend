@@ -114,6 +114,17 @@ class Draw < ApplicationRecord
     end
   end
 
+  def change_expired_date_by_draw_type
+    redis = Redis.new
+
+    if self.draw_type == "Progressive"
+      tickets = JSON.parse(redis.get("places:#{self.id}"))
+
+      tickets.count
+        
+    end
+  end
+
   def validate_expired_date
     if expired_date.present? && init_date.present? && expired_date < init_date
       errors.add(:expired_date, "debe ser mayor que la fecha de inicio")

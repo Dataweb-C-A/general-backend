@@ -17,7 +17,7 @@ class DrawsController < ApplicationController
 
   def create
     if params[:user_id].present? && params[:role] === 'Admin' && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
-    
+      
     else
       render json: { message: 'No autorizado' }, status: :forbidden
     end
