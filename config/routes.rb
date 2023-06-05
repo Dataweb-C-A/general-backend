@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   resources :rifas, only: [:index, :create, :update]
   resources :wallets, only: [:index]
   resources :tickets, only: [:index]
-  resources :draws, only: [:index, :show], param: :id
+  resources :draws, only: [:index, :show, :create], param: :id
 
   # get 'draws/index'
   # get 'draws/show'

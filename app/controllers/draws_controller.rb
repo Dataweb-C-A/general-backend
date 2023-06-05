@@ -17,7 +17,12 @@ class DrawsController < ApplicationController
 
   def create
     if params[:user_id].present? && params[:role] === 'Admin' && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
-      
+      Draw.new(draw_params)
+      if @draw.save
+        render json: @draw
+      else
+        render json: @draw.errors, status: :unprocessable_entity
+      end
     else
       render json: { message: 'No autorizado' }, status: :forbidden
     end
@@ -30,16 +35,6 @@ class DrawsController < ApplicationController
 
   def show
     render json: @draw
-  end
-
-  def create
-    @draw = Draw.new(draw_params)
-    if @draw.save
-      ActionCable.server.broadcast("DrawChannel", @draw)
-      render json: @draw
-    else
-      render json: @draw.errors, status: :unprocessable_entity
-    end
   end
 
   private
@@ -67,6 +62,7 @@ class DrawsController < ApplicationController
                                  :limit, 
                                  :price_unit, 
                                  :money, 
+                                 :ads,
                                  award: [], 
                                  visible_taquillas_ids: [], 
                                  automatic_taquillas_ids: []
