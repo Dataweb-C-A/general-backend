@@ -46,8 +46,8 @@ class Draw < ApplicationRecord
             presence: true,
             length: { minimum: 5, maximum: 50 }
   
-  validates :second_prize,
-            length: { minimum: 5, maximum: 50 }
+  # validates :second_prize,
+  #           length: { minimum: 5, maximum: 50 }
 
   validates :init_date,
             presence: true,
@@ -77,9 +77,9 @@ class Draw < ApplicationRecord
             presence: true,
             inclusion: { in: %w[Progressive End-To-Date To-Infinity] }
 
-  validates :limit,
-            presence: false,
-            numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+  # validates :limit,
+  #           presence: false,
+            # numericality: { only_integer: true, greater_than_or_equal_to: 1 }
           
   validates :price_unit,
             presence: true,

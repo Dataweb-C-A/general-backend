@@ -16,8 +16,8 @@ class DrawsController < ApplicationController
   end
 
   def create
-    if params[:user_id].present? && params[:role] === 'Admin' && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
-      Draw.new(draw_params)
+    if Draw.validate_draw_access(1, request.headers[:Authorization])
+      @draw = Draw.new(draw_params)
       if @draw.save
         render json: @draw
       else
