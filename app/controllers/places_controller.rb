@@ -1,4 +1,8 @@
+require 'pagy/extras/array'
+
 class PlacesController < ApplicationController
+  include Pagy::Backend
+
   def index
     redis = Redis.new
     place_id = params[:id]
@@ -6,7 +10,19 @@ class PlacesController < ApplicationController
     if place_id.present?
       if Place.validate_tickets(place_id)
         places = JSON.parse(redis.get("places:#{place_id}"))
-        render json: places
+
+        @pagy, @places = pagy_array(places, items: 100, page: params[:page] || 1)
+
+        render json: {
+          places: @places,
+          status_code: 200,
+          metadata: {
+            page: @pagy.page,
+            count: @pagy.count,
+            items: @pagy.items,
+            pages: @pagy.pages
+          }
+        }, status: :ok
       else
         render json: { message: 'No autorizado' }, status: :forbidden
       end
