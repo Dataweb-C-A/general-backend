@@ -30,38 +30,58 @@ class GenerateDrawPlacesJob < ApplicationJob
     Draw.find(draw_id).update(draw_params)
   end
 
-  def sell_places(draw_id, place_position, client_data)
-    @client
+  def sell_places(draw_id, place_positions, client_data)
     redis = Redis.new
-    
     @draw = Draw.find(draw_id)
-
+  
     return unless @draw
-
-    if (Client.find_by(dni: client_data.dni))
-      @client = Client.find_by(dni: client_data.dni)
-    else
-      @client = Client.create(client_data)
-    end
-
-    if (@draw.is_active == false)
-      puts 'Draw expired!'
+  
+    if @draw.is_active == false
+      puts '¡Sorteo vencido!'
       return
     else
       places = JSON.parse(redis.get("places:#{draw_id}"))
-
-      if places[place_position - 1]['is_sold']
-        puts 'Place already sold!'
-        return
-      else
-        places[place_position - 1]['is_sold'] = true
-        places[place_position - 1]['client'] = @client
-    
+  
+      places_to_insert = []
+  
+      place_positions.each do |position|
+        if position > places.length || position < 1
+          puts "El lugar #{position} no existe."
+          next
+        end
+  
+        place = places[position - 1]
+  
+        if place['is_sold']
+          puts "El lugar #{position} ya está vendido."
+          next
+        end
+  
+        place['is_sold'] = true
+        place['client'] = client_data
+  
+        places_to_insert << {
+          draw_id: draw_id,
+          numbers: place['numbers'],
+          place_number: place['place_number'],
+          sold_at: Date.today,
+          created_at: DateTime.now,
+          updated_at: DateTime.now
+        }
+  
+        puts "Lugar #{position} vendido correctamente."
+      end
+  
+      if places_to_insert.present?
+        Place.insert_all(places_to_insert)
+  
         redis.del("places:#{draw_id}")
         redis.set("places:#{draw_id}", places.to_json)
+      else
+        puts 'No se encontraron lugares para vender.'
       end
     end
-  end
+  end  
 end
 
 # +---------------------------------------------------------------------------------------------------------------------------------------------------------------+

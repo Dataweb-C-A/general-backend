@@ -94,10 +94,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_185653) do
   end
 
   create_table "places", force: :cascade do |t|
-    t.integer "number"
-    t.integer "place_nro"
-    t.date "sold_at"
-    t.bigint "client_id", null: false
+    t.integer "numbers"
+    t.integer "place_number"
+    t.date "sold_at", default: "2023-06-07"
+    t.bigint "client_id"
     t.bigint "draw_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

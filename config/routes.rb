@@ -36,4 +36,6 @@ Rails.application.routes.draw do
   post '/', to: 'application#test'
   post '/auth/login', to: 'authentication#login'
   post '/api/public/draws', to: 'draws#public_get'
+  
+  put '/places', to: 'places#sell_places'
 end
