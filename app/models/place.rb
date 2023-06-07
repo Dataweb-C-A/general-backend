@@ -24,4 +24,15 @@
 class Place < ApplicationRecord
   belongs_to :draw
   belongs_to :client
+
+  def self.validate_tickets(draw_id)
+    redis = Redis.new
+    places = redis.get("places:#{draw_id}")
+
+    if places.present?
+      true
+    else
+      false
+    end
+  end
 end

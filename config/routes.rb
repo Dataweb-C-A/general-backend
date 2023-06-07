@@ -3,6 +3,7 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  get 'places/index'
   require 'sidekiq/web'
 
   mount ActionCable.server => '/cable'
@@ -15,6 +16,7 @@ Rails.application.routes.draw do
   resources :wallets, only: [:index]
   resources :tickets, only: [:index]
   resources :draws, only: [:index, :show, :create], param: :id
+  resources :places, only: [:index], param: :id
 
   # get 'draws/index'
   # get 'draws/show'

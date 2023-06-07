@@ -31,7 +31,8 @@
 class DrawSerializer < ActiveModel::Serializer
   attributes  :id,
               :title,
-              :awards_url,
+              :award_urls,
+              :ads_url,
               :first_prize,
               :second_prize,
               :uniq,
@@ -52,10 +53,12 @@ class DrawSerializer < ActiveModel::Serializer
               :created_at,
               :updated_at
 
-  def awards_url
-    object.award.map do |award|
-      Rails.application.routes.url_helpers.rails_blob_url(award)
-    end
+  def award_urls
+    object.award.map { |image| url_for(image) }
+  end
+
+  def ads_url
+    url_for(object.ads) if object.ads.attached?
   end
 
   def owner
