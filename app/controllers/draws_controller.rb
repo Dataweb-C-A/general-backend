@@ -19,6 +19,17 @@ class DrawsController < ApplicationController
   def create
     if Draw.validate_draw_access(1, request.headers[:Authorization])
       @draw = Draw.new(draw_params)
+      
+      if params[:ads].present?
+        @draw.ads = params[:ads][:path]
+      end
+
+      if params[:award].present?
+        params[:award].each do |award_params|
+          @draw.award << award_params[:path]
+        end
+      end
+      
       if @draw.save
         render json: @draw
       else

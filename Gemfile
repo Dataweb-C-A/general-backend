@@ -94,3 +94,5 @@ gem "pundit", "~> 2.3"
 gem "haml", "~> 6.1"
 
 gem "railroady", "~> 1.6"
+
+gem 'carrierwave', '>= 3.0.0.beta', '< 4.0'

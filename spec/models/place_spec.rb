@@ -5,7 +5,7 @@
 #  id           :bigint           not null, primary key
 #  numbers      :integer
 #  place_number :integer
-#  sold_at      :date             default(Wed, 07 Jun 2023)
+#  sold_at      :date             default(Thu, 08 Jun 2023)
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  client_id    :bigint

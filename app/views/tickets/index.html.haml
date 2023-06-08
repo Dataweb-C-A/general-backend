@@ -12,7 +12,7 @@
           %div{:class => "card mt-2", :style => "max-width: 20rem; margin: auto;"}
             =image_tag("/logo-rifamax.png", :class => "max-width: 20rem; margin: auto;", alt: "Logo Rifamax")
             .card-body
-              %h5{:class => "card-title text-center"} #{@rifa.numbers} - #{@tickets.sign.upcase!}
+              %h5{:class => "card-title text-center"} #{@rifa.numbers} - #{@tickets.play.upcase!}
               %h5{:class => "card-title text-center"} PRECIO: #{@rifa.price.to_i}#{@rifa.money}
               .row
                 = render 'awards'

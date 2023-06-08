@@ -31,8 +31,6 @@
 class DrawSerializer < ActiveModel::Serializer
   attributes  :id,
               :title,
-              :award_urls,
-              :ads_url,
               :first_prize,
               :second_prize,
               :uniq,
@@ -52,14 +50,6 @@ class DrawSerializer < ActiveModel::Serializer
               :owner,
               :created_at,
               :updated_at
-
-  def award_urls
-    object.award.map { |image| url_for(image) }
-  end
-
-  def ads_url
-    url_for(object.ads) if object.ads.attached?
-  end
 
   def owner
     Whitelist.find_by(user_id: object.owner_id)

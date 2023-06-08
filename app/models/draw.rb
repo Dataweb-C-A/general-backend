@@ -29,8 +29,10 @@
 #  owner_id                :integer          not null
 #
 class Draw < ApplicationRecord
-  has_many_attached :award
-  has_one_attached :ads
+  require 'image_uploader'
+
+  mount_uploader :ads, ImageUploader
+  mount_uploader :award, ImageUploader
 
   has_and_belongs_to_many :taquillas, class_name: 'Taquilla'
   has_many :places, dependent: :destroy
