@@ -34,7 +34,8 @@ class DrawSerializer < ActiveModel::Serializer
               :first_prize,
               :second_prize,
               :adnoucement,
-              :award,
+              :progress,
+              :award_images,
               :uniq,
               :init_date,
               :expired_date,
@@ -60,6 +61,19 @@ class DrawSerializer < ActiveModel::Serializer
     else
       nil
     end
+  end
+
+  def award_images
+    @award = object.award
+    if @award
+      ["https://localhost:3000#{@award}"]
+    else
+      []
+    end
+  end
+
+  def progress 
+    Draw.progress(object.id)
   end
 
   def owner

@@ -30,7 +30,7 @@ class GenerateDrawPlacesJob < ApplicationJob
     Draw.find(draw_id).update(draw_params)
   end
 
-  def sell_places(draw_id, place_positions, client_data)
+  def sell_places(draw_id, place_positions)
     redis = Redis.new
     @draw = Draw.find(draw_id)
   
@@ -58,7 +58,7 @@ class GenerateDrawPlacesJob < ApplicationJob
         end
   
         place['is_sold'] = true
-        place['client'] = client_data
+        # place['client'] = client_data
   
         puts "Lugar #{position} vendido correctamente."
       end
@@ -67,12 +67,10 @@ class GenerateDrawPlacesJob < ApplicationJob
         draw_id: draw_id,
         place_numbers: place_positions,
         sold_at: DateTime.now,
-        created_at: DateTime.now,
-        updated_at: DateTime.now
       }
   
       if places_to_insert.present?
-        Place.insert(places_to_insert)
+        Place.insert_all(places_to_insert)
   
         redis.del("places:#{draw_id}")
         redis.set("places:#{draw_id}", places.to_json)

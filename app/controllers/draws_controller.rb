@@ -3,13 +3,13 @@ class DrawsController < ApplicationController
   
   def index
     @draws = Draw.last
-    render json: @draws
+    render json: [@draws]
   end
 
   def public_get
     if params[:user_id].present? && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
-      @draws = Draw.find_by(owner_id: params[:user_id])
-      render json: [@draws], status: :ok
+      @draws = Draw.where(owner_id: params[:user_id])
+      render json: @draws, status: :ok
     else
       render json: { message: 'No autorizado' }, status: :forbidden
     end

@@ -162,6 +162,33 @@ class Draw < ApplicationRecord
     Draw.where(owner_id: id)
   end
 
+  def self.progress(id)
+    redis = Redis.new
+    draw = Draw.find(id)
+
+    if draw.draw_type != "To-Infinity"
+      places = JSON.parse(redis.get("places:#{draw.id}"))
+      
+      solds = places.select { |ticket| ticket["is_sold"] == true }
+      availables = places.select { |ticket| ticket["is_sold"] == false}
+      current = (solds.count.to_f / (availables.count + solds.count).to_f) * 100
+
+      progress = {
+        available: availables.count,
+        sold: solds.count,
+        current: current
+      }
+
+      return progress
+    else
+      return {
+        available: 0,
+        sold: 0,
+        current: 0
+      }
+    end
+  end
+
   def self.get_winners(draw_id)
     redis = Redis.new
     tickets = JSON.parse(redis.get("places:#{draw_id}"))
