@@ -5,7 +5,7 @@
 #  id                      :bigint           not null, primary key
 #  ads                     :string
 #  automatic_taquillas_ids :integer          default([]), is an Array
-#  award                   :string
+#  award                   :string           default([]), is an Array
 #  draw_type               :string
 #  expired_date            :date
 #  first_prize             :string

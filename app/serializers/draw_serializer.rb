@@ -5,7 +5,7 @@
 #  id                      :bigint           not null, primary key
 #  ads                     :string
 #  automatic_taquillas_ids :integer          default([]), is an Array
-#  award                   :string
+#  award                   :string           default([]), is an Array
 #  draw_type               :string
 #  expired_date            :date
 #  first_prize             :string
@@ -33,6 +33,8 @@ class DrawSerializer < ActiveModel::Serializer
               :title,
               :first_prize,
               :second_prize,
+              :adnoucement,
+              :award,
               :uniq,
               :init_date,
               :expired_date,
@@ -50,6 +52,15 @@ class DrawSerializer < ActiveModel::Serializer
               :owner,
               :created_at,
               :updated_at
+
+  def adnoucement 
+    @ad = object.ads
+    if @ad
+      "http://localhost:3000#{@ad}"
+    else
+      nil
+    end
+  end
 
   def owner
     Whitelist.find_by(user_id: object.owner_id)

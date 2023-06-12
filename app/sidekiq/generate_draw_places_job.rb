@@ -60,20 +60,19 @@ class GenerateDrawPlacesJob < ApplicationJob
         place['is_sold'] = true
         place['client'] = client_data
   
-        places_to_insert << {
-          draw_id: draw_id,
-          numbers: place['numbers'],
-          place_number: place['place_number'],
-          sold_at: Date.today,
-          created_at: DateTime.now,
-          updated_at: DateTime.now
-        }
-  
         puts "Lugar #{position} vendido correctamente."
       end
+
+      places_to_insert << {
+        draw_id: draw_id,
+        place_numbers: place_positions,
+        sold_at: DateTime.now,
+        created_at: DateTime.now,
+        updated_at: DateTime.now
+      }
   
       if places_to_insert.present?
-        Place.insert_all(places_to_insert)
+        Place.insert(places_to_insert)
   
         redis.del("places:#{draw_id}")
         redis.set("places:#{draw_id}", places.to_json)

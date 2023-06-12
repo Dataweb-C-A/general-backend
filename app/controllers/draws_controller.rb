@@ -2,8 +2,7 @@ class DrawsController < ApplicationController
   before_action :set_draw, only: [:show]
   
   def index
-    @draws = Draw.all.includes([:award_attachment])
-    ActionCable.server.broadcast("DrawChannel", @draws)
+    @draws = Draw.last
     render json: @draws
   end
 
@@ -19,16 +18,8 @@ class DrawsController < ApplicationController
   def create
     if Draw.validate_draw_access(1, request.headers[:Authorization])
       @draw = Draw.new(draw_params)
-      
-      if params[:ads].present?
-        @draw.ads = params[:ads][:path]
-      end
 
-      if params[:award].present?
-        params[:award].each do |award_params|
-          @draw.award << award_params[:path]
-        end
-      end
+      puts params[:draw]
       
       if @draw.save
         render json: @draw
@@ -74,7 +65,7 @@ class DrawsController < ApplicationController
                                  :price_unit,
                                  :money,
                                  :ads,
-                                 :award => []
+                                 :award
     )
   end
 end

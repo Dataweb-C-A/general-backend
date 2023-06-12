@@ -2,14 +2,13 @@
 #
 # Table name: places
 #
-#  id           :bigint           not null, primary key
-#  numbers      :integer
-#  place_number :integer
-#  sold_at      :date             default(Thu, 08 Jun 2023)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  client_id    :bigint
-#  draw_id      :bigint           not null
+#  id            :bigint           not null, primary key
+#  place_numbers :integer          default([]), is an Array
+#  sold_at       :datetime         default(Fri, 09 Jun 2023 15:18:53.964336000 -04 -04:00)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  client_id     :bigint
+#  draw_id       :bigint           not null
 #
 # Indexes
 #
