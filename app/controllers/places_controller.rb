@@ -32,7 +32,7 @@ class PlacesController < ApplicationController
   end
 
   def sell_places
-    GenerateDrawPlacesJob.new.sell_places(place_params[:draw_id], place_params[:place_nro], place_params[:client])
+    GenerateDrawPlacesJob.new.sell_places(place_params[:draw_id], place_params[:place_nro])
 
     render json: { message: 'Ticket vendido', redirect: "http://localhost:3000/tickets?place_position=#{place_params[:place_nro]}" }, status: :ok
   end
@@ -40,6 +40,6 @@ class PlacesController < ApplicationController
   private
 
   def place_params
-    params.require(:place).permit(:number, :client, :draw_id, place_nro: [])
+    params.require(:place).permit(:client, :draw_id, place_nro: [])
   end
 end
