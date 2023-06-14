@@ -78,6 +78,8 @@ gem 'accountingjs-rails'
 
 gem 'draper'
 
+gem "rqrcode", "~> 2.0"
+
 gem 'figaro'
 
 gem 'bullet'

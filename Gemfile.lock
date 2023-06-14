@@ -104,6 +104,7 @@ GEM
     case_transform (0.2)
       activesupport
     choice (0.2.0)
+    chunky_png (1.4.0)
     concurrent-ruby (1.2.0)
     connection_pool (2.4.0)
     crass (1.0.6)
@@ -257,6 +258,10 @@ GEM
     request_store (1.5.1)
       rack (>= 1.4)
     rexml (3.2.5)
+    rqrcode (2.2.0)
+      chunky_png (~> 1.0)
+      rqrcode_core (~> 1.0)
+    rqrcode_core (1.2.0)
     rspec-core (3.12.1)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.2)
@@ -356,6 +361,7 @@ DEPENDENCIES
   rails-erd
   redis (~> 4.0)
   redis-rails
+  rqrcode (~> 2.0)
   rspec-rails
   rubocop
   shoulda-matchers

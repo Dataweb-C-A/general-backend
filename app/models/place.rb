@@ -4,7 +4,7 @@
 #
 #  id            :bigint           not null, primary key
 #  place_numbers :integer          default([]), is an Array
-#  sold_at       :datetime         default(Fri, 09 Jun 2023 15:18:53.964336000 -04 -04:00)
+#  sold_at       :datetime         default(Wed, 14 Jun 2023 14:13:55.963926000 -04 -04:00)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  client_id     :bigint

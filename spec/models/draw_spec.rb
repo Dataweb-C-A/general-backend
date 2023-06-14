@@ -22,6 +22,7 @@
 #  second_winner           :integer
 #  tickets_count           :integer
 #  title                   :string
+#  type_of_draw            :string           default("")
 #  uniq                    :string
 #  visible_taquillas_ids   :integer          default([]), is an Array
 #  created_at              :datetime         not null

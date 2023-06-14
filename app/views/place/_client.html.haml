@@ -18,3 +18,8 @@
     04121688466
 %a{:class => "card-text text-center mb-4", :href => "http://www.resultadostriplezulia.com/action/index"}
   Busque el resultado aquí
+
+- @data = ApplicationRecord.generate_qr("https://localhost:3000/tickets?draw_id=#{@draw.id}&plays=#{@place.id}")
+
+.div
+  %img{src: "data:image/png;base64,#{@data}"}/

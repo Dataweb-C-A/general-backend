@@ -11,9 +11,10 @@ class TicketsController <  ApplicationController
   end
 
   def index
-    @rifa = Rifa.last
-    @tickets = Ticket.find(1)
-    render 'place/index', locals: { rifa: @rifa, tickets: @tickets }
+    @draw = Draw.find(params[:draw_id])
+    @place = Place.find(params[:plays])
+    @agency = Whitelist.find(@draw.owner_id)
+    render 'place/index', locals: { draw: @draw, place: @place, agency: @agency }
   end
 
   private

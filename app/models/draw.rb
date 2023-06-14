@@ -22,6 +22,7 @@
 #  second_winner           :integer
 #  tickets_count           :integer
 #  title                   :string
+#  type_of_draw            :string           default("")
 #  uniq                    :string
 #  visible_taquillas_ids   :integer          default([]), is an Array
 #  created_at              :datetime         not null
@@ -36,27 +37,30 @@ class Draw < ApplicationRecord
 
   has_and_belongs_to_many :taquillas, class_name: 'Taquilla'
   has_many :places, dependent: :destroy
-
+  
+  before_create :validate_type
+  
   after_create :generate_places
+  
   after_commit :change_expired_date_by_draw_type, except: [:destroy]
-
+  
   validates :title,
-            presence: true,
-            length: { minimum: 5, maximum: 50 }
-
+  presence: true,
+  length: { minimum: 5, maximum: 50 }
+  
   validates :first_prize,
-            presence: true,
-            length: { minimum: 5, maximum: 50 }
+  presence: true,
+  length: { minimum: 5, maximum: 50 }
   
   # validates :second_prize,
   #           length: { minimum: 5, maximum: 50 }
-
+  
   validates :init_date,
-            presence: true,
+  presence: true,
             comparison: { greater_than_or_equal_to: Time.now.in_time_zone("Caracas").to_date() }
             
   validate :validate_expired_date
-
+  
   validate :validate_draw_type
   
   validates :numbers,
@@ -186,6 +190,16 @@ class Draw < ApplicationRecord
         sold: 0,
         current: 0
       }
+    end
+  end
+
+  def validate_type
+    if self.tickets_count === 100
+      self.type_of_draw = "Terminal"
+    elsif self.tickets_count === 1000
+      self.type_of_draw = "Triple"
+    else
+      self.type_of_draw = "Infinito"
     end
   end
 

@@ -58,6 +58,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_185653) do
     t.string "first_prize"
     t.string "second_prize"
     t.string "uniq"
+    t.string "type_of_draw", default: ""
     t.date "init_date"
     t.date "expired_date"
     t.integer "numbers"
@@ -95,7 +96,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_185653) do
 
   create_table "places", force: :cascade do |t|
     t.integer "place_numbers", default: [], array: true
-    t.datetime "sold_at", default: "2023-06-09 19:18:53"
+    t.datetime "sold_at", default: "2023-06-14 18:13:55"
     t.bigint "client_id"
     t.bigint "draw_id", null: false
     t.datetime "created_at", null: false
