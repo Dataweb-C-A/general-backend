@@ -64,26 +64,28 @@ Jugadas: #{@place.place_numbers.length} 	  Total: #{@place.place_numbers.length 
 Nombre:		  Javier Diaz
 Cedula:		  V-29.543.140
 Telefono:	  0412-1688466
----------------------------------"
+---------------------------------
+#{ApplicationRecord.generate_qr("http://localhost:3000/tickets?draw_id=#{@draw.id}&plays=#{@place.id}")}
+"
 
     @fifty_six_mm = "----------- CUT -----------
 
         RIFAMAX
 ----------------------------
         NUMEROS:
-    01, 12, 29, 69, 77
+#{@place.place_numbers}
 ----------------------------
-Premio:      Moto Bera
-Precio:      2,50$
+Premio:      #{@draw.first_prize}
+Precio:      #{@draw.price_unit}0$
 Tipo:	     Terminal(00-99)
-Agencia:     4 Bocas
-Ticket num:  231
-Fecha venta: 06/08/2023
-Tipo sorteo: Progresivo
-Fecha:	     Por anunciar
-Progreso:    10%
+Agencia:     #{@agency.name}
+Ticket num:  #{@draw.numbers}
+Fecha venta: #{@place.created_at.strftime("%d/%m/%Y %H:%M")}
+Tipo sorteo: #{@draw.draw_type}
+Fecha:	     #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}
+Progreso:    #{Draw.progress(@draw.id)[:current]}%
 ----------------------------
-Jugadas: 5   Total: 12.50$
+Jugadas: #{@place.place_numbers.length}   Total: #{@place.place_numbers.length * @draw.price_unit}0$
 ----------------------------
          CLIENTE
 ----------------------------

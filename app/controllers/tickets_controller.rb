@@ -1,7 +1,7 @@
 class TicketsController <  ApplicationController
   include TimeBlock
 
-  before_action :check_hibernation_time
+  # before_action :check_hibernation_time
 
   HIBERNATION_START_TIME = Time.new(Time.now.year, Time.now.month, Time.now.day, 4, 0, 0)
   HIBERNATION_END_TIME = Time.new(Time.now.year, Time.now.month, Time.now.day, 19, 30, 0)
