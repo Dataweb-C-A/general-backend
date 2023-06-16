@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_06_185653) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_16_150219) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -94,9 +94,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_185653) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "inboxes", force: :cascade do |t|
+    t.string "message"
+    t.string "request_type"
+    t.bigint "whitelist_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["whitelist_id"], name: "index_inboxes_on_whitelist_id"
+  end
+
   create_table "places", force: :cascade do |t|
     t.integer "place_numbers", default: [], array: true
-    t.datetime "sold_at", default: "2023-06-14 18:13:55"
+    t.datetime "sold_at", default: "2023-06-16 20:59:43"
+    t.integer "agency_id", null: false
     t.bigint "client_id"
     t.bigint "draw_id", null: false
     t.datetime "created_at", null: false
@@ -225,6 +235,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_185653) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "inboxes", "whitelists"
   add_foreign_key "places", "clients"
   add_foreign_key "places", "draws"
   add_foreign_key "rifas", "users"

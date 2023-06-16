@@ -11,4 +11,10 @@
 #  user_id    :integer
 #
 class Whitelist < ApplicationRecord
+  has_one :whitelist
+  
+  def get_messages
+    messages = []
+    messages
+  end
 end

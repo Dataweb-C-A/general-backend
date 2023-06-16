@@ -3,6 +3,7 @@ class CreatePlaces < ActiveRecord::Migration[7.0]
     create_table :places do |t|
       t.integer :place_numbers, array: true, default: []
       t.datetime :sold_at, default: DateTime.now
+      t.integer :agency_id, null: false
       t.references :client, null: true, foreign_key: true
       t.references :draw, null: false, foreign_key: true
 

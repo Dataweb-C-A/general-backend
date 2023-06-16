@@ -32,9 +32,17 @@ class PlacesController < ApplicationController
   end
 
   def sell_places
-    GenerateDrawPlacesJob.new.sell_places(place_params[:draw_id], place_params[:place_nro])
-
-    render json: { message: 'Ticket vendido', redirect: "http://localhost:3000/tickets?place_position=#{place_params[:place_nro]}" }, status: :ok
+    return unless place_params[:agency_id]
+    if place_params[:user_id].present? && Draw.validate_draw_access(place_params[:user_id], request.headers[:Authorization])
+      if place_params[:agency_id] && Whitelist.find_by(user_id: place_params[:agency_id])
+        GenerateDrawPlacesJob.new.sell_places(place_params[:draw_id], place_params[:place_nro], place_params[:agency_id])
+        render json: { message: 'Ticket vendido', redirect: "http://localhost:3000/tickets?place_position=#{place_params[:place_nro]}" }, status: :ok
+      else
+        render json: { error: 'Unauthorized!', code: 401 }, status: :unauthorized
+      end
+    else
+      render json: { error: 'Unauthorized!', code: 401 }, status: :unauthorized
+    end
   end
 
   def print_text
@@ -71,7 +79,7 @@ Telefono:	  0412-1688466
 "
 
     @fifty_six_mm = "----------- CUT -----------
-
+       
         RIFAMAX
 ----------------------------
         NUMEROS:
@@ -108,6 +116,6 @@ Telefono:    0412-1688466
   private
 
   def place_params
-    params.require(:place).permit(:client, :draw_id, place_nro: [])
+    params.require(:place).permit(:client, :draw_id, :agency_id, :user_id, place_nro: [])
   end
 end

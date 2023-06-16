@@ -16,4 +16,7 @@ Exchange.create(money: "USD", value: 25.47, day: Time.now.in_time_zone("Caracas"
 
 Whitelist.create(user_id: 1, email: "rifamax4bocas@gmail.com", name: "4 Bocas", role: "Taquilla")
 
+Whitelist.create(user_id: 2, email: "4bocasauto@gmail.com", name: "4 Bocas", role: "Auto")
+
 Client.create(name: "Javier Diaz", dni: "V-29543140", phone: "0412-1688466", email: "javierdiazt406@gmail.com")
+

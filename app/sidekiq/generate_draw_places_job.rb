@@ -30,7 +30,7 @@ class GenerateDrawPlacesJob < ApplicationJob
     Draw.find(draw_id).update(draw_params)
   end
 
-  def sell_places(draw_id, place_positions)
+  def sell_places(draw_id, place_positions, agency_id)
     redis = Redis.new
     @draw = Draw.find(draw_id)
   
@@ -66,14 +66,29 @@ class GenerateDrawPlacesJob < ApplicationJob
       places_to_insert << {
         draw_id: draw_id,
         place_numbers: place_positions,
+        agency_id: agency_id,
         sold_at: DateTime.now,
       }
   
       if places_to_insert.present?
-        Place.insert_all(places_to_insert)
-  
-        redis.del("places:#{draw_id}")
-        redis.set("places:#{draw_id}", places.to_json)
+        if Place.where(draw_id: @draw.id, place_numbers: place_positions).length == 0
+          Place.insert_all(places_to_insert)
+          # Declare a variable to get de created Place
+          created_places = Place.where(draw_id: draw_id, place_numbers: place_positions)
+    
+          if Whitelist.find_by(user_id: agency_id).role == 'Auto'
+            Inbox.create(
+              message: "Monto: #{place_positions.length * @draw.price_unit} \n Numeros: #{place_positions} \n Premio: #{@draw.first_prize} \n Tipo: #{@draw.type_of_draw} \n Agencia: #{Whitelist.find_by(user_id: @draw.owner_id).name} \n Tipo sorteo: #{@draw.draw_type} \n Fecha limite: #{@draw.expired_date == nil ? 'Por anunciar' : @draw.expired_date}",
+              request_type: "Auto",
+              whitelist_id: Whitelist.where(name: Whitelist.find_by(user_id: agency_id).name).first.id
+            )
+          end
+
+          redis.del("places:#{draw_id}")
+          redis.set("places:#{draw_id}", places.to_json)
+        else 
+          puts "aaa"
+        end 
       else
         puts 'No se encontraron lugares para vender.'
       end
