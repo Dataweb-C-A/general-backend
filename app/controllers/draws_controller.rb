@@ -9,6 +9,7 @@ class DrawsController < ApplicationController
   def public_get
     if params[:user_id].present? && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
       @draws = Draw.where(owner_id: params[:user_id])
+      @draws.change_expired(@draws.ids)
       render json: @draws, status: :ok
     else
       render json: { message: 'No autorizado' }, status: :forbidden

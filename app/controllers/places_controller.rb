@@ -44,10 +44,12 @@ class PlacesController < ApplicationController
     
     @eighty_mm = "	    RIFAMAX
 ---------------------------------
-            NUMEROS:
+            NUMEROS
 #{@place.place_numbers}
 ---------------------------------
-Premio:   	  #{@draw.first_prize}
+            PREMIOS
+#{@draw.first_prize} #{}
+---------------------------------
 Precio:       	  #{@draw.price_unit}0$
 Tipo:	          Terminal(00-99)
 Agencia:    	  #{@agency.name}

@@ -42,7 +42,9 @@ class Draw < ApplicationRecord
   
   after_create :generate_places
   
-  after_commit :change_expired_date_by_draw_type, except: [:destroy]
+  # after_commit :change_expired_date_by_draw_type, except: [:destroy]
+
+  before_commit :change_expired_date_by_draw_type, except: [:destroy]
   
   validates :title,
   presence: true,
@@ -123,6 +125,35 @@ class Draw < ApplicationRecord
     end
   end
 
+  def self.change_expired(draw_ids)
+    redis = Redis.new
+  
+    draw_ids.each do |draw_id|
+      draw = Draw.find(draw_id)
+  
+      if draw.draw_type == "Progressive"
+        tickets = JSON.parse(redis.get("places:#{draw_id}"))
+  
+        sold_tickets_count = tickets.count { |ticket| ticket["is_sold"] }
+        available_tickets_count = tickets.count { |ticket| !ticket["is_sold"] }
+  
+        sold_average = ((sold_tickets_count.to_f / draw.tickets_count) * 100).round(2)
+      
+        if sold_average >= draw.limit.to_f.round(2)
+          draw.update(expired_date: Date.today + 3.day)
+        else
+          expired_date = nil
+        end
+  
+        draw.update(expired_date: expired_date)
+      end
+  
+      if draw.expired_date && draw.expired_date <= Time.now
+        draw.update(is_active: false)
+      end
+    end
+  end
+
   def change_expired_date_by_draw_type
     redis = Redis.new
 
@@ -135,9 +166,15 @@ class Draw < ApplicationRecord
       sold_average = ((sold_tickets_count / available_tickets_count) * 100).round(2)
     
       if sold_average >= self.limit
-        expired_date = self.expired_date + 3.day
+        expired_date = Date.today + 3
       else
         expired_date = nil
+      end
+    end
+
+    if self.expired_date
+      if self.expired_date <= Time.now
+        self.is_active = false
       end
     end
   end

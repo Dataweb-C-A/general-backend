@@ -24,9 +24,19 @@ class Place < ApplicationRecord
   belongs_to :draw
   belongs_to :client
 
+  before_commit :change_expired
+  after_create :change_expired
+
   def self.validate_tickets(draw_id)
     redis = Redis.new
     places = redis.get("places:#{draw_id}")
+    @draw = Draw.find(draw_id)
+
+    if @draw.draw_type == 'Progressive' 
+      if Draw.progress(draw_id)[:current] >= @draw.limit
+        @draw.update(expired_date: Date.today + 3)
+      end
+    end
 
     if places.present?
       true
@@ -34,4 +44,14 @@ class Place < ApplicationRecord
       false
     end
   end
+
+  def change_expired 
+    @draw = Draw.find(self.draw_id)
+
+    if @draw.draw_type == 'Progressive' 
+      if Draw.progress(self.draw_id)[:current] >= @draw.limit
+        @draw.update(expired_date: Date.today + 3)
+      end
+    end
+  end 
 end
