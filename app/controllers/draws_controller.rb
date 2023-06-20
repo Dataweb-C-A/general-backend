@@ -9,7 +9,19 @@ class DrawsController < ApplicationController
   def public_get
     if params[:user_id].present? && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
       @draws = Draw.where(owner_id: params[:user_id])
-      @draws.change_expired(@draws.ids)
+      @draws.each do |draw|
+        if draw.draw_type == "Progressive"
+          if (Draw.progress(draw.id)[:current].to_i >= draw.limit && draw.expired_date == nil)
+            puts "evanan es gay"
+            Draw.where(id: draw.id).update_all(expired_date: Date.today + 3)
+          end
+        end
+        if draw.expired_date
+          if draw.expired_date <= Time.now
+            draw.is_active = false
+          end
+        end
+      end
       render json: @draws, status: :ok
     else
       render json: { message: 'No autorizado' }, status: :forbidden

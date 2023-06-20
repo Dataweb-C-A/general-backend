@@ -53,7 +53,7 @@ class PlacesController < ApplicationController
     @eighty_mm = "	    RIFAMAX
 ---------------------------------
             NUMEROS
-#{@place.place_numbers}
+#{@place.place_numbers.to_s.tr('[]', '')}
 ---------------------------------
             PREMIOS
 #{@draw.first_prize} #{}
@@ -69,42 +69,41 @@ Progreso: 	  #{Draw.progress(@draw.id)[:current]}%
 ---------------------------------
 Jugadas: #{@place.place_numbers.length} 	  Total: #{@place.place_numbers.length * @draw.price_unit}0$
 ---------------------------------
-            CLIENTE
+#{@place.client != nil ? "            CLIENTE
 ---------------------------------
 Nombre:		  Javier Diaz
 Cedula:		  V-29.543.140
 Telefono:	  0412-1688466
----------------------------------
+---------------------------------" : nil}
 #{ApplicationRecord.generate_qr("http://localhost:3000/tickets?draw_id=#{@draw.id}&plays=#{@place.id}")}
 "
 
-    @fifty_six_mm = "----------- CUT -----------
-       
-        RIFAMAX
-----------------------------
-        NUMEROS:
-#{@place.place_numbers}
-----------------------------
-Premio:      #{@draw.first_prize}
-Precio:      #{@draw.price_unit}0$
-Tipo:	     Terminal(00-99)
-Agencia:     #{@agency.name}
-Ticket num:  #{@draw.numbers}
-Fecha venta: #{@place.created_at.strftime("%d/%m/%Y %H:%M")}
-Tipo sorteo: #{@draw.draw_type}
-Fecha:	     #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}
-Progreso:    #{Draw.progress(@draw.id)[:current]}%
-----------------------------
-Jugadas: #{@place.place_numbers.length}   Total: #{@place.place_numbers.length * @draw.price_unit}0$
-----------------------------
-         CLIENTE
-----------------------------
-Nombre:	     Javier Diaz
-Cedula:	     V-29.543.140
-Telefono:    0412-1688466
-----------------------------
-
------------ CUT ------------+"
+    @fifty_six_mm = "
+           RIFAMAX
+--------------------------------
+           NUMEROS:
+#{@place.place_numbers.to_s.tr('[]', '*****')}
+--------------------------------
+Premio:        #{@draw.first_prize}
+Precio:        #{@draw.price_unit}0$
+Tipo:	          Terminal(00-99)
+Agencia:       #{@agency.name}
+Ticket num:    #{@draw.numbers}
+Fecha venta:   #{@place.created_at.strftime("%d/%m/%Y %H:%M")}
+Tipo sorteo:   #{@draw.draw_type}
+Fecha:	         #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}
+Progreso:      #{Draw.progress(@draw.id)[:current]}%
+--------------------------------
+Jugadas: #{@place.place_numbers.length}      Total: #{@place.place_numbers.length * @draw.price_unit}0$
+--------------------------------
+#{@place.client != nil ? "          CLIENTE
+--------------------------------
+Nombre:	        Javier Diaz
+Cedula:	        V-29.543.140
+Telefono:      0412-1688466
+--------------------------------" : nil}
+#{ApplicationRecord.generate_qr("http://localhost:3000/tickets?draw_id=#{@draw.id}&plays=#{@place.id}")}
+------------ CUT ---------------"
 
     if params[:print] == "80mm"
       render plain: @eighty_mm
