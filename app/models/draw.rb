@@ -140,12 +140,11 @@ class Draw < ApplicationRecord
         sold_average = ((sold_tickets_count.to_f / draw.tickets_count) * 100).round(2)
       
         if sold_average >= draw.limit.to_f.round(2)
-          draw.update(expired_date: Date.today + 3.day)
+          Draw.where(id: draw_id).first.update(expired_date: Date.today + 3.day)
         else
+          puts('prueba')
           expired_date = nil
         end
-  
-        draw.update(expired_date: expired_date)
       end
   
       if draw.expired_date && draw.expired_date <= Time.now

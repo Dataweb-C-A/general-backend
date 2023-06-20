@@ -86,8 +86,6 @@ class GenerateDrawPlacesJob < ApplicationJob
 
           redis.del("places:#{draw_id}")
           redis.set("places:#{draw_id}", places.to_json)
-        else 
-          puts "aaa"
         end 
       else
         puts 'No se encontraron lugares para vender.'
