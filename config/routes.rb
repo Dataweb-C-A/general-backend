@@ -3,6 +3,7 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  get 'inboxes/index'
   get 'places/index'
   require 'sidekiq/web'
 
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
   resources :tickets, only: [:index]
   resources :draws, only: [:index, :show, :create], param: :id
   resources :places, only: [:index], param: :id
+  resources :whitelist, only: [:index], param: :agency
 
   # get 'draws/index'
   # get 'draws/show'
