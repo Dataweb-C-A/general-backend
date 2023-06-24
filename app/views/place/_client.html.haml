@@ -22,4 +22,4 @@
 - @data = ApplicationRecord.generate_qr("https://localhost:3000/tickets?draw_id=#{@draw.id}&plays=#{@place.id}")
 
 .div
-  %img{src: "data:image/png;base64,#{@data}"}/
+  %img{src: "data:image/png;base64,#{@data}", :style => "margin: -20px 0 0 24.4%; width: 170px"}/

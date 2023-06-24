@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   get '/rifas/active', to: 'rifas#actives'
   get '/my-profile', to: 'profiles#index'
   get '/stats/rifas', to: 'stats#rifas_stats'
+  get '/draws_finder', to: 'draws#find', param: :id
   
   post '/', to: 'application#test'
   post '/auth/login', to: 'authentication#login'

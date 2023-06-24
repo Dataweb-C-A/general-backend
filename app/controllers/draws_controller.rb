@@ -44,6 +44,15 @@ class DrawsController < ApplicationController
     end
   end
 
+  def find
+    if params[:id]
+      @draw_finder = Draw.find(params[:id])
+      render json: @draw_finder
+    else
+      render json: { message: 'No autorizado' }, status: :forbidden
+    end
+  end
+
   def filter
     @draws = Draw.find_awards_by_owner(params[:owner_id])
     render json: @draws
