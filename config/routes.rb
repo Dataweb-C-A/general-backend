@@ -3,6 +3,7 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  resources :clients
   get 'inboxes/index'
   get 'places/index'
   require 'sidekiq/web'

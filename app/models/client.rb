@@ -32,4 +32,8 @@ class Client < ApplicationRecord
 
   # validates :email,
   #           format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  def self.search(finder)
+    Client.where("name LIKE ? OR dni LIKE ? OR phone LIKE ?", "%#{finder}%", "%#{finder}%", "%#{finder}%")
+  end
 end
