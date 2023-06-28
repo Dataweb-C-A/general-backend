@@ -87,9 +87,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_150219) do
   end
 
   create_table "exchanges", force: :cascade do |t|
-    t.string "money"
-    t.float "value"
-    t.date "day"
+    t.float "variacion_bs"
+    t.float "variacion_cop", null: false
+    t.boolean "automatic", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -105,7 +105,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_150219) do
 
   create_table "places", force: :cascade do |t|
     t.integer "place_numbers", default: [], array: true
-    t.datetime "sold_at", default: "2023-06-16 20:59:43"
+    t.datetime "sold_at", default: "2023-06-27 20:58:38"
     t.integer "agency_id", null: false
     t.bigint "client_id"
     t.bigint "draw_id", null: false

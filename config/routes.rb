@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :draws, only: [:index, :show, :create], param: :id
   resources :places, only: [:index], param: :id
   resources :whitelist, only: [:index], param: :agency
+  resources :exchange
 
   # get 'draws/index'
   # get 'draws/show'

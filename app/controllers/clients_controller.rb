@@ -6,7 +6,8 @@ class ClientsController < ApplicationController
   def index
     @clients = Client.all
     if params[:query]
-      render json: @search
+      puts("This is the param: #{params[:query].to_s}")
+      render json: Client.search(params[:query].to_s).first
     else 
       render json: @clients
     end
@@ -21,12 +22,19 @@ class ClientsController < ApplicationController
   # POST /clients
   # POST /clients.json
   def create
-    @client = Client.new(client_params)
-
-    if @client.save
-      render :show, status: :created, location: @client
+    if client_params
+      if Client.find_by(dni: client_params[:dni])
+        render json: { message:"Client already exists" }, status:409
+      else
+        @client = Client.new(client_params)
+        if @client.save
+          render json: @client, status: :created, location: @client
+        else
+          render json: @client.errors, status: :unprocessable_entity
+        end
+      end
     else
-      render json: @client.errors, status: :unprocessable_entity
+      render json: { message: "No client on ticket" }, status: :ok
     end
   end
 
@@ -58,6 +66,6 @@ class ClientsController < ApplicationController
     end
 
     def search
-      @search = Client.search(params[:query])
+      @search = Client.search(params[:query].to_s)
     end
 end

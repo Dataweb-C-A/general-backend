@@ -2,12 +2,12 @@
 #
 # Table name: exchanges
 #
-#  id         :bigint           not null, primary key
-#  day        :date
-#  money      :string
-#  value      :float
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :bigint           not null, primary key
+#  automatic     :boolean          default(FALSE)
+#  variacion_bs  :float
+#  variacion_cop :float            not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 require 'rails_helper'
 

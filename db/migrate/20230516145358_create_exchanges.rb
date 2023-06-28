@@ -1,9 +1,9 @@
 class CreateExchanges < ActiveRecord::Migration[7.0]
   def change
     create_table :exchanges do |t|
-      t.string :money
-      t.float :value
-      t.date :day
+      t.float :variacion_bs, null: true
+      t.float :variacion_cop, null: false
+      t.boolean :automatic, default: false
 
       t.timestamps
     end

@@ -36,7 +36,7 @@ class PlacesController < ApplicationController
     if place_params[:user_id].present? && Draw.validate_draw_access(place_params[:user_id], request.headers[:Authorization])
       if place_params[:agency_id] && Whitelist.find_by(user_id: place_params[:agency_id])
         GenerateDrawPlacesJob.new.sell_places(place_params[:draw_id], place_params[:place_nro], place_params[:agency_id])
-        render json: { message: 'Ticket vendido', redirect: "http://localhost:3000/tickets?place_position=#{place_params[:place_nro]}" }, status: :ok
+        render json: { message: 'Ticket vendido', redirect: "#{ENV["HOST"]}/tickets?place_position=#{place_params[:place_nro]}" }, status: :ok
       else
         render json: { error: 'Unauthorized!', code: 401 }, status: :unauthorized
       end
@@ -53,8 +53,8 @@ class PlacesController < ApplicationController
     
     place_numbers = @place.place_numbers.to_s.tr('[]', '')
   
-    qr_code_url = "http://localhost:3000/tickets?draw_id=#{@draw.id}&plays=#{@place.id}"
-    qr_code = "IMAGE|2|1|#{ApplicationRecord.generate_qr(qr_code_url)}"
+    qr_code_url = "#{ENV["HOST"]}/tickets?draw_id=#{@draw.id}&plays=#{@place.id}"
+    qr_code = "IMAGE|150|150|#{ApplicationRecord.generate_qr(qr_code_url)}"
   
 @eighty_mm = <<-PLAIN_TEXT
                    RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{place_numbers}\n------------------------------------------------\n                   PREMIOS\n#{@draw.first_prize}\n------------------------------------------------\nPrecio:    	      	      #{@draw.price_unit}0$\nTipo:    	      	      Terminal(00-99)\nAgencia:    	      	      #{@agency.name}\nTicket numero:    	      #{@draw.numbers}\nFecha de venta:    	      #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nTipo sorteo:    	              #{@draw.draw_type}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\nProgreso:    	      	      #{Draw.progress(@draw.id)[:current]}%\n------------------------------------------------\nJugadas: #{@place.place_numbers.length}    	      	      Total: #{@place.place_numbers.length * @draw.price_unit}0$\n------------------------------------------------#{@client.present? ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n"}

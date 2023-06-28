@@ -67,9 +67,9 @@ class DrawSerializer < ActiveModel::Serializer
   def award_images
     @award = object.award
     if @award
-      ["https://localhost:3000#{@award}"]
+      "#{ENV["HOST"]}#{@award}"
     else
-      []
+      nil
     end
   end
 

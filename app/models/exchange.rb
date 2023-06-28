@@ -2,25 +2,26 @@
 #
 # Table name: exchanges
 #
-#  id         :bigint           not null, primary key
-#  day        :date
-#  money      :string
-#  value      :float
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :bigint           not null, primary key
+#  automatic     :boolean          default(FALSE)
+#  variacion_bs  :float
+#  variacion_cop :float            not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 class Exchange < ApplicationRecord
   include HTTParty
-  base_uri 'https://s3.amazonaws.com/dolartoday/data.json'
-
-  before_save :set_day
-
-  private
-  def validates_fields
-    
-  end
-
-  def set_day
-    self.day = Time.now.in_time_zone("Caracas").to_date()
+  
+  after_create :get_exchange
+  
+  def get_exchange
+    @base_uri = 'https://s3.amazonaws.com/dolartoday/data.json'
+    if self.automatic
+      response = HTTParty.get(@base_uri)
+      if response.code == 200
+        self.variacion_bs = JSON.parse(response.body)["USD"]["promedio"]
+        self.save
+      end
+    end
   end
 end

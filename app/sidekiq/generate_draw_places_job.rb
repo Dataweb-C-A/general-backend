@@ -66,7 +66,7 @@ class GenerateDrawPlacesJob < ApplicationJob
       places_to_insert << {
         draw_id: draw_id,
         place_numbers: place_positions,
-        agency_id: agency_id,
+        agency_id: @draw.owner_id,
         sold_at: DateTime.now,
       }
   
