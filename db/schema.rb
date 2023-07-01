@@ -52,7 +52,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_150219) do
   end
 
   create_table "draws", force: :cascade do |t|
-    t.string "award", default: [], array: true
+    t.string "award"
     t.string "ads"
     t.string "title"
     t.string "first_prize"
@@ -105,7 +105,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_150219) do
 
   create_table "places", force: :cascade do |t|
     t.integer "place_numbers", default: [], array: true
-    t.datetime "sold_at", default: "2023-06-27 20:58:38"
+    t.datetime "sold_at", default: "2023-06-30 18:35:00"
     t.integer "agency_id", null: false
     t.bigint "client_id"
     t.bigint "draw_id", null: false

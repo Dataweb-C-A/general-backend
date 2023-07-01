@@ -5,7 +5,7 @@
 #  id                      :bigint           not null, primary key
 #  ads                     :string
 #  automatic_taquillas_ids :integer          default([]), is an Array
-#  award                   :string           default([]), is an Array
+#  award                   :string
 #  draw_type               :string
 #  expired_date            :date
 #  first_prize             :string
@@ -57,7 +57,7 @@ class DrawSerializer < ActiveModel::Serializer
 
   def adnoucement 
     @ad = object.ads
-    if @ad
+    if @ad != nil
       "http://localhost:3000#{@ad}"
     else
       nil

@@ -16,9 +16,9 @@ class ClientSerializer < ActiveModel::Serializer
              :phone, 
              :dni
 
-  def places
-    object.place_ids.map do |place|
-      Place.find(place).place_numbers
-    end
-  end
+  # def places
+  #   object.place_ids.map do |place|
+  #     Place.find(place).place_numbers
+  #   end
+  # end
 end

@@ -23,8 +23,9 @@ class ClientsController < ApplicationController
   # POST /clients.json
   def create
     if client_params
-      if Client.find_by(dni: client_params[:dni])
-        render json: { message:"Client already exists" }, status:409
+      @client_exists = Client.find_by(dni: client_params[:dni])
+      if @client_exists
+        render json: { message: @client_exists }, status: :ok
       else
         @client = Client.new(client_params)
         if @client.save
@@ -34,7 +35,7 @@ class ClientsController < ApplicationController
         end
       end
     else
-      render json: { message: "No client on ticket" }, status: :ok
+      render json: { message: "No client on ticket" }, status: :409
     end
   end
 
@@ -62,7 +63,7 @@ class ClientsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def client_params
-      params.fetch(:client, {})
+      params.require(:clients).permit(:name, :dni, :email, :phone)
     end
 
     def search

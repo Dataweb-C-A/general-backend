@@ -3,6 +3,7 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  get 'whitelists/index'
   resources :clients
   get 'inboxes/index'
   get 'places/index'
@@ -19,8 +20,9 @@ Rails.application.routes.draw do
   resources :tickets, only: [:index]
   resources :draws, only: [:index, :show, :create], param: :id
   resources :places, only: [:index], param: :id
-  resources :whitelist, only: [:index], param: :agency
+  resources :whitelists, only: [:index], param: :agency
   resources :exchange
+  resources :clients
 
   # get 'draws/index'
   # get 'draws/show'
@@ -37,11 +39,12 @@ Rails.application.routes.draw do
   get '/my-profile', to: 'profiles#index'
   get '/stats/rifas', to: 'stats#rifas_stats'
   get '/draws_finder', to: 'draws#find', param: :id
+  get '/api/public/draws', to: 'draws#all'
   
   post '/', to: 'application#test'
   post '/auth/login', to: 'authentication#login'
   post '/api/public/draws', to: 'draws#public_get'
   
-  put '/places', to: 'places#sell_places'
+  post '/places', to: 'places#sell_places'
   get '/tickets/print', to: 'places#print_text'
 end

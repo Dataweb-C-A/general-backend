@@ -12,7 +12,6 @@ class DrawsController < ApplicationController
       @draws.each do |draw|
         if draw.draw_type == "Progressive"
           if (Draw.progress(draw.id)[:current].to_i >= draw.limit && draw.expired_date == nil)
-            puts "evanan es gay"
             Draw.where(id: draw.id).update_all(expired_date: Date.today + 3)
           end
         end
@@ -26,6 +25,11 @@ class DrawsController < ApplicationController
     else
       render json: { message: 'No autorizado' }, status: :forbidden
     end
+  end
+
+  def all
+    @draws = Draw.all
+    render json: @draws, status: :ok
   end
 
   def create
