@@ -115,7 +115,7 @@ class Draw < ApplicationRecord
 
   def self.validate_draw_access(user_id, access_token)
     if (access_token == ENV['ACCESS_TOKEN'])
-      if (Whitelist.find_by(user_id: user_id).present?)
+      if (Whitelist.where(user_id: user_id.to_i).length > 0)
         true
       else
         false 

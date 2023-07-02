@@ -33,7 +33,7 @@ class DrawsController < ApplicationController
   end
 
   def create
-    if Draw.validate_draw_access(1, request.headers[:Authorization])
+    if Draw.validate_draw_access(draw_params[:owner_id], request.headers[:Authorization])
       @draw = Draw.new(draw_params)
 
       puts params[:draw]

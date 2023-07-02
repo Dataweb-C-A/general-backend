@@ -35,7 +35,7 @@ class ClientsController < ApplicationController
         end
       end
     else
-      render json: { message: "No client on ticket" }, status: :409
+      render json: { message: "No client on ticket" }, status: :ok
     end
   end
 
