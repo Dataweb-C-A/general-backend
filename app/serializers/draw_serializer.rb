@@ -58,7 +58,7 @@ class DrawSerializer < ActiveModel::Serializer
   def adnoucement 
     @ad = object.ads
     if @ad != nil
-      "http://localhost:3000#{@ad}"
+      "https://#{ENV["HOST"]}#{@ad}"
     else
       nil
     end
@@ -67,7 +67,7 @@ class DrawSerializer < ActiveModel::Serializer
   def award_images
     @award = object.award
     if @award
-      "#{ENV["HOST"]}#{@award}"
+      "https://#{ENV["HOST"]}#{@award}"
     else
       nil
     end

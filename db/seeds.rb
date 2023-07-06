@@ -12,9 +12,9 @@ User.create(name: 'Bob', username: 'BotBob', role: 'Taquilla', cedula: 'AUTO', e
 
 # Draw.create(title: "Sorteo de un mercedes", owner_id: 1, first_prize: "Una moto mercedes", second_prize: "2500$", uniq: "89374bc", init_date: Time.now.in_time_zone("Caracas").to_date(), numbers: 293, tickets_count: 1000, loteria: "Zulia 7A", has_winners: false, is_active: true, draw_type: "End-To-Date", limit: 100, price_unit: 25.0, money: "BsF", visible_taquillas_ids: [1], automatic_taquillas_ids: [1])
 
-Exchange.create(variacion_cop: 4172.50, automatic: true)
+Exchange.create(variacion_bs: 28.01, variacion_cop: 4172.50, automatic: true)
 
-Whitelist.create(user_id: 227, email: "rifamaxmaxima02@gmail.com", name: "Maxima02", role: "Taquilla")
+Whitelist.create(user_id: 221, email: "rifamaxmaxima02@gmail.com", name: "Maxima02", role: "Taquilla")
 
 # Whitelist.create(user_id: 2, email: "4bocasauto@gmail.com", name: "4 Bocas", role: "Auto")
 
