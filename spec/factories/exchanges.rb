@@ -5,7 +5,7 @@
 #  id            :bigint           not null, primary key
 #  automatic     :boolean          default(FALSE)
 #  variacion_bs  :float
-#  variacion_cop :float            not null
+#  variacion_cop :float
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #

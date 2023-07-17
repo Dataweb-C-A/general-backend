@@ -8,7 +8,7 @@ class DrawsController < ApplicationController
 
   def public_get
     if params[:user_id].present? && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
-      @draws = Draw.where(owner_id: params[:user_id])
+      @draws = Draw.where("visible_taquillas_ids @> ARRAY[?]::integer[] OR visible_taquillas_ids = ARRAY[]::integer[]", params[:user_id])
       @draws.each do |draw|
         if draw.draw_type == "Progressive"
           if (Draw.progress(draw.id)[:current].to_i >= draw.limit && draw.expired_date == nil)
@@ -91,7 +91,8 @@ class DrawsController < ApplicationController
                                  :price_unit,
                                  :money,
                                  :ads,
-                                 :award
-    )
+                                 :award,
+                                 visible_taquillas_ids: []
+    ) 
   end
 end

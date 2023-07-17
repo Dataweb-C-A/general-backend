@@ -98,3 +98,14 @@ gem "haml", "~> 6.1"
 gem "railroady", "~> 1.6"
 
 gem 'carrierwave', '>= 3.0.0.beta', '< 4.0'
+gem "nokogiri", "~> 1.14"
+
+gem "open-uri", "~> 0.3.0"
+
+gem "watir", "~> 7.2"
+
+gem "webdrivers", "~> 5.2"
+
+gem "headless", "~> 2.3"
+
+gem "currencyapi", "~> 1.0"

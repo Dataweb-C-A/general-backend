@@ -13,7 +13,7 @@ class TicketsController <  ApplicationController
   def index
     @draw = Draw.find(params[:draw_id])
     @place = Place.find(params[:plays])
-    @agency = Whitelist.find_by(user_id: @draw.owner_id)
+    @agency = params[:agency_id].present? ? Whitelist.find_by(user_id: params[:agency_id]) : Whitelist.find_by(user_id: @draw.owner_id)
     render 'place/index', locals: { draw: @draw, place: @place, agency: @agency }
   end
 

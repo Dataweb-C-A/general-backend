@@ -17,4 +17,12 @@ class Whitelist < ApplicationRecord
     messages = []
     messages
   end
+
+  def self.user_ids
+    agencies_ids = []
+    Whitelist.all.each do |agency|
+      agencies_ids << agency.user_id
+    end
+    return agencies_ids
+  end
 end
