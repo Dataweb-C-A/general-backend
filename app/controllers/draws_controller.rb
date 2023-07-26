@@ -92,7 +92,7 @@ class DrawsController < ApplicationController
                                  :money,
                                  :ads,
                                  :award,
-                                 visible_taquillas_ids: []
+                                 :visible_taquillas_ids
     ) 
   end
 end
