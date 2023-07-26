@@ -45,6 +45,7 @@ class DrawSerializer < ActiveModel::Serializer
               :loteria,
               :has_winners,
               :is_active,
+              :tickets_count,
               :first_winner,
               :second_winner,
               :draw_type,

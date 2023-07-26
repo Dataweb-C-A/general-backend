@@ -8,7 +8,16 @@ class DrawsController < ApplicationController
 
   def public_get
     if params[:user_id].present? && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
-      @draws = Draw.where("visible_taquillas_ids @> ARRAY[?]::integer[] OR visible_taquillas_ids = ARRAY[]::integer[]", params[:user_id])
+      type = params[:type]
+
+      if type == 'terminales'
+        @draws = Draw.where("visible_taquillas_ids @> ARRAY[?]::integer[] OR visible_taquillas_ids = ARRAY[]::integer[]", params[:user_id]).where(tickets_count: 100)
+      elsif type == 'triples'
+        @draws = Draw.where("visible_taquillas_ids @> ARRAY[?]::integer[] OR visible_taquillas_ids = ARRAY[]::integer[]", params[:user_id]).where(tickets_count: 1000)
+      else
+        @draws = Draw.where("visible_taquillas_ids @> ARRAY[?]::integer[] OR visible_taquillas_ids = ARRAY[]::integer[]", params[:user_id])
+      end
+
       @draws.each do |draw|
         if draw.draw_type == "Progressive"
           if (Draw.progress(draw.id)[:current].to_i >= draw.limit && draw.expired_date == nil)
@@ -21,6 +30,7 @@ class DrawsController < ApplicationController
           end
         end
       end
+
       render json: @draws, status: :ok
     else
       render json: { message: 'No autorizado' }, status: :forbidden
