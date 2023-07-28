@@ -51,30 +51,20 @@ class GenerateDrawPlacesJob < ApplicationJob
       place_positions.each do |position|
         if position > places.length || position < 1
           puts "El lugar #{position} no existe."
-          return {
-            error: "El lugar #{position} ya está vendido.",
-            completed: false
-          }
+          next
         end
   
         place = places[position - 1]
   
         if place['is_sold']
           puts "El lugar #{position} ya está vendido."
-          return {
-            error: "El lugar #{position} ya está vendido.",
-            completed: false
-          }
+          next
         end
   
         place['is_sold'] = true
         # place['client'] = client_data
   
         puts "Lugar #{position} vendido correctamente."
-        return {
-          error: nil,
-          completed: true
-        }
       end
 
       places_to_insert << {
@@ -100,9 +90,17 @@ class GenerateDrawPlacesJob < ApplicationJob
 
           redis.del("places:#{draw_id}")
           redis.set("places:#{draw_id}", places.to_json)
+
+          return {
+            error: nil,
+            completed: true
+          }
         end 
       else
-        puts 'No se encontraron lugares para vender.'
+        return {
+          error: "Los tickets ya estan vendidos.",
+          completed: false
+        }
       end
     end
   end  
