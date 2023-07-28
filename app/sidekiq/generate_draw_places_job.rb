@@ -22,6 +22,7 @@ class GenerateDrawPlacesJob < ApplicationJob
   end
 
   def destroy(draw_id)
+    redis = Redis.new
     Draw.find(draw_id).destroy
     redis.del("places:#{draw_id}")
   end
@@ -38,7 +39,10 @@ class GenerateDrawPlacesJob < ApplicationJob
   
     if @draw.is_active == false
       puts '¡Sorteo vencido!'
-      return
+      return {
+        error: "¡Sorteo vencido!",
+        completed: false
+      }
     else
       places = JSON.parse(redis.get("places:#{draw_id}"))
   
@@ -47,20 +51,30 @@ class GenerateDrawPlacesJob < ApplicationJob
       place_positions.each do |position|
         if position > places.length || position < 1
           puts "El lugar #{position} no existe."
-          next
+          return {
+            error: "El lugar #{position} ya está vendido.",
+            completed: false
+          }
         end
   
         place = places[position - 1]
   
         if place['is_sold']
           puts "El lugar #{position} ya está vendido."
-          next
+          return {
+            error: "El lugar #{position} ya está vendido.",
+            completed: false
+          }
         end
   
         place['is_sold'] = true
         # place['client'] = client_data
   
         puts "Lugar #{position} vendido correctamente."
+        return {
+          error: nil,
+          completed: true
+        }
       end
 
       places_to_insert << {
