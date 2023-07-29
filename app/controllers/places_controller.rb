@@ -36,15 +36,31 @@ class PlacesController < ApplicationController
     if place_params[:user_id].present? && Draw.validate_draw_access(place_params[:user_id], request.headers[:Authorization])
       if place_params[:agency_id] && Whitelist.find_by(user_id: place_params[:agency_id])
         GenerateDrawPlacesJob.new.sell_places(place_params[:draw_id], place_params[:place_nro], place_params[:agency_id])[:completed] ? (
-          render json: { place: Place.last, redirect: "https://#{ENV["HOST"]}/tickets?place_position=#{place_params[:place_nro]}" }, status: :ok
+          render json: { 
+            place: Place.last, 
+            redirect: "https://#{ENV["HOST"]}/tickets?place_position=#{place_params[:place_nro]}", 
+            error: nil, 
+            completed: true, 
+            status: 201 
+          }, status: :ok
         ) : (
-          render json: { error: 'El lugar ya está vendido.', completed: false, status: 401 }, status: :unprocessable_entity
+          render json: { 
+            error: 'Los lugares ya estan vendidos', 
+            completed: false, 
+            status: 401 
+          }, status: :unprocessable_entity
         )
       else
-        render json: { error: 'Unauthorized!', code: 401 }, status: :unauthorized
+        render json: { 
+          error: 'Unauthorized!', 
+          code: 401 
+        }, status: :unauthorized
       end
     else
-      render json: { error: 'Unauthorized!', code: 401 }, status: :unauthorized
+      render json: { 
+        error: 'Unauthorized!', 
+        code: 401 
+      }, status: :unauthorized
     end
   end
 

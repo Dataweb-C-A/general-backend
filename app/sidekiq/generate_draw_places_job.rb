@@ -46,7 +46,8 @@ class GenerateDrawPlacesJob < ApplicationJob
     else
       places = JSON.parse(redis.get("places:#{draw_id}"))
   
-      places_to_insert = []
+      # Create an array to keep track of positions that are already sold/taken
+      sold_positions = []
   
       place_positions.each do |position|
         if position > places.length || position < 1
@@ -58,6 +59,7 @@ class GenerateDrawPlacesJob < ApplicationJob
   
         if place['is_sold']
           puts "El lugar #{position} ya está vendido."
+          sold_positions << position # Add the sold position to the list
           next
         end
   
@@ -66,20 +68,31 @@ class GenerateDrawPlacesJob < ApplicationJob
   
         puts "Lugar #{position} vendido correctamente."
       end
+  
+      if sold_positions.any?
+        return {
+          error: "Los tickets ya están vendidos en las posiciones #{sold_positions}.",
+          completed: false
+        }
+      end
+  
+      places_to_insert = []
 
-      places_to_insert << {
-        draw_id: draw_id,
-        place_numbers: place_positions,
-        agency_id: @draw.owner_id,
-        sold_at: DateTime.now,
-      }
+      place_positions.each do |position|
+        places_to_insert << {
+          draw_id: draw_id,
+          place_numbers: [position],
+          agency_id: @draw.owner_id,
+          sold_at: DateTime.now,
+        }
+      end
   
       if places_to_insert.present?
-        if Place.where(draw_id: @draw.id, place_numbers: place_positions).length == 0
+        if Place.where(draw_id: @draw.id, place_numbers: place_positions).empty?
           Place.insert_all(places_to_insert)
-          # Declare a variable to get de created Place
+          # Declare a variable to get the created Place
           created_places = Place.where(draw_id: draw_id, place_numbers: place_positions)
-    
+  
           if Whitelist.find_by(user_id: agency_id).role == 'Auto'
             Inbox.create(
               message: "Monto: #{place_positions.length * @draw.price_unit} \n Numeros: #{place_positions} \n Premio: #{@draw.first_prize} \n Tipo: #{@draw.type_of_draw} \n Agencia: #{Whitelist.find_by(user_id: @draw.owner_id).name} \n Tipo sorteo: #{@draw.draw_type} \n Fecha limite: #{@draw.expired_date == nil ? 'Por anunciar' : @draw.expired_date}",
@@ -87,18 +100,18 @@ class GenerateDrawPlacesJob < ApplicationJob
               whitelist_id: Whitelist.where(name: Whitelist.find_by(user_id: agency_id).name).first.id
             )
           end
-
+  
           redis.del("places:#{draw_id}")
           redis.set("places:#{draw_id}", places.to_json)
-
+  
           return {
             error: nil,
             completed: true
           }
-        end 
+        end
       else
         return {
-          error: "Los tickets ya estan vendidos.",
+          error: "Los tickets ya están vendidos.",
           completed: false
         }
       end
