@@ -17,10 +17,25 @@ class ReportsController < ApplicationController
     @end_date = params[:to] || Date.today
     @taquilla = params[:agency_id]
     @user = Whitelist.find_by(user_id: @taquilla)
-    @places = Place.where(created_at: @init_date.to_s..@end_date.to_s, agency_id: @taquilla).includes([:draw])
-
+    @places = Place.where(created_at: @init_date.to_s..@end_date.to_s, agency_id: @taquilla).includes(:draw)
+  
+    places_info = @places.map do |place|
+      draw = place.draw
+      price_unit = draw.price_unit
+      ganancia = price_unit * place.place_numbers.length
+      ganancia_final = ganancia - (ganancia * @user.commission_percentage.to_f / 100)
+  
+      {
+        title: draw.title,
+        sold_at: place.sold_at,
+        price_unit: price_unit,
+        ganancia: ganancia,
+        ganancia_final: ganancia_final
+      }
+    end
+  
     render :json => {
-      places: @places,
+      places: places_info,
       ui: {
         commission_percentage: @user.commission_percentage.to_i,
         commission_parser: "#{@user.commission_percentage.to_s}%",
@@ -34,5 +49,5 @@ class ReportsController < ApplicationController
         }
       }
     } 
-  end
+  end  
 end 
