@@ -17,15 +17,22 @@ class ReportsController < ApplicationController
     @end_date = params[:to] || Date.today
     @taquilla = params[:agency_id]
     @user = Whitelist.find_by(user_id: @taquilla)
-    @places = Place.where(created_at: @init_date.to_s..@end_date.to_s, agency_id: @taquilla)
+    @places = Place.where(created_at: @init_date.to_s..@end_date.to_s, agency_id: @taquilla).includes([:draw])
 
     render :json => {
       places: @places,
       ui: {
         commission_percentage: @user.commission_percentage.to_i,
         commission_parser: "#{@user.commission_percentage.to_s}%",
-        today_earnings: Place.today_earnings(@taquilla)
+        earnings: {
+          today_earnings: Place.earnings(@taquilla, Date.today),
+          today_earnings_parser: "#{sprintf('%.2f', Place.earnings(@taquilla, Date.today))}$",
+          agency_all_earnings: Place.earnings(@taquilla, nil),
+          agency_all_earnings_parser: "#{sprintf('%.2f', Place.earnings(@taquilla, nil))}$",
+          filter_agency_earnings: Place.filter_earnings(@taquilla, @init_date, @end_date),
+          filter_agency_earnings_parser: "#{sprintf('%.2f', Place.filter_earnings(@taquilla, @init_date, @end_date))}$"
+        }
       }
     } 
   end
-end
+end 

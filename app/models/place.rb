@@ -46,9 +46,12 @@ class Place < ApplicationRecord
     end
   end
 
-  def self.today_earnings(agency_id)
-    places = Place.where(sold_at: Date.today, agency_id: agency_id)
-
+  def self.earnings(agency_id, sold_at_date)
+    if sold_at_date 
+      places = Place.where(sold_at: sold_at_date, agency_id: agency_id)
+    else
+      places = Place.where(agency_id: agency_id)
+    end
     total_earnings = 0
     places.each do |place|
       draw = place.draw
@@ -58,7 +61,25 @@ class Place < ApplicationRecord
       total_earnings += place.place_numbers.length * draw.price_unit
     end
 
-    return ("#{total_earnings.to_f.round(2).to_s}$")
+    return total_earnings
+  end
+
+  def self.filter_earnings(agency_id, at, to)
+    if sold_at_date 
+      places = Place.where(sold_at: at..to, agency_id: agency_id)
+    else
+      places = Place.where(sold_at: at..to, agency_id: agency_id)
+    end
+    total_earnings = 0
+    places.each do |place|
+      draw = place.draw
+
+      next unless draw.price_unit.present?
+
+      total_earnings += place.place_numbers.length * draw.price_unit
+    end
+
+    return total_earnings
   end
 
   def self.admin_earnings(filter_date)
