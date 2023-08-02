@@ -220,6 +220,16 @@ class Draw < ApplicationRecord
     end
   end
 
+  def self.report_places(draw_id, filter_by) 
+    return unless draw_id
+
+    redis = Redis.new
+    places = JSON.parse(redis.get("places:#{draw_id}"))
+    places = places.select { |place| place[filter_by[:filter]] == filter_by[:spawn] }
+
+    return places
+  end
+
   def validate_type
     if self.tickets_count === 100
       self.type_of_draw = "Terminal"

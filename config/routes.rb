@@ -3,6 +3,8 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  get 'reports/index'
+  get 'reports/private'
   get 'whitelists/index'
   resources :clients
   get 'inboxes/index'
@@ -40,6 +42,7 @@ Rails.application.routes.draw do
   get '/stats/rifas', to: 'stats#rifas_stats'
   get '/draws_finder', to: 'draws#find', param: :id
   get '/api/public/draws', to: 'draws#all'
+  get '/places/reports', to: 'reports#daily_earning_reports'
   
   post '/', to: 'application#test'
   post '/auth/login', to: 'authentication#login'

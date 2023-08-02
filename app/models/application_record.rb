@@ -25,4 +25,25 @@ class ApplicationRecord < ActiveRecord::Base
 
     Base64.encode64(png.to_s)
   end
+
+  def self.filters(filters)
+    query = all
+
+    filters.each do |filter|
+      key = filter[:key].to_sym
+      comparison = filter[:comparison]
+
+      next unless column_names.include?(key.to_s)
+
+      if comparison.nil?
+        query = query.where(key => nil)
+      elsif comparison.is_a?(Array) && !comparison.empty?
+        query = query.where(key => comparison)
+      else
+        query = query.where(key => comparison)
+      end
+    end
+
+    query
+  end
 end

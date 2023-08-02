@@ -46,6 +46,36 @@ class Place < ApplicationRecord
     end
   end
 
+  def self.today_earnings(agency_id)
+    places = Place.where(sold_at: Date.today, agency_id: agency_id)
+
+    total_earnings = 0
+    places.each do |place|
+      draw = place.draw
+
+      next unless draw.price_unit.present?
+
+      total_earnings += place.place_numbers.length * draw.price_unit
+    end
+
+    return ("#{total_earnings.to_f.round(2).to_s}$")
+  end
+
+  def self.admin_earnings(filter_date)
+    places = Place.where(sold_at: filter_date)
+
+    total_earnings = 0
+    places.each do |place|
+      draw = place.draw
+
+      next unless draw.price_unit.present?
+
+      total_earnings += place.place_numbers.length * draw.price_unit
+    end
+
+    return ("#{total_earnings.to_f.round(2).to_s}$")
+  end
+
   def change_expired 
     @draw = Draw.find(self.draw_id)
 
