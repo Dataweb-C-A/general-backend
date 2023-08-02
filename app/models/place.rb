@@ -65,7 +65,7 @@ class Place < ApplicationRecord
   end
 
   def self.filter_earnings(agency_id, at, to)
-    if sold_at_date 
+    if at && to
       places = Place.where(sold_at: at..to, agency_id: agency_id)
     else
       places = Place.where(sold_at: at..to, agency_id: agency_id)
