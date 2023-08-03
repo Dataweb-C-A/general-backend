@@ -46,9 +46,19 @@ class Place < ApplicationRecord
     end
   end
 
+  def self.sold_at_by(fecha, agency)
+    from = fecha.beginning_of_day
+    to = fecha.end_of_day
+    @agency_id = agency
+    places = Place.where(sold_at: from..to, agency_id: @agency_id)
+  
+    return places
+  end
+
   def self.earnings(agency_id, sold_at_date)
+    places = []
     if sold_at_date 
-      places = Place.where(sold_at: sold_at_date, agency_id: agency_id)
+      places = Place.sold_at_by(sold_at_date, agency_id)
     else
       places = Place.where(agency_id: agency_id)
     end
