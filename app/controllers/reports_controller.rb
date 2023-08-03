@@ -43,7 +43,7 @@ class ReportsController < ApplicationController
           today_earnings: Place.earnings(@taquilla, Date.today),
           today_earnings_parser: "#{sprintf('%.2f', Place.earnings(@taquilla, Date.today))}$",
           agency_all_earnings: Place.earnings(@taquilla, nil),
-          result_commission: "#{Place.earnings(@taquilla, nil) - (Place.earnings(@taquilla, nil) * (@user.commission_percentage.to_f / 100)).round(2)}$",
+          result_commission: "#{Place.earnings(@taquilla, Date.now) - (Place.earnings(@taquilla, Date.now) * (@user.commission_percentage.to_f / 100)).round(2)}$",
           agency_all_earnings_parser: "#{sprintf('%.2f', Place.earnings(@taquilla, nil))}$",
           filter_agency_earnings: Place.filter_earnings(@taquilla, @init_date, @end_date),
           filter_agency_earnings_parser: "#{sprintf('%.2f', Place.filter_earnings(@taquilla, @init_date, @end_date))}$"
