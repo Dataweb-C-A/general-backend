@@ -78,14 +78,12 @@ class GenerateDrawPlacesJob < ApplicationJob
   
       places_to_insert = []
 
-      place_positions.each do |position|
-        places_to_insert << {
-          draw_id: draw_id,
-          place_numbers: [position],
-          agency_id: agency_id,
-          sold_at: DateTime.now,
-        }
-      end
+      places_to_insert << {
+        draw_id: draw_id,
+        place_numbers: place_position,
+        agency_id: agency_id,
+        sold_at: DateTime.now,
+      }
   
       if places_to_insert.present?
         if Place.where(draw_id: @draw.id, place_numbers: place_positions).empty?
