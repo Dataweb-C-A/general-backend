@@ -109,3 +109,5 @@ gem "webdrivers", "~> 5.2"
 gem "headless", "~> 2.3"
 
 gem "currencyapi", "~> 1.0"
+
+gem "sidekiq-scheduler", "~> 5.0"

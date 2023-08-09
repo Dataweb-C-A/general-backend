@@ -126,6 +126,8 @@ GEM
       request_store (>= 1.0)
       ruby2_keywords
     erubi (1.12.0)
+    et-orbi (1.2.7)
+      tzinfo
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -138,6 +140,9 @@ GEM
       thor (>= 0.14.0, < 2)
     friendly_id (5.4.2)
       activerecord (>= 4.0.0)
+    fugit (1.8.1)
+      et-orbi (~> 1, >= 1.2.7)
+      raabro (~> 1.4)
     globalid (1.1.0)
       activesupport (>= 5.0)
     haml (6.1.1)
@@ -210,6 +215,7 @@ GEM
       nio4r (~> 2.0)
     pundit (2.3.0)
       activesupport (>= 3.0.0)
+    raabro (1.4.0)
     racc (1.6.2)
     rack (2.2.6.2)
     rack-cors (2.0.0)
@@ -320,6 +326,8 @@ GEM
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
+    rufus-scheduler (3.9.1)
+      fugit (~> 1.1, >= 1.1.6)
     selenium-webdriver (4.10.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -331,6 +339,10 @@ GEM
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
       redis-client (>= 0.11.0)
+    sidekiq-scheduler (5.0.3)
+      rufus-scheduler (~> 3.2)
+      sidekiq (>= 6, < 8)
+      tilt (>= 1.4.0)
     ssrf_filter (1.1.1)
     stringio (3.0.7)
     temple (0.10.0)
@@ -412,6 +424,7 @@ DEPENDENCIES
   rubocop
   shoulda-matchers
   sidekiq
+  sidekiq-scheduler (~> 5.0)
   tzinfo-data
   versionist
   watir (~> 7.2)

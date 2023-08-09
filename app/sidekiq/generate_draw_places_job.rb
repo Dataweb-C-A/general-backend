@@ -82,7 +82,7 @@ class GenerateDrawPlacesJob < ApplicationJob
         places_to_insert << {
           draw_id: draw_id,
           place_numbers: [position],
-          agency_id: @draw.owner_id,
+          agency_id: agency_id,
           sold_at: DateTime.now,
         }
       end
@@ -95,7 +95,7 @@ class GenerateDrawPlacesJob < ApplicationJob
   
           if Whitelist.find_by(user_id: agency_id).role == 'Auto'
             Inbox.create(
-              message: "Monto: #{place_positions.length * @draw.price_unit} \n Numeros: #{place_positions} \n Premio: #{@draw.first_prize} \n Tipo: #{@draw.type_of_draw} \n Agencia: #{Whitelist.find_by(user_id: @draw.owner_id).name} \n Tipo sorteo: #{@draw.draw_type} \n Fecha limite: #{@draw.expired_date == nil ? 'Por anunciar' : @draw.expired_date}",
+              message: "Monto: #{place_positions.length * @draw.price_unit} \n Numeros: #{place_positions} \n Premio: #{@draw.first_prize} \n Tipo: #{@draw.type_of_draw} \n Agencia: #{Whitelist.find_by(user_id: agency_id).name} \n Tipo sorteo: #{@draw.draw_type} \n Fecha limite: #{@draw.expired_date == nil ? 'Por anunciar' : @draw.expired_date}",
               request_type: "Auto",
               whitelist_id: Whitelist.where(name: Whitelist.find_by(user_id: agency_id).name).first.id
             )

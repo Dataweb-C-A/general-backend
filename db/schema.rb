@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_01_230503) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_07_181046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_01_230503) do
     t.string "dni"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "denominations", force: :cascade do |t|
+    t.string "money"
+    t.float "power"
+    t.integer "quantity"
+    t.string "category"
+    t.string "label"
+    t.float "ammount"
+    t.bigint "quadre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quadre_id"], name: "index_denominations_on_quadre_id"
   end
 
   create_table "draws", force: :cascade do |t|
@@ -113,6 +126,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_01_230503) do
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_places_on_client_id"
     t.index ["draw_id"], name: "index_places_on_draw_id"
+  end
+
+  create_table "quadres", force: :cascade do |t|
+    t.date "day"
+    t.integer "total"
+    t.float "gastos"
+    t.integer "agency_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "rifas", force: :cascade do |t|
@@ -236,6 +258,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_01_230503) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "denominations", "quadres"
   add_foreign_key "inboxes", "whitelists"
   add_foreign_key "places", "clients"
   add_foreign_key "places", "draws"

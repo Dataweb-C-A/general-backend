@@ -13,7 +13,8 @@
 #
 class Whitelist < ApplicationRecord
   has_one :whitelist
-  
+  has_one :quadre
+
   def get_messages
     messages = []
     messages

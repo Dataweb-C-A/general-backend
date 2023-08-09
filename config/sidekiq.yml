@@ -4,3 +4,8 @@
 
 production:
   :url: <%= ENV["REDIS_URL"] %>
+
+:schedule:
+  hello_world:
+    every: 1s  # Runs once per second
+    class: HelloWorld

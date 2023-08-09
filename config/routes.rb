@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   mount Sidekiq::Web => '/sidekiq'
 
+  resources :quadres, only: [:index]
   resources :users, param: :_username
   resources :taquillas, path: 'taquillas', param: :_id
   resources :riferos, only: [:index], path: 'riferos'
