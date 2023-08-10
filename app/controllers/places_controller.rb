@@ -67,7 +67,7 @@ class PlacesController < ApplicationController
   def print_text
     @draw = Draw.find(params[:draw_id])
     @place = Place.find(params[:plays])
-    @agency = Whitelist.find_by(user_id: agency_id)
+    @agency = Whitelist.find_by(user_id: @place.agency_id)
     #@client = Client.find(@place.client_id)
     
     place_numbers = @place.place_numbers.to_s.tr('[]', '')
