@@ -22,7 +22,7 @@
 #  fk_rails_...  (quadre_id => quadres.id)
 #
 class DenominationSerializer < ActiveModel::Serializer
-  attributes :value, :short_value, :quantity, :power, :category, :label
+  attributes :value, :short_value, :quantity, :power, :category, :label, :ammount, :total
 
   def value
     case object.money
@@ -34,6 +34,14 @@ class DenominationSerializer < ActiveModel::Serializer
       'Bolivares'
     else
       'No definido'
+    end
+  end
+  
+  def total
+    if quantity != nil
+      quantity * power
+    else
+      nil
     end
   end
 
