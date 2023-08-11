@@ -22,7 +22,7 @@
 #  fk_rails_...  (quadre_id => quadres.id)
 #
 class DenominationSerializer < ActiveModel::Serializer
-  attributes :value, :short_value, :quantity, :power, :category, :label, :ammount, :total
+  attributes :id, :value, :short_value, :quantity, :power, :category, :label, :ammount, :total
 
   def value
     case object.money
