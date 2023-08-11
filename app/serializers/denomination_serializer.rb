@@ -38,8 +38,8 @@ class DenominationSerializer < ActiveModel::Serializer
   end
   
   def total
-    if quantity != nil
-      quantity * power
+    if object.quantity != nil
+      object.quantity * object.power
     else
       nil
     end
