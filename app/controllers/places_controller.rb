@@ -76,7 +76,7 @@ class PlacesController < ApplicationController
     qr_code = "IMAGE|0|-20|150|150|#{ApplicationRecord.generate_qr(qr_code_url)}"
   
 @eighty_mm = <<-PLAIN_TEXT
-IMAGE|0|-20|150|150|#{ENV["IMAGE_BASE"]}\n------------------------------------------------\n                   NUMEROS\n#{place_numbers}\n------------------------------------------------\n                   PREMIOS\n#{@draw.first_prize}\n------------------------------------------------\nPrecio:    	      	      #{@draw.price_unit}0$\nTipo:    	      	      Terminal(00-99)\nAgencia:    	      	      #{@agency.name}\nTicket numero:    	      #{@draw.numbers}\nFecha de venta:    	      #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\nProgreso:    	      	      #{Draw.progress(@draw.id)[:current]}%\n------------------------------------------------\nJugadas: #{@place.place_numbers.length}    	      	      Total: #{@place.place_numbers.length * @draw.price_unit}0$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n"}
+------------------------------------------------\n                   NUMEROS\n#{place_numbers}\n------------------------------------------------\n                   PREMIOS\n#{@draw.first_prize}\n------------------------------------------------\nPrecio:    	      	      #{@draw.price_unit}0$\nTipo:    	      	      Terminal(00-99)\nAgencia:    	      	      #{@agency.name}\nTicket numero:    	      #{@draw.numbers}\nFecha de venta:    	      #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\nProgreso:    	      	      #{Draw.progress(@draw.id)[:current]}%\n------------------------------------------------\nJugadas: #{@place.place_numbers.length}    	      	      Total: #{@place.place_numbers.length * @draw.price_unit}0$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n"}
 PLAIN_TEXT
 
 @qr_print = <<-PLAIN_TEXT
@@ -84,12 +84,13 @@ PLAIN_TEXT
 PLAIN_TEXT
 
 @fifty_eight_mm = <<-PLAIN_TEXT
-IMAGE|0|-20|150|150|#{ENV["IMAGE_BASE"]}\n---------------------------------\n            NUMEROS\n#{place_numbers}\n---------------------------------\n            PREMIOS\n10000$\n---------------------------------\nPrecio:    	 #{@draw.price_unit}0$\nTipo:            #{@draw.type_of_draw}(00-99)\nAgencia:    	 #{@agency.name}\nTicket Num:      #{@draw.numbers}\nFecha venta:     #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    #{@draw.expired_date ? @draw.expired_date.strftime("%d/%m/%Y") : "Por anunciar"}\nProgreso:    	 #{Draw.progress(@draw.id)[:current]}%\n---------------------------------\nJugadas: #{place_numbers.length}      Total: #{@draw.price_unit * place_numbers.length}$\n---------------------------------\n\n\n\n\n
+---------------------------------\n            NUMEROS\n#{place_numbers}\n---------------------------------\n            PREMIOS\n10000$\n---------------------------------\nPrecio:    	 #{@draw.price_unit}0$\nTipo:            #{@draw.type_of_draw}(00-99)\nAgencia:    	 #{@agency.name}\nTicket Num:      #{@draw.numbers}\nFecha venta:     #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    #{@draw.expired_date ? @draw.expired_date.strftime("%d/%m/%Y") : "Por anunciar"}\nProgreso:    	 #{Draw.progress(@draw.id)[:current]}%\n---------------------------------\nJugadas: #{place_numbers.length}      Total: #{@draw.price_unit * place_numbers.length}$\n---------------------------------\n\n\n\n\n
 PLAIN_TEXT
   
     if params[:qr] == "on"
       render plain: @qr_print
-    else
+    elsif params[:logo] == 'yes'
+      render plain: "IMAGE|10|10|150|150|#{ENV["IMAGE_BASE"]}"
       if params[:print] == "80mm"
         render plain: @eighty_mm
       else
