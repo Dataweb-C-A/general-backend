@@ -91,6 +91,7 @@ PLAIN_TEXT
       render plain: @qr_print
     elsif params[:logo] == 'yes'
       render plain: "IMAGE|10|10|150|150|#{ENV["IMAGE_BASE"]}"
+    else
       if params[:print] == "80mm"
         render plain: @eighty_mm
       else
