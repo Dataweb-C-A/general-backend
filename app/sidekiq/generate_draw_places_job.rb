@@ -97,6 +97,10 @@ class GenerateDrawPlacesJob < ApplicationJob
     #   new_numbers = expanded_range.to_a.sample(numbers_of_places)
     # end
 
+    logger.debug(draw_id)
+    logger.debug(numbers_of_places)
+    logger.debug(agency_id)
+
     places = []
     numbers_of_places.times do |index|
       first = redis.get("places:#{draw_id}:1") == nil ? [] : JSON.parse(redis.get("places:#{draw_id}:1"))

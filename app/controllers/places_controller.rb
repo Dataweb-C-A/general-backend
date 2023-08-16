@@ -61,7 +61,7 @@ class PlacesController < ApplicationController
   end
 
   def sell_infinity
-    render json: GenerateDrawPlacesJob.new.sell_random(place_params[:draw_id], place_params[:quantity], place_params[:agency_id]), status: :ok
+    render json: GenerateDrawPlacesJob.new.sell_random(place_params[:draw_id], params[:quantity], place_params[:agency_id]), status: :ok
   end
 
   def sell_places
