@@ -112,7 +112,7 @@ class GenerateDrawPlacesJob < ApplicationJob
         real_position_at: places_sold.length + 1,
         draw_id: @draw.id,
         numbers: @draw.numbers,
-        place_number: places_sold.length + 1,
+        place_number: rand(1..10000),
         is_sold: true,
         is_first_winner: false,
         is_second_winner: @draw.second_prize ? false : nil,
@@ -123,7 +123,7 @@ class GenerateDrawPlacesJob < ApplicationJob
 
       places << {
         draw_id: @draw.id,
-        place_numbers: places_sold.length + 1,
+        place_numbers: rand(1..10000),
         sold_at: DateTime.now,
         agency_id: agency_id,
         client_id: nil
