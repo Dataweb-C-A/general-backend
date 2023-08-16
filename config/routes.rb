@@ -3,6 +3,7 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  resources :denominations
   get 'reports/index'
   get 'reports/private'
   get 'whitelists/index'
@@ -41,6 +42,7 @@ Rails.application.routes.draw do
   get '/rifas/active', to: 'rifas#actives'
   get '/my-profile', to: 'profiles#index'
   get '/stats/rifas', to: 'stats#rifas_stats'
+  get '/to-infinity', to: 'places#to_infinity'
   get '/draws_finder', to: 'draws#find', param: :id
   get '/api/public/draws', to: 'draws#all'
   get '/places/reports', to: 'reports#daily_earning_reports'
@@ -50,5 +52,6 @@ Rails.application.routes.draw do
   post '/api/public/draws', to: 'draws#public_get'
   
   post '/places', to: 'places#sell_places'
+  post '/to-infinity', to: 'places#sell_infinity'
   get '/tickets/print', to: 'places#print_text'
 end

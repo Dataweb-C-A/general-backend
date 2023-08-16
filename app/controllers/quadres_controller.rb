@@ -10,7 +10,7 @@ class QuadresController < ApplicationController
   end
 
   private
-  
   def quadre_params
+    params.require(:quadre).permit(:agency_id, :day)
   end
 end

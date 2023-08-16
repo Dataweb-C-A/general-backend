@@ -31,6 +31,40 @@ class PlacesController < ApplicationController
     end
   end
 
+  def to_infinity
+    redis = Redis.new
+    place_id = params[:id]
+    part = params[:part]
+
+    if place_id.present?
+      # if Place.validate_tickets(place_id)
+        places = JSON.parse(redis.get("places:#{place_id}:#{part || 1}"))
+
+        @pagy, @places = pagy_array(places, items: 100, page: params[:page] || 1)
+
+        render json: {
+          places: @places,
+          status_code: 200,
+          metadata: {
+            page: @pagy.page,
+            count: @pagy.count,
+            items: @pagy.items,
+            pages: @pagy.pages
+          }
+        }, status: :ok
+      # else
+      #   render json: { message: 'No autorizado' }, status: :forbidden
+      # end
+    else
+      render json: { message: 'No autorizado' }, status: :forbidden
+    end
+  end
+
+  def sell_infinity
+    GenerateDrawPlacesJob.new.sell_random(place_params[:draw_id], place_params[:quantity], place_params[:agency_id])
+    render json: { status: 'ok' }, status: :ok
+  end
+
   def sell_places
     return unless place_params[:agency_id]
     if place_params[:user_id].present? && Draw.validate_draw_access(place_params[:user_id], request.headers[:Authorization])

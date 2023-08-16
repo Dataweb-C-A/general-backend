@@ -12,7 +12,7 @@ class GenerateDrawPlacesJob < ApplicationJob
       end
     end
     if draw.draw_type == 'To-Infinity'
-      puts 'To-Infinity Draw, no tickets generated!'
+      redis.set("places:#{draw_id}:1", "[]")
       return draw
     else
       GenerateDrawPlacesService.new(draw).call
@@ -31,6 +31,102 @@ class GenerateDrawPlacesJob < ApplicationJob
     Draw.find(draw_id).update(draw_params)
   end
 
+  def sell_infinity(draw_id, place_positions, agency_id) 
+    @draw = Draw.find(draw_id)
+
+    return unless @draw
+    
+    if check_tickets_status(draw_id, place_positions)
+      return {
+        error: "Los tickets ya están vendidos.",
+        completed: false
+      }
+    else
+      places_to_insert = []
+
+      places_to_insert << {
+        draw_id: draw_id,
+        place_numbers: place_positions,
+        agency_id: agency_id,
+        sold_at: DateTime.now,
+      }
+
+      if places_to_insert.present?
+        if Place.where(draw_id: @draw.id, place_numbers: place_positions).empty?
+          Place.insert_all(places_to_insert)
+          created_places = Place.where(draw_id: draw_id, place_numbers: place_positions)
+
+          if Whitelist.find_by(user_id: agency_id).role == 'Auto'
+            Inbox.create(
+              message: "Monto: #{place_positions.length * @draw.price_unit}",
+              request_type: "Auto",
+              whitelist_id: Whitelist.where(name: Whitelist.find_by(user_id: agency_id).name).first.id
+            )
+          end
+
+          return {
+            error: nil,
+            completed: true
+          }
+        end
+      else
+        return {
+          error: "Los tickets ya están vendidos.",
+          completed: false
+        }
+      end
+    end
+  end
+
+  def sell_random(draw_id, numbers_of_places, agency_id)
+    @draw = Draw.find(draw_id)
+  
+    return unless @draw
+  
+    redis = Redis.new
+  
+    
+    # available_numbers = (1..10000).to_a - places_sold.map { |place| place['place_number'] }
+    
+    # if available_numbers.length >= numbers_of_places
+    #   new_numbers = available_numbers.sample(numbers_of_places)
+    # else
+    #   max_place_number = places_sold.map { |place| place['place_number'] }.max || 10000
+    #   expanded_range = (max_place_number + 1)..(max_place_number + 5000)
+    #   new_numbers = expanded_range.to_a.sample(numbers_of_places)
+    # end
+
+    places = []
+    numbers_of_places.times do |index|
+      first = redis.get("places:#{draw_id}:1") == nil ? [] : JSON.parse(redis.get("places:#{draw_id}:1"))
+      part = first.length + index + 1 >= 10000 ? 2 : 1
+      places_sold = redis.get("places:#{draw_id}:#{part}") == nil ? [] : JSON.parse(redis.get("places:#{draw_id}:#{part}"))
+      redis.del("places:#{draw_id}:#{part}")
+
+      places_sold.concat([{
+        real_position_at: places_sold.length + 1,
+        draw_id: @draw.id,
+        numbers: @draw.numbers,
+        place_number: places_sold.length + 1,
+        is_sold: true,
+        is_first_winner: false,
+        is_second_winner: @draw.second_prize ? false : nil,
+        client: nil
+      }])
+
+      redis.set("places:#{draw_id}:#{part}", places_sold.to_json)
+
+      places << {
+        draw_id: @draw.id,
+        place_numbers: places_sold.length + 1,
+        sold_at: DateTime.now,
+        agency_id: agency_id,
+        client_id: nil
+      }
+    end
+  end
+  
+
   def sell_places(draw_id, place_positions, agency_id)
     redis = Redis.new
     @draw = Draw.find(draw_id)
@@ -45,8 +141,7 @@ class GenerateDrawPlacesJob < ApplicationJob
       }
     else
       places = JSON.parse(redis.get("places:#{draw_id}"))
-  
-      # Create an array to keep track of positions that are already sold/taken
+
       sold_positions = []
   
       place_positions.each do |position|
