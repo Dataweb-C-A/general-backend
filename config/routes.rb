@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   get '/draws_finder', to: 'draws#find', param: :id
   get '/api/public/draws', to: 'draws#all'
   get '/places/reports', to: 'reports#daily_earning_reports'
+  get '/places/printer/infinity', to: 'places#printer_infinity'
   
   post '/', to: 'application#test'
   post '/auth/login', to: 'authentication#login'
