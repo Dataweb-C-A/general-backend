@@ -12,6 +12,7 @@ class GenerateDrawPlacesJob < ApplicationJob
       end
     end
     if draw.draw_type == 'To-Infinity'
+      redis = Redis.new
       redis.set("places:#{draw_id}:1", "[]")
       return draw
     else
