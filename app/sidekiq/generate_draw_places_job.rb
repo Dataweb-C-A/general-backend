@@ -129,12 +129,12 @@ class GenerateDrawPlacesJob < ApplicationJob
         client_id: nil
       }
 
-      return {
-        error: nil,
-        completed: true,
-        places: places
-      }
     end
+    return {
+      error: nil,
+      completed: true,
+      places: places
+    }
   end
   
 
