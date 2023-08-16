@@ -102,7 +102,7 @@ class GenerateDrawPlacesJob < ApplicationJob
     logger.debug(agency_id)
 
     places = []
-    numbers_of_places.times do |index|
+    numbers_of_places.to_i.times do |index|
       first = redis.get("places:#{draw_id}:1") == nil ? [] : JSON.parse(redis.get("places:#{draw_id}:1"))
       part = first.length + index + 1 >= 10000 ? 2 : 1
       places_sold = redis.get("places:#{draw_id}:#{part}") == nil ? [] : JSON.parse(redis.get("places:#{draw_id}:#{part}"))
