@@ -124,6 +124,12 @@ class GenerateDrawPlacesJob < ApplicationJob
         agency_id: agency_id,
         client_id: nil
       }
+
+      return {
+        error: nil,
+        completed: true,
+        places: places
+      }
     end
   end
   

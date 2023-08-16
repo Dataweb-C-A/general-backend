@@ -61,8 +61,7 @@ class PlacesController < ApplicationController
   end
 
   def sell_infinity
-    GenerateDrawPlacesJob.new.sell_random(place_params[:draw_id], place_params[:quantity], place_params[:agency_id])
-    render json: { status: 'ok' }, status: :ok
+    render json: GenerateDrawPlacesJob.new.sell_random(place_params[:draw_id], place_params[:quantity], place_params[:agency_id]), status: :ok
   end
 
   def sell_places
@@ -137,6 +136,6 @@ PLAIN_TEXT
   private
 
   def place_params
-    params.require(:place).permit(:client, :draw_id, :agency_id, :user_id, place_nro: [])
+    params.require(:place).permit(:client, :quantity, :draw_id, :agency_id, :user_id, place_nro: [])
   end
 end
