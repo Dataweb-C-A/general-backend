@@ -73,9 +73,9 @@ class Draw < ApplicationRecord
                             less_than_or_equal_to: 999 
                           }
 
-  validates :tickets_count,
-            presence: true,
-            numericality: { only_integer: true, greater_than_or_equal_to: 100 }
+  # validates :tickets_count,
+  #           presence: true,
+  #           numericality: { only_integer: true, greater_than_or_equal_to: 100 }
 
   validates :loteria,
             presence: true,
