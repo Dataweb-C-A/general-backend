@@ -101,7 +101,7 @@ class PlacesController < ApplicationController
     @draw = Draw.find(params[:draw_id])
     @agency = Whitelist.find_by(user_id: params[:agency_id])
 
-    place_numbers = params[:plays].to_s.tr('[]', '')
+    place_numbers = params[:plays].to_s.tr('[]', ' ')
 
     atributos_array = place_numbers.split(',')
 
