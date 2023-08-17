@@ -109,9 +109,9 @@ class PlacesController < ApplicationController
 
     atributos_array.each do |a|
       if (a.to_i <= 999)
-        to_print << "#{a}0 "
+        to_print << "0#{a}"
       else
-        to_print << "#{a} "
+        to_print << "#{a}"
       end
     end
 
