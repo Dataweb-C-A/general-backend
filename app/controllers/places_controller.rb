@@ -105,8 +105,18 @@ class PlacesController < ApplicationController
 
     atributos_array = place_numbers.split(' ')
 
+    to_print = []
+
+    atributos_array.each do |a|
+      if (a.to_i <= 999)
+        to_print << "#{a}0 "
+      else
+        to_print << "#{a} "
+      end
+    end
+
 @eighty_mm = <<-PLAIN_TEXT
-                   RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{atributos_array.each do |a| if(a.to_i <= 999) "#{a}0 " else "#{a} " end}\n------------------------------------------------\n                   PREMIOS\n#{@draw.first_prize}\n------------------------------------------------\nPrecio:    	      	      10$\nTipo:    	      	      50-50\nAgencia:    	      	      #{@agency.name}\nTicket numero:    	      #{@draw.numbers}\nFecha de venta:    	      #{DateTime.now.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{atributos_array.length * 10}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n\n"}
+                   RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ')}\n------------------------------------------------\n                   PREMIOS\n#{@draw.first_prize}\n------------------------------------------------\nPrecio:    	      	      10$\nTipo:    	      	      50-50\nAgencia:    	      	      #{@agency.name}\nTicket numero:    	      #{@draw.numbers}\nFecha de venta:    	      #{DateTime.now.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{atributos_array.length * 10}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n\n"}
 PLAIN_TEXT
 
     render plain: @eighty_mm
