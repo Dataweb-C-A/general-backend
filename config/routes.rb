@@ -3,7 +3,6 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
-  resources :denominations
   get 'reports/index'
   get 'reports/private'
   get 'whitelists/index'
@@ -11,10 +10,11 @@ Rails.application.routes.draw do
   get 'inboxes/index'
   get 'places/index'
   require 'sidekiq/web'
-
+  
   mount ActionCable.server => '/cable'
   mount Sidekiq::Web => '/sidekiq'
-
+  
+  resources :denominations, only: [:update]
   resources :quadres, only: [:index]
   resources :users, param: :_username
   resources :taquillas, path: 'taquillas', param: :_id

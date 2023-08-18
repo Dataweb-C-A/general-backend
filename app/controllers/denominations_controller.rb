@@ -16,7 +16,6 @@ class DenominationsController < ApplicationController
   # POST /denominations.json
   def create
     @denomination = Denomination.new(denomination_params)
-
     if @denomination.save
       render :show, status: :created, location: @denomination
     else
@@ -25,12 +24,15 @@ class DenominationsController < ApplicationController
   end
 
   # PATCH/PUT /denominations/1
-  # PATCH/PUT /denominations/1.json
   def update
-    if @denomination.update(denomination_params)
-      render :show, status: :ok, location: @denomination
+    if Draw.validate_draw_access(draw_params[:user_id], request.headers[:Authorization])
+      if @denomination.update(denomination_params)
+        render :show, status: :ok, location: @denomination
+      else
+        render json: @denomination.errors, status: :unprocessable_entity
+      end
     else
-      render json: @denomination.errors, status: :unprocessable_entity
+      render json: { message: "No autorizado" }, status: :forbidden
     end
   end
 
@@ -48,6 +50,6 @@ class DenominationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def denomination_params
-      params.fetch(:denomination, {})
+      params.require(:denomination).permit(:money, :power, :quantity, :category, :label, :ammount)
     end
 end
