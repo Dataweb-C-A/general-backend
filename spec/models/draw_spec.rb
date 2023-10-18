@@ -20,6 +20,7 @@
 #  price_unit              :float
 #  second_prize            :string
 #  second_winner           :integer
+#  ticket_setted           :integer          default(0)
 #  tickets_count           :integer
 #  title                   :string
 #  type_of_draw            :string           default("")

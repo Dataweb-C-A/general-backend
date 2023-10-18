@@ -36,6 +36,9 @@ class GenerateDrawPlacesJob < ApplicationJob
     @draw = Draw.find(draw_id)
 
     return unless @draw
+
+    draw = Draw.find(draw_id)
+    draw.update(ticket_setted: ticket_setted+1)
     
     if check_tickets_status(draw_id, place_positions)
       return {
@@ -83,6 +86,11 @@ class GenerateDrawPlacesJob < ApplicationJob
     @draw = Draw.find(draw_id)
   
     return unless @draw
+
+    draw = Draw.find(draw_id)
+    draw.update(ticket_setted: draw.ticket_setted+1)
+
+    #Draw.where(id: draw_id).update(ticket_setted: @draw.ticket_setted + 1)
   
     redis = Redis.new
   
@@ -129,6 +137,8 @@ class GenerateDrawPlacesJob < ApplicationJob
         client_id: nil
       }
 
+    @draw.update(ticket_setted: @draw.ticket_setted + 1)
+
     end
     return {
       error: nil,
@@ -141,6 +151,9 @@ class GenerateDrawPlacesJob < ApplicationJob
   def sell_places(draw_id, place_positions, agency_id)
     redis = Redis.new
     @draw = Draw.find(draw_id)
+  
+    draw = Draw.find(draw_id)
+    draw.update(ticket_setted: draw.ticket_setted+1)
   
     return unless @draw
   
@@ -232,6 +245,8 @@ end
 class GenerateDrawPlacesService
   def initialize(draw)
     @draw = draw
+
+    @draw.update(ticket_setted: draw.ticket_setted+1)
   end
 
   def call

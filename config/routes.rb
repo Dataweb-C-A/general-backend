@@ -3,6 +3,7 @@
 
 # config/routes.rb
 Rails.application.routes.draw do
+  get 'printer_notifications/index'
   get 'reports/index'
   get 'reports/private'
   get 'whitelists/index'
@@ -11,6 +12,8 @@ Rails.application.routes.draw do
   get 'places/index'
   require 'sidekiq/web'
   
+  get '/menu/50-50', to: 'application#menu'
+
   mount ActionCable.server => '/cable'
   mount Sidekiq::Web => '/sidekiq'
   

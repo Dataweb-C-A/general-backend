@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_07_181046) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_11_190214) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -90,6 +90,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_07_181046) do
     t.integer "automatic_taquillas_ids", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "ticket_setted", default: 0
   end
 
   create_table "draws_taquillas", id: false, force: :cascade do |t|
@@ -118,7 +119,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_07_181046) do
 
   create_table "places", force: :cascade do |t|
     t.integer "place_numbers", default: [], array: true
-    t.datetime "sold_at", default: "2023-07-14 15:43:40"
+    t.datetime "sold_at", default: "2023-07-17 01:18:16"
     t.integer "agency_id", null: false
     t.bigint "client_id"
     t.bigint "draw_id", null: false
@@ -126,6 +127,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_07_181046) do
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_places_on_client_id"
     t.index ["draw_id"], name: "index_places_on_draw_id"
+  end
+
+  create_table "printer_notifications", force: :cascade do |t|
+    t.integer "tickets_generated", default: [], array: true
+    t.integer "user_id", null: false
+    t.boolean "is_printed", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "quadres", force: :cascade do |t|

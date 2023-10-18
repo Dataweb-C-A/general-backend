@@ -10,6 +10,12 @@ class ApplicationController < ActionController::API
     render json: { error: 'Not found' }
   end
 
+  def menu
+    render json: [
+                   {option: "1", option_parser: 1, combo_price: 1, money: "$"}, {option: "6", option_parser: 6, combo_price: 5, money: "$"}, {option: "15", option_parser: 15, combo_price: 10, money: "$"}
+                 ], status: :ok
+  end
+
   def app_version_check
     if request.headers['App-Version'] != '1.0.0'
       render json: { error: 'Update version of APP' }, status: :unauthorized

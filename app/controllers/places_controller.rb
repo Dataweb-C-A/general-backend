@@ -71,7 +71,7 @@ class PlacesController < ApplicationController
         GenerateDrawPlacesJob.new.sell_places(place_params[:draw_id], place_params[:place_nro], place_params[:agency_id])[:completed] ? (
           render json: { 
             place: Place.last, 
-            redirect: "https://#{ENV["HOST"]}/tickets?place_position=#{place_params[:place_nro]}", 
+            redirect: "https://#{ENV["HOST"]}/tickets?plays=#{place_params[:place_nro]}", 
             error: nil, 
             completed: true, 
             status: 201 
@@ -99,27 +99,37 @@ class PlacesController < ApplicationController
 
   def printer_infinity 
     @draw = Draw.find(params[:draw_id])
+    Draw.find(params[:draw_id]).update(ticket_setted: @draw.ticket_setted + 1)
     @agency = Whitelist.find_by(user_id: params[:agency_id])
+@invalid = <<-PLAIN_TEXT
+        \n\n\n\nNo tiene acceso a 50/50\n\n\n\n
+PLAIN_TEXT
+    if @agency
+      place_numbers = params[:plays].to_s.tr('[]', '').tr(',', ' ')
 
-    place_numbers = params[:plays].to_s.tr('[]', '').tr(',', ' ')
+      PrinterNotification.create(tickets_generated: params[:plays], user_id: @agency.user_id)
+      Place.create(place_numbers: params[:plays], agency_id: @agency.id, draw_id: @draw.id)
 
-    atributos_array = place_numbers.split(' ')
+      atributos_array = place_numbers.split(' ')
 
-    to_print = []
+      to_print = []
 
-    atributos_array.each do |a|
-      if (a.to_i <= 999)
-        to_print << "0#{a}"
-      else
-        to_print << "#{a}"
+      atributos_array.each do |a|
+        if (a.to_i <= 999)
+          to_print << "0#{a}"
+        else
+          to_print << "#{a}"
+        end
       end
-    end
 
-@eighty_mm = <<-PLAIN_TEXT
-                   RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ').tr('"', '')}\n------------------------------------------------\n                   PREMIOS\n#{@draw.first_prize}\n------------------------------------------------\nPrecio:    	      	      10$\nTipo:    	      	      50-50\nAgencia:    	      	      #{@agency.name}\nTicket numero:    	      #{@draw.numbers}\nFecha de venta:    	      #{DateTime.now.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{atributos_array.length * 10}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n\n"}
+@eighty_mm = <<-PLAIN_TEXT  
+               RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ').tr('"', '')}\n------------------------------------------------\n                   PREMIOS\n50% Pote Recaudado\n------------------------------------------------\nPrecio:    	      	      1$\nTipo:    	      	      50-50\nTerminal:  	      	      #{@agency.name}\nTicket numero:    	      #{Place.last.id}\nLocalidad:        Monumental\nFecha de venta:    	      #{DateTime.now.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{Place.combo_price(atributos_array)}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n\n"}
 PLAIN_TEXT
 
-    render plain: @eighty_mm
+      render plain: @eighty_mm
+    else
+      render plain: @invalid
+    end
   end
 
   def print_text
@@ -130,11 +140,14 @@ PLAIN_TEXT
     
     place_numbers = @place.place_numbers.to_s.tr('[]', '')
   
+    if @place
+      PrinterNotification.create(tickets_generated: @place.place_numbers, user_id: @agency.user_id)
+    end
     qr_code_url = "https://#{ENV["HOST"]}/tickets?draw_id=#{@draw.id}&plays=#{@place.id}"
     qr_code = "IMAGE|0|-20|150|150|#{ApplicationRecord.generate_qr(qr_code_url)}"
   
 @eighty_mm = <<-PLAIN_TEXT
-------------------------------------------------\n                   NUMEROS\n#{place_numbers}\n------------------------------------------------\n                   PREMIOS\n#{@draw.first_prize}\n------------------------------------------------\nPrecio:    	      	      #{@draw.price_unit}0$\nTipo:    	      	      Terminal(00-99)\nAgencia:    	      	      #{@agency.name}\nTicket numero:    	      #{@draw.numbers}\nFecha de venta:    	      #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\nProgreso:    	      	      #{Draw.progress(@draw.id)[:current]}%\n------------------------------------------------\nJugadas: #{@place.place_numbers.length}    	      	      Total: #{@place.place_numbers.length * @draw.price_unit}0$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n"}
+------------------------------------------------\n                   NUMEROS\n#{place_numbers}\n------------------------------------------------\n                   PREMIOS\n#{@draw.first_prize}\n------------------------------------------------\nPrecio:    	      	      #{@draw.price_unit}0$\nTipo:    	      	      Terminal(00-99)\nAgencia:    	      	      #{@agency.name}\nTicket numero:    	      prueba\nFecha de venta:    	      #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\nProgreso:    	      	      #{Draw.progress(@draw.id)[:current]}%\n------------------------------------------------\nJugadas: #{@place.place_numbers.length}    	      	      Total: #{@place.place_numbers.length * @draw.price_unit}0$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n"}
 PLAIN_TEXT
 
 @qr_print = <<-PLAIN_TEXT
@@ -142,7 +155,7 @@ PLAIN_TEXT
 PLAIN_TEXT
 
 @fifty_eight_mm = <<-PLAIN_TEXT
----------------------------------\n            NUMEROS\n#{place_numbers}\n---------------------------------\n            PREMIOS\n10000$\n---------------------------------\nPrecio:    	 #{@draw.price_unit}0$\nTipo:            #{@draw.type_of_draw}(00-99)\nAgencia:    	 #{@agency.name}\nTicket Num:      #{@draw.numbers}\nFecha venta:     #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    #{@draw.expired_date ? @draw.expired_date.strftime("%d/%m/%Y") : "Por anunciar"}\nProgreso:    	 #{Draw.progress(@draw.id)[:current]}%\n---------------------------------\nJugadas: #{place_numbers.length}      Total: #{@draw.price_unit * place_numbers.length}$\n---------------------------------\n\n\n\n\n
+---------------------------------\n            NUMEROS\n#{place_numbers}\n---------------------------------\n            PREMIOS\n50% Pote Recaudado\n---------------------------------\nPrecio:    	 #{@draw.price_unit}0$\nTipo:            #{@draw.type_of_draw}(00-99)\nTerminal:        #{@agency.name}\nTicket Num:      #{@place.id}\nFecha venta:     #{@place.created_at.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    #{@draw.expired_date ? @draw.expired_date.strftime("%d/%m/%Y") : "Por anunciar"}\nProgreso:    	 #{Draw.progress(@draw.id)[:current]}%\n---------------------------------\nJugadas: #{place_numbers.length}      Total: #{@draw.price_unit * place_numbers.length}$\n---------------------------------\n\n\n\n\n
 PLAIN_TEXT
   
     if params[:qr] == "on"
