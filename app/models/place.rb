@@ -72,7 +72,7 @@ class Place < ApplicationRecord
         return false
       else
         combined_array = (places_parsed + existing_places_parsed).sort
-        redis.delete("fifty:#{draw_id}")
+        redis.del("fifty:#{draw_id}")
         redis.set("fifty:#{draw_id}", combined_array.to_s)
         return true
       end
