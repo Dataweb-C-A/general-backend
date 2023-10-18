@@ -106,6 +106,11 @@ class GenerateDrawPlacesJob < ApplicationJob
     logger.debug(agency_id)
 
     places = []
+
+    if (redis.get("fifty:#{draw_id}") == nil)
+      redis.set("fifty:#{draw_id}", "[]")
+    end
+    
     numbers_of_places.to_i.times do |index|
       places_unavailable = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
 
