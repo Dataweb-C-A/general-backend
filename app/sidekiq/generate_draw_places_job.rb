@@ -131,7 +131,7 @@ class GenerateDrawPlacesJob < ApplicationJob
       else
         available_numbers = all_numbers_by_default - places_unavailable
 
-        random_result = available_numbers
+        random_result = available_numbers.to_a.sample(1)
       end
 
       places << {
