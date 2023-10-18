@@ -127,7 +127,7 @@ class GenerateDrawPlacesJob < ApplicationJob
 
         available_numbers = (places_unavailable.length + 1..sentinel).to_a - places_unavailable
 
-        random_result = rand(1..10000)
+        random_result = available_numbers.to_a.sample(1)
       else
         available_numbers = all_numbers_by_default - places_unavailable
 
@@ -136,7 +136,7 @@ class GenerateDrawPlacesJob < ApplicationJob
 
       places << {
         draw_id: @draw.id,
-        place_numbers: random_result,
+        place_numbers: random_result[0],
         sold_at: DateTime.now,
         agency_id: agency_id,
         client_id: nil
