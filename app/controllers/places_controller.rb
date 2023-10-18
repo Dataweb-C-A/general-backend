@@ -110,12 +110,15 @@ PLAIN_TEXT
       PrinterNotification.create(tickets_generated: params[:plays], user_id: @agency.user_id)
 
       redis = Redis.new
-      id_ticket = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length
+
+      id_ticket = 1
 
       if Place.verify_redis_game(@draw.id, params[:plays])
         atributos_array = place_numbers.split(' ')
 
         to_print = []
+
+        id_ticket = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length
 
         atributos_array.each do |a|
           if (a.to_i <= 999)
