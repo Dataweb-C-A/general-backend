@@ -108,9 +108,9 @@ class GenerateDrawPlacesJob < ApplicationJob
     places = []
 
     if (redis.get("fifty:#{draw_id}") == nil)
-      redis.set("fifty:#{draw_id}", "[]")
+      redis.set("fifty:#{draw_id}", "[0]")
     end
-    
+
     numbers_of_places.to_i.times do |index|
       places_unavailable = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
 
