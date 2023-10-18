@@ -118,7 +118,7 @@ PLAIN_TEXT
 
         to_print = []
 
-        id_ticket = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length
+        id_ticket = redis.get("fifty:#{params[:draw_id]}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length + 1
 
         atributos_array.each do |a|
           if (a.to_i <= 999)
