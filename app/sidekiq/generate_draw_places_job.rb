@@ -108,7 +108,7 @@ class GenerateDrawPlacesJob < ApplicationJob
     places = []
 
     if (redis.get("fifty:#{draw_id}") == nil)
-      redis.set("fifty:#{draw_id}", "[0]")
+      redis.set("fifty:#{draw_id}", "[]")
     end
 
     numbers_of_places.to_i.times do |index|
@@ -125,7 +125,7 @@ class GenerateDrawPlacesJob < ApplicationJob
 
         expanded_range = (places_unavailable.length + 1)..sentinel
 
-        available_numbers = sentinel - places_unavailable
+        available_numbers = (places_unavailable.length + 1..sentinel).to_a - places_unavailable
 
         random_result = available_numbers.to_a.sample(1)
       else
