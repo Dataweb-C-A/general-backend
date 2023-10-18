@@ -107,7 +107,7 @@ PLAIN_TEXT
     if @agency
       place_numbers = params[:plays].to_s.tr('[]', '').tr(',', ' ')
 
-      PrinterNotification.create(tickets_generated: params[:plays].gsub(/\[|\]|\s/, '').split(',').map(&:to_i), user_id: @agency.user_id)
+      PrinterNotification.create(tickets_generated: params[:plays], user_id: @agency.user_id)
 
       redis = Redis.new
 
