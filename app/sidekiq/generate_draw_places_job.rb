@@ -121,7 +121,7 @@ class GenerateDrawPlacesJob < ApplicationJob
       available_numbers = []
       
       if (available_numbers.length == 0)
-        random_result = available_numbers.rand(1..10000)
+        random_result = rand(1..10000)
 
         places_unavailable << random_result
 
