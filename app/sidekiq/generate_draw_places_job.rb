@@ -114,7 +114,7 @@ class GenerateDrawPlacesJob < ApplicationJob
     numbers_of_places.to_i.times do |index|
       places_unavailable = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
 
-      all_numbers_by_default = (1..10000).to_a
+      all_numbers_by_default = (1..25000).to_a
 
       random_result = 0
 
