@@ -87,14 +87,10 @@ class GenerateDrawPlacesJob < ApplicationJob
   
     return unless @draw
 
-    draw = Draw.find(draw_id)
-    draw.update(ticket_setted: draw.ticket_setted+1)
-
     #Draw.where(id: draw_id).update(ticket_setted: @draw.ticket_setted + 1)
   
-    redis = Redis.new
-  
-    
+    redis = Redis.new    
+
     # available_numbers = (1..10000).to_a - places_sold.map { |place| place['place_number'] }
     
     # if available_numbers.length >= numbers_of_places
@@ -111,34 +107,35 @@ class GenerateDrawPlacesJob < ApplicationJob
 
     places = []
     numbers_of_places.to_i.times do |index|
-      first = redis.get("places:#{draw_id}:1") == nil ? [] : JSON.parse(redis.get("places:#{draw_id}:1"))
-      part = first.length + index + 1 >= 10000 ? 2 : 1
-      places_sold = redis.get("places:#{draw_id}:#{part}") == nil ? [] : JSON.parse(redis.get("places:#{draw_id}:#{part}"))
-      redis.del("places:#{draw_id}:#{part}")
+      places_unavailable = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
 
-      places_sold.concat([{
-        real_position_at: places_sold.length + 1,
-        draw_id: @draw.id,
-        numbers: @draw.numbers,
-        place_number: rand(1..10000),
-        is_sold: true,
-        is_first_winner: false,
-        is_second_winner: @draw.second_prize ? false : nil,
-        client: nil
-      }])
+      all_numbers_by_default = (1..10000).to_a
 
-      redis.set("places:#{draw_id}:#{part}", places_sold.to_json)
+      random_result = 0
+
+      available_numbers = []
+      
+      if (available_numbers.length == 0)
+        sentinel = places_unavailable.length + 5000
+
+        expanded_range = (places_unavailable.length + 1)..sentinel
+
+        available_numbers = sentinel - places_unavailable
+
+        random_result = available_numbers.to_a.sample(1)
+      else
+        available_numbers = all_numbers_by_default - places_unavailable
+
+        random_result = available_numbers
+      end
 
       places << {
         draw_id: @draw.id,
         place_numbers: rand(1..10000),
         sold_at: DateTime.now,
-        agency_id: agency_id,
+        agency_id: random_result,
         client_id: nil
       }
-
-    @draw.update(ticket_setted: @draw.ticket_setted + 1)
-
     end
     return {
       error: nil,

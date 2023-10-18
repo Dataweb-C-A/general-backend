@@ -59,6 +59,29 @@ class Place < ApplicationRecord
     end
   end
 
+  def self.verify_redis_game(draw_id, places)
+    redis = Redis.new
+
+    if (redis.get("fifty:#{draw_id}") != nil)
+      places_parsed = places.gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
+      existing_places_parsed = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
+
+      common_numbers = places_parsed & existing_places_parsed
+
+      if common_numbers.length > 0
+        return false
+      else
+        combined_array = (places_parsed + existing_places_parsed).sort
+        redis.delete("fifty:#{draw_id}")
+        redis.set("fifty:#{draw_id}", combined_array.to_s)
+        return true
+      end
+    else
+      redis.set("fifty:#{draw_id}", places.to_s)
+      return true
+    end
+  end
+
   def self.sold_at_by(fecha, agency)
     from = fecha.beginning_of_day
     to = fecha.end_of_day

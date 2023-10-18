@@ -108,25 +108,31 @@ PLAIN_TEXT
       place_numbers = params[:plays].to_s.tr('[]', '').tr(',', ' ')
 
       PrinterNotification.create(tickets_generated: params[:plays], user_id: @agency.user_id)
-      Place.create(place_numbers: params[:plays], agency_id: @agency.id, draw_id: @draw.id)
 
-      atributos_array = place_numbers.split(' ')
+      redis = Redis.new
+      id_ticket = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length
 
-      to_print = []
+      if Place.verify_redis_game(@draw.id, params[:plays])
+        atributos_array = place_numbers.split(' ')
 
-      atributos_array.each do |a|
-        if (a.to_i <= 999)
-          to_print << "0#{a}"
-        else
-          to_print << "#{a}"
+        to_print = []
+
+        atributos_array.each do |a|
+          if (a.to_i <= 999)
+            to_print << "0#{a}"
+          else
+            to_print << "#{a}"
+          end
         end
-      end
 
 @eighty_mm = <<-PLAIN_TEXT  
-               RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ').tr('"', '')}\n------------------------------------------------\n                   PREMIOS\n50% Pote Recaudado\n------------------------------------------------\nPrecio:    	      	      1$\nTipo:    	      	      50-50\nTerminal:  	      	      #{@agency.name}\nTicket numero:    	      #{Place.last.id}\nLocalidad:        Monumental\nFecha de venta:    	      #{DateTime.now.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{Place.combo_price(atributos_array)}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n\n"}
+               RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ').tr('"', '')}\n------------------------------------------------\n                   PREMIOS\n50% Pote Recaudado\n------------------------------------------------\nPrecio:    	      	      1$\nTipo:    	      	      50-50\nTerminal:  	      	      #{@agency.name}\nTicket numero:    	      #{id_ticket}\nLocalidad:        Monumental\nFecha de venta:    	      #{DateTime.now.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{Place.combo_price(atributos_array)}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n\n"}
 PLAIN_TEXT
 
-      render plain: @eighty_mm
+        render plain: @eighty_mm
+      else
+        render plain: @invalid
+      end
     else
       render plain: @invalid
     end
