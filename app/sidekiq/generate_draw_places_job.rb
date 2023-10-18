@@ -114,31 +114,29 @@ class GenerateDrawPlacesJob < ApplicationJob
     numbers_of_places.to_i.times do |index|
       places_unavailable = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
 
-      all_numbers_by_default = (1..25000).to_a
+      all_numbers_by_default = (1..10000).to_a
 
       random_result = 0
 
       available_numbers = []
       
       if (available_numbers.length == 0)
+        sentinel = places_unavailable.length + 5000
+
+        expanded_range = (places_unavailable.length + 1)..sentinel
+
+        available_numbers = (places_unavailable.length + 1..sentinel).to_a - places_unavailable
+
         random_result = rand(1..10000)
-
-        places_unavailable << random_result
-
-        redis.set("fifty:#{draw_id}", places_unavailable.to_s)
       else
         available_numbers = all_numbers_by_default - places_unavailable
 
         random_result = available_numbers.to_a.sample(1)
-
-        available_numbers << random_result
-
-        redis.set("fifty:#{draw_id}", available_numbers.to_s)
       end
 
       places << {
         draw_id: @draw.id,
-        place_numbers: random_result[0],
+        place_numbers: random_result,
         sold_at: DateTime.now,
         agency_id: agency_id,
         client_id: nil
