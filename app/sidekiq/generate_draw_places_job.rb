@@ -136,9 +136,9 @@ class GenerateDrawPlacesJob < ApplicationJob
 
       places << {
         draw_id: @draw.id,
-        place_numbers: rand(1..10000),
+        place_numbers: random_result[0],
         sold_at: DateTime.now,
-        agency_id: random_result,
+        agency_id: agency_id,
         client_id: nil
       }
     end
