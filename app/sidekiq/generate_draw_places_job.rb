@@ -121,17 +121,19 @@ class GenerateDrawPlacesJob < ApplicationJob
       available_numbers = []
       
       if (available_numbers.length == 0)
-        sentinel = places_unavailable.length + 5000
+        random_result = available_numbers.rand(1..10000)
 
-        expanded_range = (places_unavailable.length + 1)..sentinel
+        places_unavailable << random_result
 
-        available_numbers = (places_unavailable.length + 1..sentinel).to_a - places_unavailable
-
-        random_result = available_numbers.to_a.sample(1)
+        redis.set("fifty:#{draw_id}", places_unavailable.sort.to_s)
       else
         available_numbers = all_numbers_by_default - places_unavailable
 
         random_result = available_numbers.to_a.sample(1)
+
+        places_unavailable << random_result
+
+        redis.set("fifty:#{draw_id}", places_unavailable.sort.to_s)
       end
 
       places << {
