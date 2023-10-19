@@ -32,6 +32,19 @@ class ApplicationController < ActionController::API
     }
   end
 
+  def stadium_pot
+    redis = Redis.new
+    sold = redis.get('fifty:8')
+    render json: [
+      Monumental: [{
+        playdate: Date.today,
+        tickets_sold: sold.length,
+        founds: sold.length * 0.9,
+        pot_founds: sold.length * 0.9,
+      }]
+    ], status: :ok
+  end
+
   def authorize_request
     header = request.headers['Authorization']
     header = header.split(' ').last if header
