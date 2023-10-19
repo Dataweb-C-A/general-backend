@@ -36,12 +36,12 @@ class ApplicationController < ActionController::API
     redis = Redis.new
     sold = redis.get('fifty:8').gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length
     render json: [
-      Monumental: [{
+      monumental: {
         playdate: Date.today,
         tickets_sold: sold,
         founds: (sold * 0.95).round(2),
         pot_founds: ((sold * 0.95) * 0.5).round(2),
-      }]
+      }
     ], status: :ok
   end
 
