@@ -107,7 +107,9 @@ PLAIN_TEXT
     if @agency
       place_numbers = params[:plays].to_s.tr('[]', '').tr(',', ' ')
 
-      PrinterNotification.create(tickets_generated: params[:plays], user_id: @agency.user_id)
+      plays_ids = JSON.parse(params[:plays])
+
+      PrinterNotification.create(tickets_generated: plays_ids, user_id: @agency.user_id)
 
       redis = Redis.new
 
