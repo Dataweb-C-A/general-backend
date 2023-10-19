@@ -38,9 +38,9 @@ class ApplicationController < ActionController::API
     render json: [
       Monumental: [{
         playdate: Date.today,
-        tickets_sold: sold.length,
-        founds: sold.length * 0.9,
-        pot_founds: sold.length * 0.9,
+        tickets_sold: sold,
+        founds: sold * 0.9,
+        pot_founds: sold * 0.9,
       }]
     ], status: :ok
   end
