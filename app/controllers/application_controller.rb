@@ -34,7 +34,7 @@ class ApplicationController < ActionController::API
 
   def stadium_pot
     redis = Redis.new
-    sold = redis.get('fifty:8')
+    sold = redis.get('fifty:8').gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length
     render json: [
       Monumental: [{
         playdate: Date.today,
