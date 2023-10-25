@@ -55,6 +55,30 @@ class PlacesController < ApplicationController
     end
   end
 
+  def combos
+    redis = Redis.new
+    place_id = params[:id]
+
+    if place_id.present?
+        places = JSON.parse(redis.get("combo:8"))
+
+        @pagy, @places = pagy_array(places, items: 30000000, page: params[:page] || 1)
+
+        render json: {
+          places: @places.reverse!,
+          status_code: 200,
+          metadata: {
+            page: @pagy.page,
+            count: @pagy.count,
+            items: @pagy.items,
+            pages: @pagy.pages
+          }
+        }, status: :ok
+    else
+      render json: { message: 'No autorizado' }, status: :forbidden
+    end
+  end
+
   def to_infinity
     redis = Redis.new
     place_id = params[:id]

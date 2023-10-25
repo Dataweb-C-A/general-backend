@@ -50,9 +50,10 @@ Rails.application.routes.draw do
   get '/api/public/draws', to: 'draws#all'
   get '/places/reports', to: 'reports#daily_earning_reports'
   get '/places/printer/infinity', to: 'places#printer_infinity'
-
+  
   get '/pot/stadium', to: 'application#stadium_pot'
   
+  get '/combos', to: 'places#combos'
   get '/report_tickets', to: 'places#report_sold'
 
   post '/', to: 'application#test'
