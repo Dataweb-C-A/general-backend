@@ -6,6 +6,11 @@ class DrawsController < ApplicationController
     render json: [@draws]
   end
 
+  def fifty
+    @draws = Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil)
+    render json: @draws, status: :ok
+  end
+
   def public_get
     if params[:user_id].present? && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
       type = params[:type]
