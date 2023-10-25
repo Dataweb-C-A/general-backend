@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   # get 'wallets/index'
   # get 'rifas/index'
 
-  get '/draws/fifty', to: 'draws#fifty'
+  get '/draws_fifty', to: 'draws#fifty'
 
   get '/draws/filter', to: 'draws#filter', param: :owner_id
   get '/rifas/tickets', to: 'tickets#index', param: :rifa_id
