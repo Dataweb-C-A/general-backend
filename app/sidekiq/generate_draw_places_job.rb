@@ -105,11 +105,17 @@ class GenerateDrawPlacesJob < ApplicationJob
     logger.debug(numbers_of_places)
     logger.debug(agency_id)
 
+    @agency = Whitelist.find_by(user_id: agency_id)
+
     places = []
 
-    if (redis.get("fifty:#{draw_id}") == nil)
+    if (redis.get("fifty:#{draw_id}") == nil || redis.get("fifty:#{draw_id}:ids") == nil)
       redis.set("fifty:#{draw_id}", "[]")
+      redis.set("fifty:#{draw_id}:ids", "[]")
+      redis.set("report:#{draw_id}", "[]")
     end
+
+    numbers_final = []
 
     numbers_of_places.to_i.times do |index|
       places_unavailable = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
@@ -117,6 +123,8 @@ class GenerateDrawPlacesJob < ApplicationJob
       all_numbers_by_default = (1..10000).to_a
 
       random_result = 0
+
+      numbers_final = []
 
       available_numbers = []
       
@@ -132,6 +140,14 @@ class GenerateDrawPlacesJob < ApplicationJob
         all_nums = places_unavailable << random_result[0]
 
         redis.set("fifty:#{draw_id}", all_nums)
+
+	numbers_final << random_result[0]
+
+        json_result = JSON.parse(redis.get("report:#{draw_id}"))
+
+        json_result << { numbers: numbers_final, agency: @agency.name }
+
+        redis.set("report:#{draw_id}", json_result.to_json)
       else
         available_numbers = all_numbers_by_default - places_unavailable
 
@@ -139,7 +155,15 @@ class GenerateDrawPlacesJob < ApplicationJob
 
         all_nums = places_unavailable << random_result[0]
 
+	numbers_final << random_result[0]
+	
         redis.set("fifty:#{draw_id}", all_nums)
+
+        json_result = JSON.parse(redis.get("report:#{draw_id}")) 
+
+        json_result << { numbers: numbers_final, agency: @agency.name }
+
+        redis.set("report:#{draw_id}", json_result.to_json)
       end
 
       places << {
@@ -150,6 +174,21 @@ class GenerateDrawPlacesJob < ApplicationJob
         client_id: nil
       }
     end
+
+    numbers_ids = JSON.parse(redis.get("fifty:#{draw_id}:ids"))
+
+    numbers_ids << { numbers: numbers_final }
+
+    # json_result = JSON.parse(redis.get("report:#{draw_id}"))
+
+    # json_result << { numbers: numbers_final, agency: @agency.name } 
+
+    redis.set("fifty:#{draw_id}:ids", numbers_ids.to_json)
+
+    # redis.set("report:#{draw_id}", json_result.to_json) 
+
+    redis.set("current_id:#{draw_id}", JSON.parse(redis.get("fifty:#{draw_id}:ids")).length)
+
     return {
       error: nil,
       completed: true,

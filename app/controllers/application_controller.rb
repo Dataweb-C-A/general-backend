@@ -39,8 +39,8 @@ class ApplicationController < ActionController::API
       monumental: {
         playdate: Date.today,
         tickets_sold: sold,
-        founds: (sold * 0.95).round(2),
-        pot_founds: ((sold * 0.95) * 0.5).round(2),
+        founds: (sold * 0.98).round(2),
+        pot_founds: ((sold * 0.98) * 0.5).round(2),
       }
     }, status: :ok
   end

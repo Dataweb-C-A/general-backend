@@ -7,6 +7,7 @@
 #  tickets_generated :integer          default([]), is an Array
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  current_id        :integer
 #  user_id           :integer          not null
 #
 require 'rails_helper'

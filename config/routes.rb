@@ -53,6 +53,8 @@ Rails.application.routes.draw do
 
   get '/pot/stadium', to: 'application#stadium_pot'
   
+  get '/report_tickets', to: 'places#report_sold'
+
   post '/', to: 'application#test'
   post '/auth/login', to: 'authentication#login'
   post '/api/public/draws', to: 'draws#public_get'

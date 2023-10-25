@@ -31,6 +31,30 @@ class PlacesController < ApplicationController
     end
   end
 
+  def report_sold
+    redis = Redis.new
+    place_id = params[:id]
+
+    if place_id.present?
+        places = JSON.parse(redis.get("report:8"))
+
+        @pagy, @places = pagy_array(places, items: 30000000, page: params[:page] || 1)
+
+        render json: {
+          places: @places.reverse!,
+          status_code: 200,
+          metadata: {
+            page: @pagy.page,
+            count: @pagy.count,
+            items: @pagy.items,
+            pages: @pagy.pages
+          }
+        }, status: :ok
+    else
+      render json: { message: 'No autorizado' }, status: :forbidden
+    end
+  end
+
   def to_infinity
     redis = Redis.new
     place_id = params[:id]
@@ -38,7 +62,7 @@ class PlacesController < ApplicationController
 
     if place_id.present?
       # if Place.validate_tickets(place_id)
-        places = JSON.parse(redis.get("places:#{place_id}:#{part || 1}"))
+        places = JSON.parse(redis.get("places:#{place_id}"))
 
         @pagy, @places = pagy_array(places, items: 100, page: params[:page] || 1)
 
@@ -107,20 +131,22 @@ PLAIN_TEXT
     if @agency
       place_numbers = params[:plays].to_s.tr('[]', '').tr(',', ' ')
 
-      plays_ids = JSON.parse(params[:plays])
-
-      PrinterNotification.create(tickets_generated: plays_ids, user_id: @agency.user_id)
-
       redis = Redis.new
 
+      plays_ids = JSON.parse(params[:plays])
+
+      PrinterNotification.create(tickets_generated: plays_ids, user_id: @agency.user_id, current_id: (JSON.parse(redis.get("current_id:#{params[:draw_id]}")).to_i))
+
       id_ticket = 1
+
+      id_ticket_final = JSON.parse(redis.get("current_id:#{params[:draw_id]}"))
 
       if Place.verify_redis_game(@draw.id, params[:plays])
         atributos_array = place_numbers.split(' ')
 
         to_print = []
 
-        id_ticket = redis.get("fifty:#{params[:draw_id]}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length + 1
+        id_ticket = redis.get("fifty:#{params[:draw_id]}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length - plays_ids.length - 1
 
         atributos_array.each do |a|
           if (a.to_i <= 999)
@@ -131,7 +157,7 @@ PLAIN_TEXT
         end
 
 @eighty_mm = <<-PLAIN_TEXT  
-               RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ').tr('"', '')}\n------------------------------------------------\n                   PREMIOS\n50% Pote Recaudado\n------------------------------------------------\nPrecio:    	      	      1$\nTipo:    	      	      50-50\nTerminal:  	      	      #{@agency.name}\nTicket numero:    	      #{id_ticket}\nLocalidad:                     Monumental\nFecha de venta:    	      #{DateTime.now.strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{Place.combo_price(atributos_array)}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n\n"}
+               RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ').tr('"', '')}\n------------------------------------------------\n                   PREMIOS\n50% Pote Recaudado\n------------------------------------------------\nPrecio:    	      	      1$\nTipo:    	      	      50-50\nTerminal:  	      	      #{@agency.name}\nTicket numero:    	      #{id_ticket_final}\nLocalidad:                     Caracas\nFecha de venta:    	      #{(DateTime.now - 4.hours).strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{Place.combo_price(atributos_array)}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n\n"}
 PLAIN_TEXT
 
         render plain: @eighty_mm
