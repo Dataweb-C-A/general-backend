@@ -198,7 +198,7 @@ class GenerateDrawPlacesJob < ApplicationJob
     
     redis.set("current_id:#{draw_id}", JSON.parse(redis.get("fifty:#{draw_id}:ids")).length)
     
-    combos << { id: JSON.parse(redis.get("fifty:#{draw_id}:ids")).length, current numbers: result_numbers, combo_price: result_numbers.length === 1 ? 1 : result_numbers.length === 6 ? 5 : 10}
+    combos << { id: redis.get("current_id:#{draw_id}"), current numbers: result_numbers, combo_price: result_numbers.length === 1 ? 1 : result_numbers.length === 6 ? 5 : 10}
     
     redis.set("combo:#{draw_id}", combos.to_json)
 
