@@ -194,7 +194,7 @@ class GenerateDrawPlacesJob < ApplicationJob
 
     redis.set("fifty:#{draw_id}:ids", numbers_ids.to_json)
 
-    redis.set("combo:#{draw_id}")
+    redis.set("combo:#{draw_id}", combos.to_json)
 
     # redis.set("report:#{draw_id}", json_result.to_json) 
 
