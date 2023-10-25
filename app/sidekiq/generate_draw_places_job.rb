@@ -186,19 +186,21 @@ class GenerateDrawPlacesJob < ApplicationJob
 
     numbers_ids << { numbers: numbers_final }
 
-    combos << { numbers: result_numbers, combo_price: result_numbers.length === 1 ? 1 : result_numbers.length === 6 ? 5 : 10}
-
+    
     # json_result = JSON.parse(redis.get("report:#{draw_id}"))
-
+    
     # json_result << { numbers: numbers_final, agency: @agency.name } 
-
+    
     redis.set("fifty:#{draw_id}:ids", numbers_ids.to_json)
-
-    redis.set("combo:#{draw_id}", combos.to_json)
-
+    
+    
     # redis.set("report:#{draw_id}", json_result.to_json) 
-
+    
     redis.set("current_id:#{draw_id}", JSON.parse(redis.get("fifty:#{draw_id}:ids")).length)
+    
+    combos << { id: JSON.parse(redis.get("fifty:#{draw_id}:ids")).length, current numbers: result_numbers, combo_price: result_numbers.length === 1 ? 1 : result_numbers.length === 6 ? 5 : 10}
+    
+    redis.set("combo:#{draw_id}", combos.to_json)
 
     return {
       error: nil,
