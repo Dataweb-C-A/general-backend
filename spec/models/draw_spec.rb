@@ -10,10 +10,12 @@
 #  expired_date            :date
 #  first_prize             :string
 #  first_winner            :integer
+#  foundation              :string
 #  has_winners             :boolean          default(FALSE)
 #  init_date               :date
 #  is_active               :boolean          default(TRUE)
 #  limit                   :integer          default(100)
+#  location                :string
 #  loteria                 :string
 #  money                   :string
 #  numbers                 :integer
