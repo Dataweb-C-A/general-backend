@@ -107,6 +107,8 @@ class DrawsController < ApplicationController
                                  :money,
                                  :ads,
                                  :award,
+                                 :location,
+                                 :foundation,
                                  :visible_taquillas_ids
     ) 
   end

@@ -54,6 +54,8 @@ class DrawSerializer < ActiveModel::Serializer
               :draw_type,
               :limit,
               :price_unit,
+              :foundation,
+              :location,
               :visible_taquillas_ids,
               :money,
               :owner,
