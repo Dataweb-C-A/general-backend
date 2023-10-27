@@ -80,13 +80,13 @@ class Draw < ApplicationRecord
   #           presence: true,
   #           numericality: { only_integer: true, greater_than_or_equal_to: 100 }
 
-  validates :loteria,
-            presence: true,
-            length: { minimum: 5, maximum: 50 }
+  # validates :loteria,
+  #           presence: true,
+  #           length: { minimum: 5, maximum: 50 }
           
-  validates :draw_type,
-            presence: true,
-            inclusion: { in: %w[Progressive End-To-Date To-Infinity] }
+  # validates :draw_type,
+  #           presence: true,
+  #           inclusion: { in: %w[Progressive End-To-Date To-Infinity] }
 
   # validates :limit,
   #           presence: false,
@@ -96,9 +96,9 @@ class Draw < ApplicationRecord
             presence: true,
             numericality: { greater_than_or_equal_to: 0.1 }
 
-  validates :money,
-            presence: true,
-            inclusion: { in: %w[BsF $ COP] }
+  # validates :money,
+  #           presence: true,
+  #           inclusion: { in: %w[BsF $ COP] }
       
   # validates :visible_taquillas_ids,
   #           presence: true
@@ -106,8 +106,8 @@ class Draw < ApplicationRecord
   # validates :automatic_taquillas_ids,
   #           presence: true
 
-  validates :owner_id,
-            presence: true
+  # validates :owner_id,
+  #           presence: true
 
   # scope :active, -> { where('is_active = true') }
   # scope :expired, -> { where('is_active = false') }
