@@ -61,8 +61,8 @@ class Draw < ApplicationRecord
   #           length: { minimum: 5, maximum: 50 }
   
   validates :init_date,
-  presence: true,
-            comparison: { greater_than_or_equal_to: Time.now.in_time_zone("Caracas").to_date() }
+  presence: true
+#            comparison: { greater_than_or_equal_to: Time.now.in_time_zone("Caracas").to_date() }
             
   validate :validate_expired_date
   
