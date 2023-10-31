@@ -56,7 +56,7 @@ class DrawsController < ApplicationController
       if @draw.save
         render json: @draw
       else
-        render json: @draw.errors, status: :unprocessable_entity
+        render json: { errors: @draw.errors }, status: :unprocessable_entity
       end
     else
       render json: { message: 'No autorizado' }, status: :forbidden

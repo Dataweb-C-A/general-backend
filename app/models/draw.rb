@@ -53,9 +53,9 @@ class Draw < ApplicationRecord
   presence: true,
   length: { minimum: 5, maximum: 50 }
   
-  validates :first_prize,
-  presence: true,
-  length: { minimum: 5, maximum: 50 }
+ # validates :first_prize,
+ # presence: true,
+#  length: { minimum: 5, maximum: 50 }
   
   # validates :second_prize,
   #           length: { minimum: 5, maximum: 50 }
