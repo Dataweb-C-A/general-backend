@@ -121,7 +121,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_26_170804) do
 
   create_table "places", force: :cascade do |t|
     t.integer "place_numbers", default: [], array: true
-    t.datetime "sold_at", default: "2023-07-17 01:18:16"
+    t.datetime "sold_at", default: "2023-09-28 16:43:11"
     t.integer "agency_id", null: false
     t.bigint "client_id"
     t.bigint "draw_id", null: false
@@ -166,6 +166,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_26_170804) do
     t.string "tickets_type"
     t.boolean "tickets_are_sold", default: false
     t.integer "year"
+    t.float "amount"
+    t.boolean "is_closed", default: false
+    t.boolean "refund", default: false
+    t.integer "check_ticket_number"
+    t.string "refund_serial"
     t.integer "taquillas_ids", default: [], array: true
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
