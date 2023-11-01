@@ -146,10 +146,14 @@ class GenerateDrawPlacesJob < ApplicationJob
 
 	numbers_final << random_result[0]
 
+        redis.sadd("place:#{draw_id}", random_result[0])
+
         json_result = JSON.parse(redis.get("report:#{draw_id}"))
 
         json_result << { numbers: numbers_final, agency: @agency.name }
 
+#	redis.sadd("reports:#{draw_id}", json_result.to_json)
+	
         redis.set("report:#{draw_id}", json_result.to_json)
       else
         available_numbers = all_numbers_by_default - places_unavailable
@@ -160,11 +164,15 @@ class GenerateDrawPlacesJob < ApplicationJob
 
 	numbers_final << random_result[0]
 	
+	redis.sadd("place:#{draw_id}", random_result[0])
+
         redis.set("fifty:#{draw_id}", all_nums)
 
         json_result = JSON.parse(redis.get("report:#{draw_id}")) 
 
         json_result << { numbers: numbers_final, agency: @agency.name }
+
+#	redis.sadd("reports:#{draw_id}", json_result.to_json)
 
         redis.set("report:#{draw_id}", json_result.to_json)
       end
