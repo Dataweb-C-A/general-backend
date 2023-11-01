@@ -180,6 +180,8 @@ class GenerateDrawPlacesJob < ApplicationJob
 
       result_numbers << random_result
 
+      redis.incr("ticket_id:#{draw_id}")
+
       places << {
         draw_id: @draw.id,
         place_numbers: random_result[0],
@@ -274,8 +276,6 @@ class GenerateDrawPlacesJob < ApplicationJob
         agency_id: agency_id,
         sold_at: DateTime.now,
       }
-
-      redis.incr("ticket_id:#{draw_id}")
   
       if places_to_insert.present?
         if Place.where(draw_id: @draw.id, place_numbers: place_positions).empty?
