@@ -163,7 +163,7 @@ PLAIN_TEXT
 
       id_ticket = 1
 
-      id_ticket_final = JSON.parse(redis.get("current_id:#{params[:draw_id]}"))
+      id_ticket_final = JSON.parse(redis.get("combo:#{params[:draw_id]}")).last["id"]
 
       if Place.verify_redis_game(@draw.id, params[:plays])
         atributos_array = place_numbers.split(' ')

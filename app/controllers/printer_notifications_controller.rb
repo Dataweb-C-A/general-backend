@@ -1,9 +1,10 @@
 class PrinterNotificationsController < ApplicationController
   def index
-    @notification = PrinterNotification.where(is_printed: false).last
+    @notification = PrinterNotification.lock('FOR UPDATE SKIP LOCKED').where(is_printed: false).last
     redis = Redis.new
     if @notification
-      @notification.update(is_printed: true)
+      @notification.is_printed = true
+      @notification.save
       render json: [{notification: @notification}], status: :ok
     else
       render json: { error: "Not messages to print" }, status: :not_found
