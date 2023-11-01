@@ -165,7 +165,7 @@ PLAIN_TEXT
 
       #  id_ticket_final = redis.get("ticket_id:#{params[:draw_id]}")
 
-      id_ticket_final = JSON.parse(redis.get("combo:#{draw_id}")).select{ |item| item["agency_id"].to_i == params[:agency_id].to_i}.last["id"]
+      id_ticket_final = JSON.parse(redis.get("combo:#{params[:draw_id]}")).select{ |item| item["agency_id"].to_i == params[:agency_id].to_i}.last["id"]
 
       if Place.verify_redis_game(@draw.id, params[:plays])
         atributos_array = place_numbers.split(' ')
