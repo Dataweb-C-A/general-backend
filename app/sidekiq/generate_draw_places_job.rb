@@ -114,6 +114,7 @@ class GenerateDrawPlacesJob < ApplicationJob
       redis.set("fifty:#{draw_id}:ids", "[]")
       redis.set("report:#{draw_id}", "[]")
       redis.set("combo:#{draw_id}", "[]")
+      redis.set("ticket_id:#{draw_id}", 0)
     end
 
     result_numbers = []
@@ -273,6 +274,8 @@ class GenerateDrawPlacesJob < ApplicationJob
         agency_id: agency_id,
         sold_at: DateTime.now,
       }
+
+      redis.incr("ticket_id:#{draw_id}")
   
       if places_to_insert.present?
         if Place.where(draw_id: @draw.id, place_numbers: place_positions).empty?
