@@ -180,8 +180,7 @@ class GenerateDrawPlacesJob < ApplicationJob
 
       result_numbers << random_result
 
-      redis.incr("ticket_id:#{draw_id}")
-
+      
       places << {
         draw_id: @draw.id,
         place_numbers: random_result[0],
@@ -190,11 +189,11 @@ class GenerateDrawPlacesJob < ApplicationJob
         client_id: nil
       }
     end
-
+    
     numbers_ids = JSON.parse(redis.get("fifty:#{draw_id}:ids"))
-
+    
     combos = JSON.parse(redis.get("combo:#{draw_id}"))
-
+    
     numbers_ids << { numbers: numbers_final }
 
     
@@ -204,12 +203,13 @@ class GenerateDrawPlacesJob < ApplicationJob
     
     redis.set("fifty:#{draw_id}:ids", numbers_ids.to_json)
     
+    current_ticket_id = redis.incr("ticket_id:#{draw_id}")
     
     # redis.set("report:#{draw_id}", json_result.to_json) 
     
     redis.set("current_id:#{draw_id}", JSON.parse(redis.get("fifty:#{draw_id}:ids")).length)
     
-    combos << { id: redis.get("current_id:#{draw_id}"), numbers: result_numbers, combo_price: result_numbers.length === 1 ? 1 : result_numbers.length === 6 ? 5 : 10 }
+    combos << { id: current_ticket_id, numbers: result_numbers, combo_price: result_numbers.length === 1 ? 1 : result_numbers.length === 6 ? 5 : 10 }
     
     redis.set("combo:#{draw_id}", combos.to_json)
 
