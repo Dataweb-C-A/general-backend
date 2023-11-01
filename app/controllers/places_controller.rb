@@ -159,13 +159,14 @@ PLAIN_TEXT
 
       plays_ids = JSON.parse(params[:plays])
 
-      PrinterNotification.create(tickets_generated: plays_ids, user_id: @agency.user_id, current_id: redis.get("ticket_id:#{params[:draw_id]}"))
-
+      
       id_ticket = 1
-
+      
       #  id_ticket_final = redis.get("ticket_id:#{params[:draw_id]}")
-
+      
       id_ticket_final = JSON.parse(redis.get("combo:#{params[:draw_id]}")).select{ |item| item["agency_id"].to_i == params[:agency_id].to_i}.last["id"]
+      
+      PrinterNotification.create(tickets_generated: plays_ids, user_id: @agency.user_id, current_id: id_ticket_final)
 
       if Place.verify_redis_game(@draw.id, params[:plays])
         atributos_array = place_numbers.split(' ')
