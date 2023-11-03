@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   
   get '/menu/50-50', to: 'application#menu'
 
+  put '/draw/status', to: 'draws#update_draws'
+
   mount ActionCable.server => '/cable'
   mount Sidekiq::Web => '/sidekiq'
   
@@ -40,7 +42,7 @@ Rails.application.routes.draw do
   # get 'rifas/index'
 
   get '/draws_fifty', to: 'draws#fifty'
-
+  get '/draws_fifty_last', to: 'draws#fifty_last'
   get '/draws/filter', to: 'draws#filter', param: :owner_id
   get '/rifas/tickets', to: 'tickets#index', param: :rifa_id
   get '/rifas/expired', to: 'rifas#expireds'

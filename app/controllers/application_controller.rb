@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
 
   def menu
     render json: [
-                   {option: "1", option_parser: 1, combo_price: 1, money: "$"}, {option: "6", option_parser: 6, combo_price: 5, money: "$"}, {option: "15", option_parser: 15, combo_price: 10, money: "$"}
+                   {option: "1", option_parser: 1, combo_price: 2, money: "$"}, {option: "3", option_parser: 3, combo_price: 5, money: "$"}, {option: "7", option_parser: 7, combo_price: 10, money: "$"}
                  ], status: :ok
   end
 

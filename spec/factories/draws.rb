@@ -14,6 +14,7 @@
 #  has_winners             :boolean          default(FALSE)
 #  init_date               :date
 #  is_active               :boolean          default(TRUE)
+#  is_closed               :boolean          default(FALSE)
 #  limit                   :integer          default(100)
 #  location                :string
 #  loteria                 :string
@@ -28,6 +29,7 @@
 #  type_of_draw            :string           default("")
 #  uniq                    :string
 #  visible_taquillas_ids   :integer          default([]), is an Array
+#  winner_is               :integer
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  owner_id                :integer          not null

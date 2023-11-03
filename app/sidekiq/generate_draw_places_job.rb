@@ -83,7 +83,7 @@ class GenerateDrawPlacesJob < ApplicationJob
   end
 
   def sell_random(draw_id, numbers_of_places, agency_id)
-    @draw = Draw.find(draw_id)
+    @draw = Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil).last
   
     return unless @draw
 
@@ -109,12 +109,12 @@ class GenerateDrawPlacesJob < ApplicationJob
 
     places = []
 
-    if (redis.get("fifty:#{draw_id}") == nil || redis.get("fifty:#{draw_id}:ids") == nil)
-      redis.set("fifty:#{draw_id}", "[]")
-      redis.set("fifty:#{draw_id}:ids", "[]")
-      redis.set("report:#{draw_id}", "[]")
-      redis.set("combo:#{draw_id}", "[]")
-      redis.set("ticket_id:#{draw_id}", 0)
+    if (redis.get("fifty:#{@draw.id}") == nil || redis.get("fifty:#{@draw.id}:ids") == nil)
+      redis.set("fifty:#{@draw.id}", "[]")
+      redis.set("fifty:#{@draw.id}:ids", "[]")
+      redis.set("report:#{@draw.id}", "[]")
+      redis.set("combo:#{@draw.id}", "[]")
+      redis.set("ticket_id:#{@draw.id}", 0)
     end
 
     result_numbers = []
@@ -122,7 +122,7 @@ class GenerateDrawPlacesJob < ApplicationJob
     numbers_final = []
 
     numbers_of_places.to_i.times do |index|
-      places_unavailable = redis.get("fifty:#{draw_id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
+      places_unavailable = redis.get("fifty:#{@draw.id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i)
 
       all_numbers_by_default = (1..10000).to_a
 
@@ -143,19 +143,19 @@ class GenerateDrawPlacesJob < ApplicationJob
 
         all_nums = places_unavailable << random_result[0]
 
-        redis.set("fifty:#{draw_id}", all_nums)
+        redis.set("fifty:#{@draw.id}", all_nums)
 
 	numbers_final << random_result[0]
 
-        redis.sadd("place:#{draw_id}", random_result[0])
+        redis.sadd("place:#{@draw.id}", random_result[0])
 
-        json_result = JSON.parse(redis.get("report:#{draw_id}"))
+        json_result = JSON.parse(redis.get("report:#{@draw.id}"))
 
         json_result << { numbers: numbers_final, agency: @agency.name }
 
 #	redis.sadd("reports:#{draw_id}", json_result.to_json)
 	
-        redis.set("report:#{draw_id}", json_result.to_json)
+        redis.set("report:#{@draw.id}", json_result.to_json)
       else
         available_numbers = all_numbers_by_default - places_unavailable
 
@@ -165,17 +165,17 @@ class GenerateDrawPlacesJob < ApplicationJob
 
 	numbers_final << random_result[0]
 	
-	redis.sadd("place:#{draw_id}", random_result[0])
+	redis.sadd("place:#{@draw.id}", random_result[0])
 
-        redis.set("fifty:#{draw_id}", all_nums)
+        redis.set("fifty:#{@draw.id}", all_nums)
 
-        json_result = JSON.parse(redis.get("report:#{draw_id}")) 
+        json_result = JSON.parse(redis.get("report:#{@draw.id}")) 
 
         json_result << { numbers: numbers_final, agency: @agency.name }
 
 #	redis.sadd("reports:#{draw_id}", json_result.to_json)
 
-        redis.set("report:#{draw_id}", json_result.to_json)
+        redis.set("report:#{@draw.id}", json_result.to_json)
       end
 
       result_numbers << random_result
@@ -190,9 +190,9 @@ class GenerateDrawPlacesJob < ApplicationJob
       }
     end
     
-    numbers_ids = JSON.parse(redis.get("fifty:#{draw_id}:ids"))
+    numbers_ids = JSON.parse(redis.get("fifty:#{@draw.id}:ids"))
     
-    combos = JSON.parse(redis.get("combo:#{draw_id}"))
+    combos = JSON.parse(redis.get("combo:#{@draw.id}"))
     
     numbers_ids << { numbers: numbers_final }
 
@@ -201,17 +201,17 @@ class GenerateDrawPlacesJob < ApplicationJob
     
     # json_result << { numbers: numbers_final, agency: @agency.name } 
     
-    redis.set("fifty:#{draw_id}:ids", numbers_ids.to_json)
+    redis.set("fifty:#{@draw.id}:ids", numbers_ids.to_json)
     
-    current_ticket_id = redis.incr("ticket_id:#{draw_id}")
+    current_ticket_id = redis.incr("ticket_id:#{@draw.id}")
     
     # redis.set("report:#{draw_id}", json_result.to_json) 
     
-    redis.set("current_id:#{draw_id}", JSON.parse(redis.get("fifty:#{draw_id}:ids")).length)
+    redis.set("current_id:#{@draw.id}", JSON.parse(redis.get("fifty:#{@draw.id}:ids")).length)
     
-    combos << { id: current_ticket_id, numbers: result_numbers, combo_price: result_numbers.length === 1 ? 1 : result_numbers.length === 6 ? 5 : 10, agency_id: agency_id }
+    combos << { id: current_ticket_id, numbers: result_numbers, combo_price: result_numbers.length === 1 ? 2 : result_numbers.length === 3 ? 5 : 10, agency_id: agency_id }
     
-    redis.set("combo:#{draw_id}", combos.to_json)
+    redis.set("combo:#{@draw.id}", combos.to_json)
 
     return {
       error: nil,

@@ -34,9 +34,10 @@ class PlacesController < ApplicationController
   def report_sold
     redis = Redis.new
     place_id = params[:id]
+    @draw_id = Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil).last
 
     if place_id.present?
-        places = JSON.parse(redis.get("report:8"))
+        places = JSON.parse(redis.get("report:#{@draw_id.id}"))
 
         @pagy, @places = pagy_array(places, items: 30000000, page: params[:page] || 1)
 
@@ -58,9 +59,10 @@ class PlacesController < ApplicationController
   def combos
     redis = Redis.new
     place_id = params[:id]
+    @draw_id = Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil).last
 
     if place_id.present?
-        places = JSON.parse(redis.get("combo:8"))
+        places = JSON.parse(redis.get("combo:#{@draw_id.id}"))
 
         @pagy, @places = pagy_array(places, items: 30000000, page: params[:page] || 1)
 
@@ -146,8 +148,8 @@ class PlacesController < ApplicationController
   end
 
   def printer_infinity 
-    @draw = Draw.find(params[:draw_id])
-    Draw.find(params[:draw_id]).update(ticket_setted: @draw.ticket_setted + 1)
+    @draw = Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil).last
+    Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil).last.update(ticket_setted: @draw.ticket_setted + 1)
     @agency = Whitelist.find_by(user_id: params[:agency_id])
 @invalid = <<-PLAIN_TEXT
         \n\n\n\nNo tiene acceso a 50/50\n\n\n\n
@@ -159,12 +161,13 @@ PLAIN_TEXT
 
       plays_ids = JSON.parse(params[:plays])
 
+      @draw_id = Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil).last
       
       id_ticket = 1
       
       #  id_ticket_final = redis.get("ticket_id:#{params[:draw_id]}")
       
-      id_ticket_final = JSON.parse(redis.get("combo:#{params[:draw_id]}")).select{ |item| item["agency_id"].to_i == params[:agency_id].to_i}.last["id"]
+      id_ticket_final = JSON.parse(redis.get("combo:#{@draw_id.id}")).select{ |item| item["agency_id"].to_i == params[:agency_id].to_i}.last["id"]
       
       PrinterNotification.create(tickets_generated: plays_ids, user_id: @agency.user_id, current_id: id_ticket_final)
 
@@ -173,7 +176,7 @@ PLAIN_TEXT
 
         to_print = []
 
-        id_ticket = redis.get("fifty:#{params[:draw_id]}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length - plays_ids.length - 1
+        id_ticket = redis.get("fifty:#{@draw_id.id}").gsub(/\[|\]|\s/, '').split(',').map(&:to_i).length - plays_ids.length - 1
 
         atributos_array.each do |a|
           if (a.to_i <= 999)
@@ -184,7 +187,7 @@ PLAIN_TEXT
         end
 
 @eighty_mm = <<-PLAIN_TEXT  
-                  RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ').tr('"', '')}\n------------------------------------------------\n                   PREMIO\n50% Pote Recaudado\n------------------------------------------------\nEvento:                        #{@draw.title}\nPrecio:    	      	      1$\nTipo:    	      	      50-50\nTerminal:  	      	      #{@agency.name}\nTicket numero:    	      #{id_ticket_final}\nLocalidad:                     Caracas\nFecha de venta:    	      #{(DateTime.now - 4.hours).strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{Place.combo_price(atributos_array)}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n"}
+                  RIFAMAX\n------------------------------------------------\n                   NUMEROS\n#{to_print.to_s.tr('[]', '').tr(',', ' ').tr('"', '')}\n------------------------------------------------\n                   PREMIO\n50% Pote Recaudado\n------------------------------------------------\nEvento:                        #{@draw_id.title}\nPrecio:    	      	      1$\nTipo:    	      	      50-50\nTerminal:  	      	      #{@agency.name}\nTicket numero:    	      #{id_ticket_final}\nLocalidad:                     Caracas\nFecha de venta:    	      #{(DateTime.now - 4.hours).strftime("%d/%m/%Y %H:%M")}\nFecha sorteo:    	      #{@draw_id.created_at.strftime("%d/%m/%Y %H:%M")}\n------------------------------------------------\nJugadas: #{atributos_array.length}    	      	      Total: #{Place.combo_price(atributos_array)}$\n------------------------------------------------#{false ? "\n                   CLIENTE\n------------------------------------------------\nNombre:    	      	      #{@client.name}\nCedula:    	      	      #{@client.dni}\nTelefono:    	      	      #{@client.phone}\n------------------------------------------------\n" : "\n\n\n\n"}
 PLAIN_TEXT
 
         render plain: @eighty_mm

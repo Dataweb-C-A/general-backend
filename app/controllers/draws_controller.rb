@@ -11,6 +11,24 @@ class DrawsController < ApplicationController
     render json: @draws, status: :ok
   end
 
+  def fifty_last
+    @draws = Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil).last
+    render json: @draws, status: :ok
+  end
+
+  def update_draws
+    if Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
+      @draws = Draw.where(draw_type: 'To-Infinity', award: nil, ads: nil).last.update(draw_params)
+      if @draws
+	render json: @draws, status: :ok
+      else
+        render json: { errors: @draws.errors }, status: :unprocessable_entity
+      end
+    else
+      render json: { message: "Unauthorized", error_code: 401 }, status: :forbidden
+    end
+  end
+
   def public_get
     if params[:user_id].present? && Draw.validate_draw_access(params[:user_id], request.headers[:Authorization])
       type = params[:type]
@@ -108,6 +126,8 @@ class DrawsController < ApplicationController
                                  :ads,
                                  :award,
                                  :location,
+				 :is_closed,
+				 :winner_is,
                                  :foundation,
                                  :visible_taquillas_ids
     ) 
